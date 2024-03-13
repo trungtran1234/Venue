@@ -15,7 +15,6 @@ class LoginPage extends StatelessWidget {
                 'Venue',
                 style: TextStyle(
                   color: Colors.orange,
-                  // fontFamily: 'Freedoka',
                   fontSize: 100.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -25,9 +24,8 @@ class LoginPage extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: Colors.white, // Set the color here
-                borderRadius: BorderRadius.circular(
-                    10), // Set the radius for rounded edges
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
                 children: [
@@ -41,50 +39,68 @@ class LoginPage extends StatelessWidget {
                   ),
                   SizedBox(height: 20.0),
                   LoginForm(),
+                  SizedBox(height: 20.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Handle sign-up logic here
+                    },
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Color(0xFF437AE5)),
+                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                        EdgeInsets.symmetric(vertical: 16.0),
+                      ),
+                      shape: MaterialStateProperty.all<OutlinedBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      minimumSize: MaterialStateProperty.all<Size>(
+                        Size(double.infinity,
+                            55), // Set the width to be as wide as possible
+                      ),
+                    ),
+                    child: Text(
+                      'Login',
+                      style: TextStyle(
+                        color: Colors.white, // text color
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
             SizedBox(height: 20.0),
             Container(
-              color: Colors.white,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
               alignment: Alignment.center,
-              child:
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Text(
-                  'Need an account? ',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 16.0,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    // Handle navigation to sign-up page here
-                  },
-                  child: Text(
-                    'Sign Up',
+              padding: EdgeInsets.all(30.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Need an account? ',
                     style: TextStyle(
-                      color: Colors.blue,
+                      color: Colors.grey,
                       fontSize: 16.0,
                     ),
                   ),
-                ),
-              ]),
-            ),
-            SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: () {
-                // Handle sign-up logic here
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                    Color(0xFF437AE5)), // background color
-              ),
-              child: Text(
-                'Login',
-                style: TextStyle(
-                  color: Colors.white, // text color
-                ),
+                  GestureDetector(
+                    onTap: () {
+                      // Handle navigation to sign-up page here
+                    },
+                    child: Text(
+                      'Sign Up',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -110,18 +126,26 @@ class _LoginFormState extends State<LoginForm> {
         TextField(
           controller: _emailController,
           decoration: InputDecoration(
-            labelText: 'Email',
+            hintText: 'Email',
             filled: true,
-            fillColor: Colors.white,
+            fillColor: Color(0xFFE6E6E6),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: BorderSide.none,
+            ),
           ),
         ),
         SizedBox(height: 20.0),
         TextField(
           controller: _passwordController,
           decoration: InputDecoration(
-            labelText: 'Password',
+            hintText: 'Password',
             filled: true,
-            fillColor: Colors.white,
+            fillColor: Color(0xFFE6E6E6),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: BorderSide.none,
+            ),
           ),
           obscureText: true,
         ),

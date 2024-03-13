@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue),
         useMaterial3: true,
       ),
-      home: SignUpPage(), // Change this to see different pages as homepage
+      home: LoginPage(), // Change this to see different pages as homepage
     );
   }
 }
