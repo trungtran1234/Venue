@@ -41,17 +41,30 @@ class SignUpPage extends StatelessWidget {
             ),
             SizedBox(height: 20.0),
             Container(
+              color: Colors.white,
               alignment: Alignment.center,
-              child: TextButton(
-                onPressed: () {},
-                child: Text(
-                  'Need an account? Sign Up',
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Text(
+                  'Need an account? ',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.grey,
                     fontSize: 16.0,
                   ),
                 ),
-              ),
+                GestureDetector(
+                  onTap: () {
+                    // Handle navigation to sign-up page here
+                  },
+                  child: Text(
+                    'Sign Up',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+              ]),
             ),
             SizedBox(height: 20.0),
             ElevatedButton(
@@ -87,7 +100,6 @@ class _SignUpFormState extends State<SignUpForm> {
           controller: _emailController,
           decoration: InputDecoration(
             labelText: 'Email',
-            prefixIcon: Icon(Icons.email),
             filled: true,
             fillColor: Colors.white,
           ),
@@ -97,7 +109,6 @@ class _SignUpFormState extends State<SignUpForm> {
           controller: _usernameController,
           decoration: InputDecoration(
             labelText: 'Username',
-            prefixIcon: Icon(Icons.person),
             filled: true,
             fillColor: Colors.white,
           ),
@@ -107,7 +118,6 @@ class _SignUpFormState extends State<SignUpForm> {
           controller: _passwordController,
           decoration: InputDecoration(
             labelText: 'Password',
-            prefixIcon: Icon(Icons.lock),
             filled: true,
             fillColor: Colors.white,
           ),
@@ -118,7 +128,6 @@ class _SignUpFormState extends State<SignUpForm> {
           controller: _reEnterPasswordController,
           decoration: InputDecoration(
             labelText: 'Re-enter Password',
-            prefixIcon: Icon(Icons.lock),
             filled: true,
             fillColor: Colors.white,
           ),
