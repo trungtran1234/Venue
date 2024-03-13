@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SignUpPage extends StatelessWidget {
+class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,27 +15,32 @@ class SignUpPage extends StatelessWidget {
                 'Venue',
                 style: TextStyle(
                   color: Colors.orange,
-                  fontSize: 24.0,
+                  // fontFamily: 'Freedoka',
+                  fontSize: 100.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
             SizedBox(height: 20.0),
             Container(
-              color: Colors.white,
               padding: EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.white, // Set the color here
+                borderRadius: BorderRadius.circular(
+                    10), // Set the radius for rounded edges
+              ),
               child: Column(
                 children: [
                   Text(
-                    'Create An Account',
+                    'Sign into your account',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20.0,
+                      color: Color(0xFF443636),
+                      fontSize: 30.0,
                     ),
                   ),
                   SizedBox(height: 20.0),
-                  SignUpForm(),
+                  LoginForm(),
                 ],
               ),
             ),
@@ -46,7 +51,7 @@ class SignUpPage extends StatelessWidget {
               child:
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Text(
-                  'Have an account? ',
+                  'Need an account? ',
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 16.0,
@@ -57,7 +62,7 @@ class SignUpPage extends StatelessWidget {
                     // Handle navigation to sign-up page here
                   },
                   child: Text(
-                    'Login',
+                    'Sign Up',
                     style: TextStyle(
                       color: Colors.blue,
                       fontSize: 16.0,
@@ -71,7 +76,16 @@ class SignUpPage extends StatelessWidget {
               onPressed: () {
                 // Handle sign-up logic here
               },
-              child: Text('Create Account'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    Color(0xFF437AE5)), // background color
+              ),
+              child: Text(
+                'Login',
+                style: TextStyle(
+                  color: Colors.white, // text color
+                ),
+              ),
             ),
           ],
         ),
@@ -80,17 +94,14 @@ class SignUpPage extends StatelessWidget {
   }
 }
 
-class SignUpForm extends StatefulWidget {
+class LoginForm extends StatefulWidget {
   @override
-  _SignUpFormState createState() => _SignUpFormState();
+  _LoginFormState createState() => _LoginFormState();
 }
 
-class _SignUpFormState extends State<SignUpForm> {
+class _LoginFormState extends State<LoginForm> {
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _reEnterPasswordController =
-      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -106,28 +117,9 @@ class _SignUpFormState extends State<SignUpForm> {
         ),
         SizedBox(height: 20.0),
         TextField(
-          controller: _usernameController,
-          decoration: InputDecoration(
-            labelText: 'Username',
-            filled: true,
-            fillColor: Colors.white,
-          ),
-        ),
-        SizedBox(height: 20.0),
-        TextField(
           controller: _passwordController,
           decoration: InputDecoration(
             labelText: 'Password',
-            filled: true,
-            fillColor: Colors.white,
-          ),
-          obscureText: true,
-        ),
-        SizedBox(height: 20.0),
-        TextField(
-          controller: _reEnterPasswordController,
-          decoration: InputDecoration(
-            labelText: 'Re-enter Password',
             filled: true,
             fillColor: Colors.white,
           ),
