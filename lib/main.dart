@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'signup.dart';
+import 'login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,15 +12,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Venue', // Update the title to 'Venue'
+      title: 'Venue',
       theme: ThemeData(
-        // Set the background color to hex color 437AE5
-        scaffoldBackgroundColor: Color(0xFF437AE5),
-        // Your app's theme data
+        scaffoldBackgroundColor: Color(0xFF437AE5), // App background color
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue),
         useMaterial3: true,
       ),
-      home: SignUpPage(),
+      home: LoginPage(), // Change this to see different pages as homepage
     );
   }
 }
