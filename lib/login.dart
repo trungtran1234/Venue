@@ -9,6 +9,7 @@ class LoginPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Venue title
             Container(
               alignment: Alignment.center,
               child: Text(
@@ -20,7 +21,8 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 20.0), // Spacer
+            // Container for the login form
             Container(
               padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
@@ -29,6 +31,7 @@ class LoginPage extends StatelessWidget {
               ),
               child: Column(
                 children: [
+                  // Title for the login form
                   Text(
                     'Sign into your account',
                     textAlign: TextAlign.center,
@@ -37,12 +40,14 @@ class LoginPage extends StatelessWidget {
                       fontSize: 30.0,
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 20.0), // Spacer
+                  // Login form fields
                   LoginForm(),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 20.0), // Spacer
+                  // Login button
                   ElevatedButton(
                     onPressed: () {
-                      // Handle sign-up logic here
+                      // Handle sign-in logic here
                     },
                     style: ButtonStyle(
                       backgroundColor:
@@ -70,7 +75,8 @@ class LoginPage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 20.0), // Spacer
+            // Container for the sign-up option
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -88,6 +94,7 @@ class LoginPage extends StatelessWidget {
                       fontSize: 16.0,
                     ),
                   ),
+                  // GestureDetector for the sign-up option
                   GestureDetector(
                     onTap: () {
                       // Handle navigation to sign-up page here
@@ -110,6 +117,7 @@ class LoginPage extends StatelessWidget {
   }
 }
 
+// LoginForm widget containing the login form fields
 class LoginForm extends StatefulWidget {
   @override
   _LoginFormState createState() => _LoginFormState();
@@ -123,6 +131,7 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // Email field
         TextField(
           controller: _emailController,
           decoration: InputDecoration(
@@ -135,7 +144,8 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
         ),
-        SizedBox(height: 20.0),
+        SizedBox(height: 20.0), // Spacer
+        // Password field
         TextField(
           controller: _passwordController,
           decoration: InputDecoration(

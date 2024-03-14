@@ -9,6 +9,7 @@ class SignUpPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Venue title
             Container(
               alignment: Alignment.center,
               child: Text(
@@ -20,7 +21,8 @@ class SignUpPage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 20.0), // Spacer
+            // Container for the sign-up form
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -29,6 +31,7 @@ class SignUpPage extends StatelessWidget {
               padding: EdgeInsets.all(16.0),
               child: Column(
                 children: [
+                  // Title for the sign-up form
                   Text(
                     'Create An Account',
                     textAlign: TextAlign.center,
@@ -37,11 +40,11 @@ class SignUpPage extends StatelessWidget {
                       fontSize: 30.0,
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 20.0), // Spacer
+                  // Sign-up form fields
                   SignUpForm(),
-                  SizedBox(
-                      height:
-                          20.0), // Add spacing between text fields and button
+                  SizedBox(height: 20.0), // Spacer
+                  // Create Account button
                   ElevatedButton(
                     onPressed: () {
                       // Handle sign-up logic here
@@ -72,36 +75,40 @@ class SignUpPage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 20.0), // Spacer
+            // Container for the login option
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
               ),
               alignment: Alignment.center,
-              padding: EdgeInsets.all(30.0),
-              child:
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Text(
-                  'Have an account? ',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 16.0,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    // Handle navigation to sign-up page here
-                  },
-                  child: Text(
-                    'Login',
+              padding: EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Have an account? ',
                     style: TextStyle(
-                      color: Colors.blue,
+                      color: Colors.grey,
                       fontSize: 16.0,
                     ),
                   ),
-                ),
-              ]),
+                  // GestureDetector for the login option
+                  GestureDetector(
+                    onTap: () {
+                      // Handle navigation to login page here
+                    },
+                    child: Text(
+                      'Login',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -110,6 +117,7 @@ class SignUpPage extends StatelessWidget {
   }
 }
 
+// SignUpForm widget containing the sign-up form fields
 class SignUpForm extends StatefulWidget {
   @override
   _SignUpFormState createState() => _SignUpFormState();
@@ -126,6 +134,7 @@ class _SignUpFormState extends State<SignUpForm> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // Email field
         TextField(
           controller: _emailController,
           decoration: InputDecoration(
@@ -138,7 +147,8 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
           ),
         ),
-        SizedBox(height: 20.0),
+        SizedBox(height: 20.0), // Spacer
+        // Username field
         TextField(
           controller: _usernameController,
           decoration: InputDecoration(
@@ -151,7 +161,8 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
           ),
         ),
-        SizedBox(height: 20.0),
+        SizedBox(height: 20.0), // Spacer
+        // Password field
         TextField(
           controller: _passwordController,
           decoration: InputDecoration(
@@ -165,7 +176,8 @@ class _SignUpFormState extends State<SignUpForm> {
           ),
           obscureText: true,
         ),
-        SizedBox(height: 20.0),
+        SizedBox(height: 20.0), // Spacer
+        // Re-enter password field
         TextField(
           controller: _reEnterPasswordController,
           decoration: InputDecoration(
