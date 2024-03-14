@@ -5,7 +5,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(30.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -17,15 +17,15 @@ class LoginPage extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.orange,
                   fontFamily: 'Fredoka',
-                  fontSize: 100.0,
+                  fontSize: 75.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            SizedBox(height: 20.0), // Spacer
+            SizedBox(height: 10.0), // Spacer
             // Container for the login form
             Container(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(30.0),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -49,7 +49,7 @@ class LoginPage extends StatelessWidget {
                   // Login button
                   ElevatedButton(
                     onPressed: () {
-                      // Handle sign-in logic here
+                      // Handle sign-up logic here
                     },
                     style: ButtonStyle(
                       backgroundColor:
@@ -71,8 +71,8 @@ class LoginPage extends StatelessWidget {
                       'Login',
                       style: TextStyle(
                         fontFamily: 'Fredoka',
-                        color: Colors.white, // text color
                         fontSize: 15.0,
+                        color: Colors.white, // Set text color to white
                       ),
                     ),
                   ),
@@ -142,7 +142,7 @@ class _LoginFormState extends State<LoginForm> {
             hintText: 'Email',
             filled: true,
             fillColor: Color(0xFFE6E6E6),
-            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(50.0),
               borderSide: BorderSide.none,
@@ -157,7 +157,7 @@ class _LoginFormState extends State<LoginForm> {
             hintText: 'Password',
             filled: true,
             fillColor: Color(0xFFE6E6E6),
-            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(50.0),
               borderSide: BorderSide.none,

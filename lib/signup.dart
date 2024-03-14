@@ -5,7 +5,7 @@ class SignUpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(30.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -17,12 +17,12 @@ class SignUpPage extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.orange,
                   fontFamily: 'Fredoka',
-                  fontSize: 100.0,
+                  fontSize: 75.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            SizedBox(height: 20.0), // Spacer
+            SizedBox(height: 10.0), // Spacer
             // Container for the sign-up form
             Container(
               decoration: BoxDecoration(
@@ -80,14 +80,14 @@ class SignUpPage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20.0), // Spacer
-            // Container for the login option
+            // Container for the sign-up option
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
               ),
               alignment: Alignment.center,
-              padding: EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(30.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -98,10 +98,10 @@ class SignUpPage extends StatelessWidget {
                       fontSize: 16.0,
                     ),
                   ),
-                  // GestureDetector for the login option
+                  // GestureDetector for the sign-up option
                   GestureDetector(
                     onTap: () {
-                      // Handle navigation to login page here
+                      // Handle navigation to sign-up page here
                     },
                     child: Text(
                       'Login',
@@ -145,7 +145,7 @@ class _SignUpFormState extends State<SignUpForm> {
             hintText: 'Email',
             filled: true,
             fillColor: Color(0xFFE6E6E6),
-            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(50.0),
               borderSide: BorderSide.none,
@@ -160,7 +160,7 @@ class _SignUpFormState extends State<SignUpForm> {
             hintText: 'Username',
             filled: true,
             fillColor: Color(0xFFE6E6E6),
-            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(50.0),
               borderSide: BorderSide.none,
@@ -175,7 +175,7 @@ class _SignUpFormState extends State<SignUpForm> {
             hintText: 'Password',
             filled: true,
             fillColor: Color(0xFFE6E6E6),
-            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(50.0),
               borderSide: BorderSide.none,
@@ -191,7 +191,7 @@ class _SignUpFormState extends State<SignUpForm> {
             hintText: 'Re-Enter Password',
             filled: true,
             fillColor: Color(0xFFE6E6E6),
-            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(50.0),
               borderSide: BorderSide.none,
