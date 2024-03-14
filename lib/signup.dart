@@ -16,6 +16,7 @@ class SignUpPage extends StatelessWidget {
                 'Venue',
                 style: TextStyle(
                   color: Colors.orange,
+                  fontFamily: 'Fredoka',
                   fontSize: 100.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -26,9 +27,9 @@ class SignUpPage extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(20),
               ),
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(30.0),
               child: Column(
                 children: [
                   // Title for the sign-up form
@@ -37,6 +38,7 @@ class SignUpPage extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Color(0xFF443636),
+                      fontFamily: 'Fredoka',
                       fontSize: 30.0,
                     ),
                   ),
@@ -53,11 +55,11 @@ class SignUpPage extends StatelessWidget {
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Color(0xFF437AE5)),
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        EdgeInsets.symmetric(vertical: 16.0),
+                        EdgeInsets.symmetric(vertical: 25.0),
                       ),
                       shape: MaterialStateProperty.all<OutlinedBorder>(
                         RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                       minimumSize: MaterialStateProperty.all<Size>(
@@ -68,6 +70,8 @@ class SignUpPage extends StatelessWidget {
                     child: Text(
                       'Create Account',
                       style: TextStyle(
+                        fontFamily: 'Fredoka',
+                        fontSize: 15.0,
                         color: Colors.white, // Set text color to white
                       ),
                     ),
@@ -141,8 +145,9 @@ class _SignUpFormState extends State<SignUpForm> {
             hintText: 'Email',
             filled: true,
             fillColor: Color(0xFFE6E6E6),
+            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(50.0),
               borderSide: BorderSide.none,
             ),
           ),
@@ -155,8 +160,9 @@ class _SignUpFormState extends State<SignUpForm> {
             hintText: 'Username',
             filled: true,
             fillColor: Color(0xFFE6E6E6),
+            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(50.0),
               borderSide: BorderSide.none,
             ),
           ),
@@ -169,8 +175,9 @@ class _SignUpFormState extends State<SignUpForm> {
             hintText: 'Password',
             filled: true,
             fillColor: Color(0xFFE6E6E6),
+            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(50.0),
               borderSide: BorderSide.none,
             ),
           ),
@@ -184,8 +191,9 @@ class _SignUpFormState extends State<SignUpForm> {
             hintText: 'Re-Enter Password',
             filled: true,
             fillColor: Color(0xFFE6E6E6),
+            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(50.0),
               borderSide: BorderSide.none,
             ),
           ),
