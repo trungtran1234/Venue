@@ -1,3 +1,4 @@
+import 'package:app/login.dart';
 import 'package:flutter/material.dart';
 
 class SignUpPage extends StatelessWidget {
@@ -98,10 +99,12 @@ class SignUpPage extends StatelessWidget {
                       fontSize: 16.0,
                     ),
                   ),
-                  // GestureDetector for the sign-up option
+                  // GestureDetector for the login option
                   GestureDetector(
                     onTap: () {
-                      // Handle navigation to sign-up page here
+                      // Handle navigation to login page
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()));
                     },
                     child: Text(
                       'Login',
@@ -133,6 +136,33 @@ class _SignUpFormState extends State<SignUpForm> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _reEnterPasswordController =
       TextEditingController();
+
+  // String? _validateEmail(String? value) {
+  //   if (value == null || value.isEmpty) {
+  //     return 'Please enter your email';
+  //   }
+  // }
+
+  // String? _validateUsername(String? value) {
+  //   if (value == null || value.isEmpty) {
+  //     return 'Please enter a username';
+  //   }
+  // }
+
+  // String? _validatePassword(String? value) {
+  //   if (value == null || value.isEmpty) {
+  //     return 'Please enter a password';
+  //   }
+  // }
+
+  // String? _validateReEnterPassword(String? value) {
+  //   if (value == null || value.isEmpty) {
+  //     return 'Please re-enter your password';
+  //   }
+  //   if (value != _passwordController.text) {
+  //     return 'Passwords do not match';
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

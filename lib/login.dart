@@ -1,3 +1,4 @@
+import 'package:app/signup.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
@@ -76,6 +77,25 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                   ),
+                  SizedBox(height: 10.0),
+                  // Forgot password option
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          // Handle forgot password action here
+                        },
+                        child: Text(
+                          'Forgot Password?',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -102,6 +122,10 @@ class LoginPage extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       // Handle navigation to sign-up page here
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignUpPage()));
                     },
                     child: Text(
                       'Sign Up',
