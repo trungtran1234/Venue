@@ -1,3 +1,4 @@
+import 'package:app/signup.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
@@ -5,41 +6,48 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(30.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Venue title
             Container(
               alignment: Alignment.center,
               child: Text(
                 'Venue',
                 style: TextStyle(
                   color: Colors.orange,
-                  fontSize: 100.0,
+                  fontFamily: 'Fredoka',
+                  fontSize: 75.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 10.0), // Spacer
+            // Container for the login form
             Container(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(30.0),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
                 children: [
+                  // Title for the login form
                   Text(
                     'Sign into your account',
                     textAlign: TextAlign.center,
                     style: TextStyle(
+                      fontFamily: 'Fredoka',
                       color: Color(0xFF443636),
                       fontSize: 30.0,
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 20.0), // Spacer
+                  // Login form fields
                   LoginForm(),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 20.0), // Spacer
+                  // Login button
                   ElevatedButton(
                     onPressed: () {
                       // Handle sign-up logic here
@@ -48,11 +56,11 @@ class LoginPage extends StatelessWidget {
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Color(0xFF437AE5)),
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        EdgeInsets.symmetric(vertical: 16.0),
+                        EdgeInsets.symmetric(vertical: 25.0),
                       ),
                       shape: MaterialStateProperty.all<OutlinedBorder>(
                         RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                       minimumSize: MaterialStateProperty.all<Size>(
@@ -63,14 +71,36 @@ class LoginPage extends StatelessWidget {
                     child: Text(
                       'Login',
                       style: TextStyle(
-                        color: Colors.white, // text color
+                        fontFamily: 'Fredoka',
+                        fontSize: 15.0,
+                        color: Colors.white, // Set text color to white
                       ),
                     ),
                   ),
+                  SizedBox(height: 10.0),
+                  // Forgot password option
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          // Handle forgot password action here
+                        },
+                        child: Text(
+                          'Forgot Password?',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 20.0), // Spacer
+            // Container for the sign-up option
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -88,9 +118,14 @@ class LoginPage extends StatelessWidget {
                       fontSize: 16.0,
                     ),
                   ),
+                  // GestureDetector for the sign-up option
                   GestureDetector(
                     onTap: () {
                       // Handle navigation to sign-up page here
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignUpPage()));
                     },
                     child: Text(
                       'Sign Up',
@@ -110,6 +145,7 @@ class LoginPage extends StatelessWidget {
   }
 }
 
+// LoginForm widget containing the login form fields
 class LoginForm extends StatefulWidget {
   @override
   _LoginFormState createState() => _LoginFormState();
@@ -123,27 +159,31 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // Email field
         TextField(
           controller: _emailController,
           decoration: InputDecoration(
             hintText: 'Email',
             filled: true,
             fillColor: Color(0xFFE6E6E6),
+            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(50.0),
               borderSide: BorderSide.none,
             ),
           ),
         ),
-        SizedBox(height: 20.0),
+        SizedBox(height: 20.0), // Spacer
+        // Password field
         TextField(
           controller: _passwordController,
           decoration: InputDecoration(
             hintText: 'Password',
             filled: true,
             fillColor: Color(0xFFE6E6E6),
+            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(50.0),
               borderSide: BorderSide.none,
             ),
           ),
