@@ -1,19 +1,19 @@
-import 'package:app/login.dart';
+import 'package:app/pages/login.dart';
 import 'package:flutter/material.dart';
 
 class SignUpPage extends StatelessWidget {
+  const SignUpPage({Key? key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(30.0),
+        padding: const EdgeInsets.all(30.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Venue title
             Container(
-              alignment: Alignment.center,
-              child: Text(
+              child: const Text(
                 'Venue',
                 style: TextStyle(
                   color: Colors.orange,
@@ -23,16 +23,16 @@ class SignUpPage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 10.0), // Spacer
             // Container for the sign-up form
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
               ),
-              padding: EdgeInsets.all(30.0),
+              padding: const EdgeInsets.all(30.0),
               child: Column(
                 children: [
+                  const
                   // Title for the sign-up form
                   Text(
                     'Create An Account',
@@ -43,10 +43,10 @@ class SignUpPage extends StatelessWidget {
                       fontSize: 30.0,
                     ),
                   ),
-                  SizedBox(height: 20.0), // Spacer
+                  const SizedBox(height: 20.0), // Spacer
                   // Sign-up form fields
                   SignUpForm(),
-                  SizedBox(height: 20.0), // Spacer
+                  const SizedBox(height: 20.0), // Spacer
                   // Create Account button
                   ElevatedButton(
                     onPressed: () {
@@ -56,7 +56,7 @@ class SignUpPage extends StatelessWidget {
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Color(0xFF437AE5)),
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        EdgeInsets.symmetric(vertical: 25.0),
+                        const EdgeInsets.symmetric(vertical: 25.0),
                       ),
                       shape: MaterialStateProperty.all<OutlinedBorder>(
                         RoundedRectangleBorder(
@@ -64,11 +64,11 @@ class SignUpPage extends StatelessWidget {
                         ),
                       ),
                       minimumSize: MaterialStateProperty.all<Size>(
-                        Size(double.infinity,
+                        const Size(double.infinity,
                             55), // Set the width to be as wide as possible
                       ),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Create Account',
                       style: TextStyle(
                         fontFamily: 'Fredoka',
@@ -80,7 +80,7 @@ class SignUpPage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 20.0), // Spacer
+            const SizedBox(height: 20.0), // Spacer
             // Container for the sign-up option
             Container(
               decoration: BoxDecoration(
@@ -88,11 +88,11 @@ class SignUpPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               alignment: Alignment.center,
-              padding: EdgeInsets.all(30.0),
+              padding: const EdgeInsets.all(30.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'Have an account? ',
                     style: TextStyle(
                       color: Colors.grey,
@@ -106,7 +106,7 @@ class SignUpPage extends StatelessWidget {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => LoginPage()));
                     },
-                    child: Text(
+                    child: const Text(
                       'Login',
                       style: TextStyle(
                         color: Colors.blue,
@@ -137,99 +137,43 @@ class _SignUpFormState extends State<SignUpForm> {
   final TextEditingController _reEnterPasswordController =
       TextEditingController();
 
-  // String? _validateEmail(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return 'Please enter your email';
-  //   }
-  // }
-
-  // String? _validateUsername(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return 'Please enter a username';
-  //   }
-  // }
-
-  // String? _validatePassword(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return 'Please enter a password';
-  //   }
-  // }
-
-  // String? _validateReEnterPassword(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return 'Please re-enter your password';
-  //   }
-  //   if (value != _passwordController.text) {
-  //     return 'Passwords do not match';
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Email field
-        TextField(
-          controller: _emailController,
-          decoration: InputDecoration(
-            hintText: 'Email',
-            filled: true,
-            fillColor: Color(0xFFE6E6E6),
-            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(50.0),
-              borderSide: BorderSide.none,
-            ),
-          ),
-        ),
-        SizedBox(height: 20.0), // Spacer
-        // Username field
-        TextField(
-          controller: _usernameController,
-          decoration: InputDecoration(
-            hintText: 'Username',
-            filled: true,
-            fillColor: Color(0xFFE6E6E6),
-            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(50.0),
-              borderSide: BorderSide.none,
-            ),
-          ),
-        ),
-        SizedBox(height: 20.0), // Spacer
-        // Password field
-        TextField(
-          controller: _passwordController,
-          decoration: InputDecoration(
-            hintText: 'Password',
-            filled: true,
-            fillColor: Color(0xFFE6E6E6),
-            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(50.0),
-              borderSide: BorderSide.none,
-            ),
-          ),
-          obscureText: true,
-        ),
-        SizedBox(height: 20.0), // Spacer
-        // Re-enter password field
-        TextField(
-          controller: _reEnterPasswordController,
-          decoration: InputDecoration(
-            hintText: 'Re-Enter Password',
-            filled: true,
-            fillColor: Color(0xFFE6E6E6),
-            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(50.0),
-              borderSide: BorderSide.none,
-            ),
-          ),
+        _buildTextField(_emailController, 'Email'),
+        const SizedBox(height: 20.0),
+        _buildTextField(_usernameController, 'Username'),
+        const SizedBox(height: 20.0),
+        _buildTextField(_passwordController, 'Password', obscureText: true),
+        const SizedBox(height: 20.0),
+        _buildTextField(
+          _reEnterPasswordController,
+          'Re-Enter Password',
           obscureText: true,
         ),
       ],
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String hintText,
+      {bool obscureText = false}) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        hintText: hintText,
+        filled: true,
+        fillColor: const Color(0xFFE6E6E6),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 10,
+          horizontal: 20,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(50.0),
+          borderSide: BorderSide.none,
+        ),
+      ),
+      obscureText: obscureText,
     );
   }
 }
