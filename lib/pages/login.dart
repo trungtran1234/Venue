@@ -1,19 +1,22 @@
-import 'package:app/signup.dart';
+import 'package:app/pages/home.dart';
+import 'package:app/pages/signup.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
+  const LoginPage({Key? key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(30.0),
+        padding: const EdgeInsets.all(30.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Venue title
             Container(
               alignment: Alignment.center,
-              child: Text(
+              child: const Text(
                 'Venue',
                 style: TextStyle(
                   color: Colors.orange,
@@ -23,10 +26,10 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 10.0), // Spacer
+            const SizedBox(height: 10.0), // Spacer
             // Container for the login form
             Container(
-              padding: EdgeInsets.all(30.0),
+              padding: const EdgeInsets.all(30.0),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -34,7 +37,7 @@ class LoginPage extends StatelessWidget {
               child: Column(
                 children: [
                   // Title for the login form
-                  Text(
+                  const Text(
                     'Sign into your account',
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -43,20 +46,22 @@ class LoginPage extends StatelessWidget {
                       fontSize: 30.0,
                     ),
                   ),
-                  SizedBox(height: 20.0), // Spacer
+                  const SizedBox(height: 20.0), // Spacer
                   // Login form fields
                   LoginForm(),
-                  SizedBox(height: 20.0), // Spacer
+                  const SizedBox(height: 20.0), // Spacer
                   // Login button
                   ElevatedButton(
                     onPressed: () {
-                      // Handle sign-up logic here
+                      // Handle login logic here
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => HomePage()));
                     },
                     style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Color(0xFF437AE5)),
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        EdgeInsets.symmetric(vertical: 25.0),
+                        const EdgeInsets.symmetric(vertical: 25.0),
                       ),
                       shape: MaterialStateProperty.all<OutlinedBorder>(
                         RoundedRectangleBorder(
@@ -64,11 +69,11 @@ class LoginPage extends StatelessWidget {
                         ),
                       ),
                       minimumSize: MaterialStateProperty.all<Size>(
-                        Size(double.infinity,
+                        const Size(double.infinity,
                             55), // Set the width to be as wide as possible
                       ),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Login',
                       style: TextStyle(
                         fontFamily: 'Fredoka',
@@ -77,7 +82,7 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
                   // Forgot password option
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -86,7 +91,7 @@ class LoginPage extends StatelessWidget {
                         onTap: () {
                           // Handle forgot password action here
                         },
-                        child: Text(
+                        child: const Text(
                           'Forgot Password?',
                           style: TextStyle(
                             color: Colors.blue,
@@ -99,7 +104,7 @@ class LoginPage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 20.0), // Spacer
+            const SizedBox(height: 20.0), // Spacer
             // Container for the sign-up option
             Container(
               decoration: BoxDecoration(
@@ -107,11 +112,11 @@ class LoginPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               alignment: Alignment.center,
-              padding: EdgeInsets.all(30.0),
+              padding: const EdgeInsets.all(30.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'Need an account? ',
                     style: TextStyle(
                       color: Colors.grey,
@@ -121,13 +126,12 @@ class LoginPage extends StatelessWidget {
                   // GestureDetector for the sign-up option
                   GestureDetector(
                     onTap: () {
-                      // Handle navigation to sign-up page here
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SignUpPage()));
+                              builder: (context) => const SignUpPage()));
                     },
-                    child: Text(
+                    child: const Text(
                       'Sign Up',
                       style: TextStyle(
                         color: Colors.blue,
@@ -159,37 +163,32 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Email field
-        TextField(
-          controller: _emailController,
-          decoration: InputDecoration(
-            hintText: 'Email',
-            filled: true,
-            fillColor: Color(0xFFE6E6E6),
-            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(50.0),
-              borderSide: BorderSide.none,
-            ),
-          ),
-        ),
-        SizedBox(height: 20.0), // Spacer
-        // Password field
-        TextField(
-          controller: _passwordController,
-          decoration: InputDecoration(
-            hintText: 'Password',
-            filled: true,
-            fillColor: Color(0xFFE6E6E6),
-            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(50.0),
-              borderSide: BorderSide.none,
-            ),
-          ),
-          obscureText: true,
-        ),
+        _buildTextField(_emailController, 'Email'),
+        const SizedBox(height: 20.0),
+        _buildTextField(_passwordController, 'Password', obscureText: true),
+        const SizedBox(height: 20.0),
       ],
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String hintText,
+      {bool obscureText = false}) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        hintText: hintText,
+        filled: true,
+        fillColor: const Color(0xFFE6E6E6),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 10,
+          horizontal: 20,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(50.0),
+          borderSide: BorderSide.none,
+        ),
+      ),
+      obscureText: obscureText,
     );
   }
 }
