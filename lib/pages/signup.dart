@@ -50,7 +50,10 @@ class SignUpPage extends StatelessWidget {
                   // Create Account button
                   ElevatedButton(
                     onPressed: () {
-                      // Handle sign-up logic here
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginPage()));
                     },
                     style: ButtonStyle(
                       backgroundColor:
@@ -64,8 +67,7 @@ class SignUpPage extends StatelessWidget {
                         ),
                       ),
                       minimumSize: MaterialStateProperty.all<Size>(
-                        const Size(double.infinity,
-                            55), // Set the width to be as wide as possible
+                        const Size(double.infinity, 55),
                       ),
                     ),
                     child: const Text(
@@ -73,7 +75,7 @@ class SignUpPage extends StatelessWidget {
                       style: TextStyle(
                         fontFamily: 'Fredoka',
                         fontSize: 15.0,
-                        color: Colors.white, // Set text color to white
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -103,8 +105,10 @@ class SignUpPage extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       // Handle navigation to login page
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => LoginPage()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginPage()));
                     },
                     child: const Text(
                       'Login',

@@ -1,3 +1,4 @@
+import 'package:app/pages/home.dart';
 import 'package:app/pages/signup.dart';
 import 'package:flutter/material.dart';
 
@@ -52,7 +53,9 @@ class LoginPage extends StatelessWidget {
                   // Login button
                   ElevatedButton(
                     onPressed: () {
-                      // Handle sign-up logic here
+                      // Handle login logic here
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => HomePage()));
                     },
                     style: ButtonStyle(
                       backgroundColor:
@@ -123,11 +126,10 @@ class LoginPage extends StatelessWidget {
                   // GestureDetector for the sign-up option
                   GestureDetector(
                     onTap: () {
-                      // Handle navigation to sign-up page here
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SignUpPage()));
+                              builder: (context) => const SignUpPage()));
                     },
                     child: const Text(
                       'Sign Up',

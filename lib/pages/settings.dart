@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'login.dart';
 
 class SettingsPage extends StatelessWidget {
+  const SettingsPage({Key? key});
+
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: ThemeData(
-        primaryColor: Colors.blue,
-      ),
+      data: ThemeData(),
       child: Scaffold(
+        backgroundColor: Color(0xFF437AE5),
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
-          title: Text('Settings'),
+          title: const Text('Settings'),
         ),
         body: SettingsList(),
       ),
@@ -25,52 +26,33 @@ class SettingsPage extends StatelessWidget {
 }
 
 class SettingsList extends StatelessWidget {
+  final List<String> settingsOptions = [
+    'Account',
+    'Security and Privacy',
+    'Notifications',
+    'Log out'
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        ListTile(
-          title: Text('Account'),
+    return ListView.builder(
+      itemCount: settingsOptions.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(settingsOptions[index]),
+          contentPadding: const EdgeInsets.all(20),
           onTap: () {
-            // Navigate to Account settings page
-            // You can implement navigation here
+            if (settingsOptions[index] == 'Log out') {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+              );
+            } else {
+              // Handle navigation to other settings pages
+            }
           },
-        ),
-        ListTile(
-          title: Text('Security and Privacy'),
-          onTap: () {
-            // Navigate to Security and Privacy settings page
-            // You can implement navigation here
-          },
-        ),
-        ListTile(
-          title: Text('Notifications'),
-          onTap: () {
-            // Navigate to Notifications settings page
-            // You can implement navigation here
-          },
-        ),
-        ListTile(
-          title: Text('Premium'),
-          onTap: () {
-            // Navigate to Premium settings page
-            // You can implement navigation here
-          },
-        ),
-        ListTile(
-          title: Text('Preferences'),
-          onTap: () {
-            // Navigate to Preferences settings page
-            // You can implement navigation here
-          },
-        ),
-        ListTile(
-            title: Text('Log out'),
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LoginPage()));
-            }),
-      ],
+        );
+      },
     );
   }
 }
