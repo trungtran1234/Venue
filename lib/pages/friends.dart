@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:app/pages/map.dart';
 import 'package:app/pages/newsfeed.dart';
+import 'package:app/pages/profile.dart';
 
 class FriendsPage extends StatelessWidget {
   const FriendsPage({super.key});
@@ -9,11 +10,15 @@ class FriendsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProfilePage()),
+            );
           },
+          icon: const Icon(Icons.person),
         ),
         title: const Text('Friends'),
       ),
