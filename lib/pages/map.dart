@@ -1,5 +1,4 @@
 import 'package:app/pages/profile.dart';
-import 'package:app/pages/settings.dart';
 import 'package:app/pages/friends.dart';
 import 'package:app/pages/newsfeed.dart';
 import 'package:flutter/material.dart';
@@ -11,17 +10,7 @@ class MapPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SettingsPage()),
-              );
-            },
-            icon: const Icon(Icons.settings),
-          ),
-        ],
+        backgroundColor: Colors.transparent,
         title: const Text('Map'),
         leading: IconButton(
           onPressed: () {
