@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:app/pages/settings.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key});
+  const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,8 +11,10 @@ class ProfilePage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SettingsPage()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SettingsPage()));
             },
             icon: const Icon(Icons.settings),
           ),

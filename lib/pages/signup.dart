@@ -2,7 +2,7 @@ import 'package:app/pages/login.dart';
 import 'package:flutter/material.dart';
 
 class SignUpPage extends StatelessWidget {
-  const SignUpPage({Key? key});
+  const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,15 +12,13 @@ class SignUpPage extends StatelessWidget {
         child: Column(
           children: [
             // Venue title
-            Container(
-              child: const Text(
-                'Venue',
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontFamily: 'Fredoka',
-                  fontSize: 75.0,
-                  fontWeight: FontWeight.bold,
-                ),
+            const Text(
+              'Venue',
+              style: TextStyle(
+                color: Colors.orange,
+                fontFamily: 'Fredoka',
+                fontSize: 75.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
             // Container for the sign-up form
@@ -56,8 +54,8 @@ class SignUpPage extends StatelessWidget {
                               builder: (context) => const LoginPage()));
                     },
                     style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Color(0xFF437AE5)),
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          const Color(0xFF437AE5)),
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                         const EdgeInsets.symmetric(vertical: 25.0),
                       ),

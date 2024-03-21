@@ -1,9 +1,9 @@
-import 'package:app/pages/home.dart';
+import 'package:app/pages/map.dart';
 import 'package:app/pages/signup.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key});
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,12 +54,14 @@ class LoginPage extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       // Handle login logic here
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => HomePage()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MapPage()));
                     },
                     style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Color(0xFF437AE5)),
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          const Color(0xFF437AE5)),
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                         const EdgeInsets.symmetric(vertical: 25.0),
                       ),

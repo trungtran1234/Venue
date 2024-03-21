@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'login.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({Key? key});
+  const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Theme(
       data: ThemeData(),
       child: Scaffold(
-        backgroundColor: Color(0xFF437AE5),
+        backgroundColor: const Color(0xFF437AE5),
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
@@ -26,6 +26,8 @@ class SettingsPage extends StatelessWidget {
 }
 
 class SettingsList extends StatelessWidget {
+  SettingsList({super.key});
+
   final List<String> settingsOptions = [
     'Account',
     'Security and Privacy',
@@ -45,7 +47,7 @@ class SettingsList extends StatelessWidget {
             if (settingsOptions[index] == 'Log out') {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
+                MaterialPageRoute(builder: (context) => const LoginPage()),
               );
             } else {
               // Handle navigation to other settings pages
