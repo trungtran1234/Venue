@@ -14,10 +14,7 @@ class MapPage extends StatelessWidget {
         title: const Text('Map'),
         leading: IconButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProfilePage()),
-            );
+            newRoute(context, const ProfilePage());
           },
           icon: const Icon(Icons.person),
         ),
@@ -43,20 +40,9 @@ class MapPage extends StatelessWidget {
         ],
         onTap: (index) {
           if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const NewsFeedPage()),
-            );
-          } else if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const MapPage()),
-            );
+            newRoute(context, const NewsFeedPage());
           } else if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const FriendsPage()),
-            );
+            newRoute(context, const FriendsPage());
           }
         },
       ),
@@ -143,4 +129,15 @@ class MapPage extends StatelessWidget {
   //     },
   //   );
   // }
+}
+
+void newRoute(BuildContext context, Widget newRoute) {
+  if (!Navigator.of(context).canPop()) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => newRoute));
+  } else {
+    Navigator.of(context).pop();
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => newRoute));
+  }
 }

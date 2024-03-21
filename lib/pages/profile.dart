@@ -1,3 +1,4 @@
+import 'package:app/pages/map.dart';
 import 'package:flutter/material.dart';
 import 'package:app/pages/settings.dart';
 
@@ -9,13 +10,12 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        // Fix back button going back to login page
+
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SettingsPage()));
+              newRoute(context, const SettingsPage());
             },
             icon: const Icon(Icons.settings),
           ),

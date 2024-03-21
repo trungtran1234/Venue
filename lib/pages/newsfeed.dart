@@ -42,21 +42,10 @@ class NewsFeedPage extends StatelessWidget {
           ),
         ],
         onTap: (index) {
-          if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const NewsFeedPage()),
-            );
-          } else if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const MapPage()),
-            );
+          if (index == 1) {
+            newRoute(context, const MapPage());
           } else if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const FriendsPage()),
-            );
+            newRoute(context, const FriendsPage());
           }
         },
       ),

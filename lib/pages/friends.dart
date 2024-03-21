@@ -13,10 +13,7 @@ class FriendsPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         leading: IconButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProfilePage()),
-            );
+            newRoute(context, const ProfilePage());
           },
           icon: const Icon(Icons.person),
         ),
@@ -43,20 +40,9 @@ class FriendsPage extends StatelessWidget {
         ],
         onTap: (index) {
           if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const NewsFeedPage()),
-            );
+            newRoute(context, const NewsFeedPage());
           } else if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const MapPage()),
-            );
-          } else if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const FriendsPage()),
-            );
+            newRoute(context, const MapPage());
           }
         },
       ),
