@@ -53,11 +53,7 @@ class LoginPage extends StatelessWidget {
                   // Login button
                   ElevatedButton(
                     onPressed: () {
-                      // Handle login logic here
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MapPage()));
+                      newRoute(context, const MapPage());
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
@@ -128,10 +124,7 @@ class LoginPage extends StatelessWidget {
                   // GestureDetector for the sign-up option
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignUpPage()));
+                      newRoute(context, const SignUpPage());
                     },
                     child: const Text(
                       'Sign Up',

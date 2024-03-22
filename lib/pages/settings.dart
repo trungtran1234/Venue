@@ -1,3 +1,5 @@
+import 'package:app/pages/map.dart';
+import 'package:app/pages/profile.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
 
@@ -11,10 +13,11 @@ class SettingsPage extends StatelessWidget {
       child: Scaffold(
         backgroundColor: const Color(0xFF437AE5),
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.of(context).pop();
+              newRoute(context, const ProfilePage());
             },
           ),
           title: const Text('Settings'),
@@ -45,10 +48,7 @@ class SettingsList extends StatelessWidget {
           contentPadding: const EdgeInsets.all(20),
           onTap: () {
             if (settingsOptions[index] == 'Log out') {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-              );
+              newRoute(context, const LoginPage());
             } else {
               // Handle navigation to other settings pages
             }

@@ -1,4 +1,5 @@
 import 'package:app/pages/login.dart';
+import 'package:app/pages/map.dart';
 import 'package:flutter/material.dart';
 
 class SignUpPage extends StatelessWidget {
@@ -48,10 +49,7 @@ class SignUpPage extends StatelessWidget {
                   // Create Account button
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginPage()));
+                      newRoute(context, const LoginPage());
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
@@ -102,11 +100,7 @@ class SignUpPage extends StatelessWidget {
                   // GestureDetector for the login option
                   GestureDetector(
                     onTap: () {
-                      // Handle navigation to login page
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginPage()));
+                      newRoute(context, const LoginPage());
                     },
                     child: const Text(
                       'Login',
