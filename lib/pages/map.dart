@@ -3,8 +3,15 @@ import 'package:app/pages/friends.dart';
 import 'package:app/pages/newsfeed.dart';
 import 'package:flutter/material.dart';
 
-class MapPage extends StatelessWidget {
+class MapPage extends StatefulWidget {
   const MapPage({super.key});
+
+  @override
+  _MapPageState createState() => _MapPageState();
+}
+
+class _MapPageState extends State<MapPage> {
+  int _selectedIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +21,10 @@ class MapPage extends StatelessWidget {
         title: const Text('Map'),
         leading: IconButton(
           onPressed: () {
-            newRoute(context, const ProfilePage());
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProfilePage()),
+            );
           },
           icon: const Icon(Icons.person),
         ),
@@ -24,6 +34,8 @@ class MapPage extends StatelessWidget {
           ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
+        currentIndex: _selectedIndex, // Set the current index
+        selectedItemColor: Colors.blue, // Set the selected item color to blue
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.newspaper),
@@ -39,6 +51,9 @@ class MapPage extends StatelessWidget {
           ),
         ],
         onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
           if (index == 0) {
             newRoute(context, const NewsFeedPage());
           } else if (index == 2) {
@@ -48,87 +63,6 @@ class MapPage extends StatelessWidget {
       ),
     );
   }
-
-  // void _showCreateEventModal(BuildContext context) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     isScrollControlled: true, // Allow the modal to fill the whole page
-  //     builder: (BuildContext context) {
-  //       return SingleChildScrollView(
-  //         child: Padding(
-  //           padding: EdgeInsets.only(
-  //             bottom: MediaQuery.of(context).viewInsets.bottom,
-  //             left: 20,
-  //             right: 20,
-  //             top: 20,
-  //           ),
-  //           child: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               Row(
-  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                 children: [
-  //                   const Text(
-  //                     'Create Event',
-  //                     style: TextStyle(
-  //                       fontSize: 20,
-  //                       fontWeight: FontWeight.bold,
-  //                     ),
-  //                   ),
-  //                   IconButton(
-  //                     onPressed: () {
-  //                       Navigator.pop(context);
-  //                     },
-  //                     icon: const Icon(Icons.close),
-  //                   ),
-  //                 ],
-  //               ),
-  //               const SizedBox(height: 20),
-  //               const TextField(
-  //                 decoration: InputDecoration(
-  //                   hintText: 'Event Name',
-  //                 ),
-  //               ),
-  //               const SizedBox(height: 20),
-  //               const TextField(
-  //                 decoration: InputDecoration(
-  //                   hintText: 'Location',
-  //                 ),
-  //               ),
-  //               const SizedBox(height: 20),
-  //               TextFormField(
-  //                 maxLines: null, // Multiline
-  //                 decoration: const InputDecoration(
-  //                   hintText: 'Description',
-  //                 ),
-  //               ),
-  //               const SizedBox(height: 20),
-  //               Row(
-  //                 children: [
-  //                   Checkbox(
-  //                     value: false, // Initial value for friends only checkbox
-  //                     onChanged: (bool? value) {},
-  //                   ),
-  //                   const Text('Friends Only'),
-  //                 ],
-  //               ),
-  //               const SizedBox(height: 20),
-  //               SizedBox(
-  //                 width: double.infinity,
-  //                 child: ElevatedButton(
-  //                   onPressed: () {
-  //                     Navigator.pop(context);
-  //                   },
-  //                   child: const Text('Create Event'),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 }
 
 void newRoute(BuildContext context, Widget newRoute) {

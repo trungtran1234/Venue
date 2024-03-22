@@ -3,8 +3,15 @@ import 'package:app/pages/map.dart';
 import 'package:app/pages/friends.dart';
 import 'package:app/pages/profile.dart';
 
-class NewsFeedPage extends StatelessWidget {
+class NewsFeedPage extends StatefulWidget {
   const NewsFeedPage({super.key});
+
+  @override
+  _NewsFeedState createState() => _NewsFeedState();
+}
+
+class _NewsFeedState extends State<NewsFeedPage> {
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +34,8 @@ class NewsFeedPage extends StatelessWidget {
           ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.newspaper),
@@ -42,6 +51,9 @@ class NewsFeedPage extends StatelessWidget {
           ),
         ],
         onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
           if (index == 1) {
             newRoute(context, const MapPage());
           } else if (index == 2) {

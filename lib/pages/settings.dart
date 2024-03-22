@@ -13,6 +13,7 @@ class SettingsPage extends StatelessWidget {
       child: Scaffold(
         backgroundColor: const Color(0xFF437AE5),
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
