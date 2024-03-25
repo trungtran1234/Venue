@@ -27,11 +27,61 @@ class _FriendsPageState extends State<FriendsPage> {
           },
           icon: const Icon(Icons.person),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              // Handle the action for the icon on the right side
+            },
+            icon: const Icon(Icons.search),
+          ),
+        ],
         title: const Text('Friends'),
       ),
-      body: const Center(
-          // Your page content goes here
+      body: Container(
+        color: Colors.white,
+        child: Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(
+                top: MediaQuery.of(context)
+                    .padding
+                    .top), // Add padding to avoid covering the app bar
+            child: Column(
+              children: List.generate(
+                8,
+                (index) => GestureDetector(
+                  onTap: () {
+                    // Handle tap on each friend
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(1),
+                          spreadRadius: 1,
+                          blurRadius: 2,
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(25),
+                          child: const CircleAvatar(
+                            radius: 40,
+                            child: CircleAvatar(radius: 8),
+                          ),
+                        ),
+                        const Text("Profile Name"),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         currentIndex: _selectedIndex,
