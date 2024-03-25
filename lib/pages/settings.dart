@@ -1,7 +1,7 @@
 import 'package:app/pages/map.dart';
 import 'package:app/pages/profile.dart';
+import 'package:app/pages/login.dart';
 import 'package:flutter/material.dart';
-import 'login.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
