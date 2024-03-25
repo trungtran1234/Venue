@@ -29,9 +29,38 @@ class _NewsFeedState extends State<NewsFeedPage> {
         ),
         title: const Text('News Feed'),
       ),
-      body: const Center(
-          // Your page content goes here
-          ),
+      body: Center(
+        child: Column(
+          children: [
+            Column(
+              children: List.generate(
+                8,
+                (index) => Column(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          child: CircleAvatar(
+                            radius: 14,
+                            child: CircleAvatar(radius: 12),
+                          ),
+                        ),
+                        Text("Profile Name"),
+                        Spacer(),
+                        IconButton(
+                          icon: Icon(Icons.more_vert),
+                          onPressed: () {},
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         currentIndex: _selectedIndex,
