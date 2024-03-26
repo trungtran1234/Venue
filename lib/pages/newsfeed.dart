@@ -43,7 +43,10 @@ class _NewsFeedState extends State<NewsFeedPage> {
                           padding: EdgeInsets.all(10),
                           child: CircleAvatar(
                             radius: 14,
-                            child: CircleAvatar(radius: 12),
+                            child: CircleAvatar(
+                              radius: 12,
+                              backgroundImage: AssetImage('lib/assets/Default_pfp.svg.png'),
+                            ),
                           ),
                         ),
                         Text("Profile Name"),
@@ -54,6 +57,30 @@ class _NewsFeedState extends State<NewsFeedPage> {
                         )
                       ],
                     ),
+                    //Image Display
+                    Image.asset('lib/assets/square_whirl.png'),
+
+                    //Post Footer
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.favorite_border), 
+                          onPressed: () {},
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.chat_bubble_outline), 
+                          onPressed: () {},
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.label_outline), 
+                          onPressed: () {},
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.bookmark_border), 
+                          onPressed: () {},
+                        )
+                      ],
+                    )
                   ],
                 ),
               ),
