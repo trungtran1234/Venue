@@ -1,4 +1,7 @@
+import 'package:app/pages/account.dart';
 import 'package:app/pages/map.dart';
+import 'package:app/pages/notifications.dart';
+import 'package:app/pages/privacy.dart';
 import 'package:app/pages/profile.dart';
 import 'package:app/pages/login.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +36,7 @@ class SettingsList extends StatelessWidget {
 
   final List<String> settingsOptions = [
     'Account',
-    'Security and Privacy',
+    'Privacy',
     'Notifications',
     'Log out'
   ];
@@ -47,10 +50,14 @@ class SettingsList extends StatelessWidget {
           title: Text(settingsOptions[index]),
           contentPadding: const EdgeInsets.all(20),
           onTap: () {
-            if (settingsOptions[index] == 'Log out') {
-              newRoute(context, const LoginPage());
+            if (settingsOptions[index] == 'Account') {
+              newRoute(context, const AccountSettings());
+            } else if (settingsOptions[index] == 'Privacy') {
+              newRoute(context, const Privacy());
+            } else if (settingsOptions[index] == 'Notifications') {
+              newRoute(context, const Notifications());
             } else {
-              // Handle navigation to other settings pages
+              newRoute(context, const LoginPage());
             }
           },
         );
