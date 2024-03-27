@@ -1,7 +1,7 @@
-import 'package:app/pages/map.dart';
+import 'package:app/pages/main/map.dart';
 import 'package:flutter/material.dart';
-import 'package:app/pages/settings.dart';
-import '../objects/userprofile.dart';
+import 'package:app/pages/settings/settings.dart';
+import '../../objects/userprofile.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});

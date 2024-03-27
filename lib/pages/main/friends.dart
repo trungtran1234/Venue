@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:app/pages/newsfeed.dart';
-import 'package:app/pages/profile.dart';
-import 'package:app/pages/map.dart';
+import 'package:app/pages/main/newsfeed.dart';
+import 'package:app/pages/main/profile.dart';
+import 'package:app/pages/main/map.dart';
 
 class FriendsPage extends StatefulWidget {
   const FriendsPage({super.key});

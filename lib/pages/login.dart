@@ -1,4 +1,4 @@
-import 'package:app/pages/map.dart';
+import 'package:app/pages/main/map.dart';
 import 'package:app/pages/signup.dart';
 import 'package:flutter/material.dart';
 

@@ -1,6 +1,6 @@
-import 'package:app/pages/profile.dart';
-import 'package:app/pages/friends.dart';
-import 'package:app/pages/newsfeed.dart';
+import 'package:app/pages/main/profile.dart';
+import 'package:app/pages/main/friends.dart';
+import 'package:app/pages/main/newsfeed.dart';
 import 'package:flutter/material.dart';
 
 class MapPage extends StatefulWidget {
