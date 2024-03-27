@@ -62,6 +62,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - lib/assets/Default_pfp.svg.png
+    - lib/assets/square_whirl.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
