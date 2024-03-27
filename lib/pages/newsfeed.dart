@@ -29,7 +29,7 @@ class _NewsFeedState extends State<NewsFeedPage> {
         ),
         title: const Text('News Feed'),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Column(
@@ -37,23 +37,111 @@ class _NewsFeedState extends State<NewsFeedPage> {
                 8,
                 (index) => Column(
                   children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          child: CircleAvatar(
-                            radius: 14,
-                            child: CircleAvatar(radius: 12),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          //Post Header
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(25),
+                                  topRight: Radius.circular(25)),
+                              color: Colors.white,
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: CircleAvatar(
+                                    radius: 14,
+                                    child: CircleAvatar(
+                                      radius: 12,
+                                      backgroundImage: AssetImage(
+                                          'lib/assets/Default_pfp.svg.png'),
+                                    ),
+                                  ),
+                                ),
+                                Text("Profile Name"),
+                                Spacer(),
+                                IconButton(
+                                  icon: Icon(Icons.more_vert),
+                                  onPressed: () {},
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                        Text("Profile Name"),
-                        Spacer(),
-                        IconButton(
-                          icon: Icon(Icons.more_vert),
-                          onPressed: () {},
-                        )
-                      ],
+                          //Image Display
+                          Image.asset('lib/assets/square_whirl.png'),
+
+                          //Post Footer
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(25),
+                                  bottomRight: Radius.circular(25)),
+                              color: Colors.white,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.favorite_border),
+                                      onPressed: () {},
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.chat_bubble_outline),
+                                      onPressed: () {},
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.label_outline),
+                                      onPressed: () {},
+                                    ),
+                                    Spacer(),
+                                    IconButton(
+                                      icon: Icon(Icons.bookmark_border),
+                                      onPressed: () {},
+                                    )
+                                  ],
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(
+                                      top: 10, bottom: 40, left: 15, right: 15),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      RichText(
+                                        text: TextSpan(
+                                          style: TextStyle(color: Colors.black),
+                                          children: [
+                                            TextSpan(text: "Liked by "),
+                                            TextSpan(
+                                              text: "Profile Name",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            TextSpan(text: " and"),
+                                            TextSpan(
+                                              text: " others",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                    Divider(),
                   ],
                 ),
               ),
