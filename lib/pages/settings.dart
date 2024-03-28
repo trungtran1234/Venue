@@ -34,11 +34,20 @@ class SettingsPage extends StatelessWidget {
 class SettingsList extends StatelessWidget {
   SettingsList({super.key});
 
-  final List<String> settingsOptions = [
-    'Account',
-    'Privacy',
-    'Notifications',
-    'Log out'
+  final List<Map<String, dynamic>> settingsOptions = [
+    {
+      'title': 'Account',
+      'icon': Icons.account_circle,
+      'textColor': Colors.black
+    },
+    {'title': 'Privacy', 'icon': Icons.shield, 'textColor': Colors.black},
+    {
+      'title': 'Notifications',
+      'icon': Icons.notifications,
+      'textColor': Colors.black
+    },
+    {'title': 'Devices', 'icon': Icons.laptop, 'textColor': Colors.black},
+    {'title': 'Log out', 'icon': Icons.exit_to_app, 'textColor': Colors.red},
   ];
 
   @override
@@ -47,15 +56,32 @@ class SettingsList extends StatelessWidget {
       itemCount: settingsOptions.length,
       itemBuilder: (context, index) {
         return ListTile(
-          title: Text(settingsOptions[index]),
+          leading: Icon(
+            settingsOptions[index]['icon'],
+            color: Colors.black,
+          ),
+          title: Row(
+            children: [
+              Text(
+                settingsOptions[index]['title'],
+                style: TextStyle(
+                  color: settingsOptions[index]['textColor'],
+                ),
+              ),
+              const Spacer(),
+              const Icon(Icons.arrow_forward_ios,
+                  size: 16, color: Colors.black),
+            ],
+          ),
           contentPadding: const EdgeInsets.all(20),
           onTap: () {
-            if (settingsOptions[index] == 'Account') {
+            if (settingsOptions[index]['title'] == 'Account') {
               newRoute(context, const AccountSettings());
-            } else if (settingsOptions[index] == 'Privacy') {
+            } else if (settingsOptions[index]['title'] == 'Privacy') {
               newRoute(context, const Privacy());
-            } else if (settingsOptions[index] == 'Notifications') {
+            } else if (settingsOptions[index]['title'] == 'Notifications') {
               newRoute(context, const Notifications());
+            } else if (settingsOptions[index]['title'] == 'Devices') {
             } else {
               newRoute(context, const LoginPage());
             }
