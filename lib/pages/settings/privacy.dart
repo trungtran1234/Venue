@@ -1,5 +1,5 @@
 import 'package:app/pages/map.dart';
-import 'package:app/pages/settings.dart';
+import 'package:app/pages/settings/settings.dart';
 import 'package:flutter/material.dart';
 
 class Privacy extends StatefulWidget {

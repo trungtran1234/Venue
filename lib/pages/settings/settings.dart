@@ -1,7 +1,7 @@
-import 'package:app/pages/account.dart';
+import 'package:app/pages/settings/account.dart';
 import 'package:app/pages/map.dart';
-import 'package:app/pages/notifications.dart';
-import 'package:app/pages/privacy.dart';
+import 'package:app/pages/settings/notifications.dart';
+import 'package:app/pages/settings/privacy.dart';
 import 'package:app/pages/profile.dart';
 import 'package:app/pages/signup_and_login.dart';
 import 'package:flutter/material.dart';
