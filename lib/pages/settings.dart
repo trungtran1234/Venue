@@ -3,7 +3,7 @@ import 'package:app/pages/map.dart';
 import 'package:app/pages/notifications.dart';
 import 'package:app/pages/privacy.dart';
 import 'package:app/pages/profile.dart';
-import 'package:app/pages/login.dart';
+import 'package:app/pages/signup_and_login.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatelessWidget {
