@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:app/pages/profile.dart';
 import 'package:app/pages/friends.dart';
 import 'package:app/pages/newsfeed.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -13,6 +14,11 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   int _selectedIndex = 1;
 
+  final CameraPosition _initialPosition = const CameraPosition(
+    target: LatLng(40.730610, -73.935242), //random coords for now
+    zoom: 11.0,
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,9 +26,12 @@ class _MapPageState extends State<MapPage> {
         backgroundColor: Colors.transparent,
         leading: profile(context),
       ),
-      body: const Center(
-          // Your page content goes here
-          ),
+      body: GoogleMap(
+        initialCameraPosition: _initialPosition,
+        mapType: MapType.normal, //map style
+        onMapCreated: (GoogleMapController controller) { //need controller for interactions later
+        },
+      ),
       bottomNavigationBar: buildBottomNavigationBar(context, _selectedIndex),
     );
   }
