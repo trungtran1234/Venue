@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:app/pages/newsfeed.dart';
-import 'package:app/pages/profile.dart';
 import 'package:app/pages/map.dart';
 
 class FriendsPage extends StatefulWidget {
@@ -18,15 +16,7 @@ class _FriendsPageState extends State<FriendsPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProfilePage()),
-            );
-          },
-          icon: const Icon(Icons.person),
-        ),
+        leading: profile(context),
         actions: [
           IconButton(
             onPressed: () {
@@ -35,81 +25,56 @@ class _FriendsPageState extends State<FriendsPage> {
             icon: const Icon(Icons.search),
           ),
         ],
-        title: const Text('Friends'),
       ),
-      body: Container(
-        color: Colors.white,
-        child: Center(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(
-                top: MediaQuery.of(context)
-                    .padding
-                    .top), // Add padding to avoid covering the app bar
-            child: Column(
-              children: List.generate(
-                8,
-                (index) => GestureDetector(
-                  onTap: () {
-                    // Handle tap on each friend
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(1),
-                          spreadRadius: 1,
-                          blurRadius: 2,
+      body: friendsList(context),
+      bottomNavigationBar: buildBottomNavigationBar(context, _selectedIndex),
+    );
+  }
+
+  Container friendsList(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      child: Center(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(
+              top: MediaQuery.of(context)
+                  .padding
+                  .top), // Add padding to avoid covering the app bar
+          child: Column(
+            children: List.generate(
+              8,
+              (index) => GestureDetector(
+                onTap: () {
+                  // Handle tap on each friend
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(1),
+                        spreadRadius: 1,
+                        blurRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(25),
+                        child: const CircleAvatar(
+                          radius: 40,
+                          child: CircleAvatar(radius: 8),
                         ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(25),
-                          child: const CircleAvatar(
-                            radius: 40,
-                            child: CircleAvatar(radius: 8),
-                          ),
-                        ),
-                        const Text("Profile Name"),
-                      ],
-                    ),
+                      ),
+                      const Text("Profile Name"),
+                    ],
                   ),
                 ),
               ),
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.newspaper),
-            label: 'Feed',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Map',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-            label: 'Friends',
-          ),
-        ],
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-          if (index == 0) {
-            newRoute(context, const NewsFeedPage());
-          } else if (index == 1) {
-            newRoute(context, const MapPage());
-          }
-        },
       ),
     );
   }

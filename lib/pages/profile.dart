@@ -1,6 +1,6 @@
 import 'package:app/pages/map.dart';
 import 'package:flutter/material.dart';
-import 'package:app/pages/settings.dart';
+import 'package:app/pages/settings/settings.dart';
 import '../objects/userprofile.dart';
 
 class ProfilePage extends StatelessWidget {

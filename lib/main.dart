@@ -14,8 +14,8 @@ class MyApp extends StatelessWidget {
       title: 'Venue',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor:
-            const Color(0xFF437AE5), // App background color
+        fontFamily: 'Fredoka',
+        scaffoldBackgroundColor: const Color(0xFF437AE5),
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue),
         useMaterial3: true,
       ),

@@ -37,7 +37,6 @@ class AppName extends StatelessWidget {
         'Venue',
         style: TextStyle(
           color: Colors.orange,
-          fontFamily: 'Fredoka',
           fontSize: 75.0,
           fontWeight: FontWeight.bold,
         ),
@@ -63,7 +62,6 @@ class SignUpForm extends StatelessWidget {
             'Create An Account',
             style: TextStyle(
               color: Color(0xFF443636),
-              fontFamily: 'Fredoka',
               fontSize: 30.0,
             ),
           ),
@@ -126,7 +124,6 @@ class LoginForm extends StatelessWidget {
             'Sign Into Your Account',
             style: TextStyle(
               color: Color(0xFF443636),
-              fontFamily: 'Fredoka',
               fontSize: 30.0,
             ),
           ),
@@ -169,7 +166,7 @@ class ForgotPasswordOption extends StatelessWidget {
   }
 }
 
-class Button extends StatelessWidget {
+class Button extends StatefulWidget {
   final Widget newPage;
   final String buttonText;
 
@@ -180,14 +177,28 @@ class Button extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _ButtonState createState() => _ButtonState();
+}
+
+class _ButtonState extends State<Button> {
+  bool _isPressed = false;
+
+  @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        newRoute(context, newPage);
+        setState(() {
+          _isPressed = true;
+        });
+        newRoute(context, widget.newPage);
       },
       style: ButtonStyle(
-        backgroundColor:
-            MaterialStateProperty.all<Color>(const Color(0xFF437AE5)),
+        backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+          if (states.contains(MaterialState.pressed)) {
+            return Colors.blue.withOpacity(0.8);
+          }
+          return const Color(0xFF437AE5);
+        }),
         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
           const EdgeInsets.symmetric(vertical: 25.0),
         ),
@@ -201,7 +212,7 @@ class Button extends StatelessWidget {
         ),
       ),
       child: Text(
-        buttonText,
+        widget.buttonText,
         style: const TextStyle(
           fontFamily: 'Fredoka',
           fontSize: 15.0,
@@ -241,7 +252,7 @@ class InputFields extends StatelessWidget {
   }
 }
 
-class OtherOption extends StatelessWidget {
+class OtherOption extends StatefulWidget {
   final String firstText;
   final String secondText;
   final Widget newPage;
@@ -254,37 +265,57 @@ class OtherOption extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _OtherOptionState createState() => _OtherOptionState();
+}
+
+class _OtherOptionState extends State<OtherOption> {
+  Color _secondTextColor = Colors.blue;
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      alignment: Alignment.center,
-      padding: const EdgeInsets.all(30.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            '$firstText ',
-            style: const TextStyle(
-              color: Colors.grey,
-              fontSize: 16.0,
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              newRoute(context, newPage);
-            },
-            child: Text(
-              secondText,
+    return GestureDetector(
+      onTapDown: (_) {
+        setState(() {
+          _secondTextColor = Colors.blue.withOpacity(0.8);
+        });
+      },
+      onTapUp: (_) {
+        setState(() {
+          _secondTextColor = Colors.blue;
+        });
+        newRoute(context, widget.newPage);
+      },
+      onTapCancel: () {
+        setState(() {
+          _secondTextColor = Colors.blue;
+        });
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(30.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              '${widget.firstText} ',
               style: const TextStyle(
-                color: Colors.blue,
+                color: Colors.grey,
                 fontSize: 16.0,
               ),
             ),
-          ),
-        ],
+            Text(
+              widget.secondText,
+              style: TextStyle(
+                color: _secondTextColor,
+                fontSize: 16.0,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
