@@ -171,10 +171,10 @@ class Button extends StatefulWidget {
   final String buttonText;
 
   const Button({
-    Key? key,
+    super.key,
     required this.newPage,
     required this.buttonText,
-  }) : super(key: key);
+  });
 
   @override
   _ButtonState createState() => _ButtonState();
@@ -228,10 +228,10 @@ class InputFields extends StatelessWidget {
   final bool obscureText;
 
   const InputFields({
-    Key? key,
+    super.key,
     required this.label,
     required this.obscureText,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -258,11 +258,11 @@ class OtherOption extends StatefulWidget {
   final Widget newPage;
 
   const OtherOption({
-    Key? key,
+    super.key,
     required this.firstText,
     required this.secondText,
     required this.newPage,
-  }) : super(key: key);
+  });
 
   @override
   _OtherOptionState createState() => _OtherOptionState();
