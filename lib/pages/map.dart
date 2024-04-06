@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:app/pages/profile.dart';
 import 'package:app/pages/friends.dart';
 import 'package:app/pages/newsfeed.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -12,20 +14,58 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   int _selectedIndex = 1;
+  GoogleMapController? _controller;
+  Location _location = Location(); 
+  Set<Marker> _markers = {};
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        leading: profile(context),
-      ),
-      body: const Center(
-          // Your page content goes here
+  void initState() {
+    super.initState();
+    _location.onLocationChanged.listen((LocationData currentLocation) {
+      _controller?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(currentLocation.latitude!, currentLocation.longitude!),
+            zoom: 12.0,  
           ),
-      bottomNavigationBar: buildBottomNavigationBar(context, _selectedIndex),
-    );
+        ),
+      );
+
+    
+      setState(() {
+        _markers = {
+          Marker(
+            markerId: MarkerId('currentLocation'),
+            position: LatLng(currentLocation.latitude!, currentLocation.longitude!),
+            infoWindow: InfoWindow(
+              title: 'Your Location',
+            ),
+          ),
+        };
+      });
+    });
   }
+
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      backgroundColor: Colors.transparent,
+      leading: profile(context),
+    ),
+    body: GoogleMap(
+      mapType: MapType.normal,
+      initialCameraPosition: CameraPosition(target: LatLng(0, 0)), 
+      myLocationEnabled: true, 
+      myLocationButtonEnabled: true,
+      onMapCreated: (GoogleMapController controller) {
+        _controller = controller;
+      },
+      markers: _markers,
+    ),
+    bottomNavigationBar: buildBottomNavigationBar(context, _selectedIndex),
+  );
+}
 }
 
 IconButton profile(BuildContext context) {
