@@ -177,7 +177,7 @@ class Privacy extends StatefulWidget {
 class _PrivacyState extends State<Privacy> {
   bool _privateAccount = true;
   bool _hideFromSearch = true;
-  bool _hideOnlineStatus = false;
+  bool _hideOnlineStatus = true;
   bool _allowFriendRequests = true;
 
   @override
@@ -202,10 +202,9 @@ class _PrivacyState extends State<Privacy> {
               'Account Privacy',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SwitchListTile(
-              title: const Text('Private Account'),
-              subtitle:
-                  const Text('Only approved followers can see your posts'),
+            buildSwitchListTile(
+              title: 'Private Profile',
+              subtitle: 'Only friends can see your posts',
               value: _privateAccount,
               onChanged: (value) {
                 setState(() {
@@ -213,10 +212,9 @@ class _PrivacyState extends State<Privacy> {
                 });
               },
             ),
-            SwitchListTile(
-              title: const Text('Hide From Search'),
-              subtitle: const Text(
-                  'Prevent your account from appearing in search results'),
+            buildSwitchListTile(
+              title: 'Hide From Search',
+              subtitle: 'Prevent your profile from appearing in search results',
               value: _hideFromSearch,
               onChanged: (value) {
                 setState(() {
@@ -229,9 +227,9 @@ class _PrivacyState extends State<Privacy> {
               'Activity Privacy',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SwitchListTile(
-              title: const Text('Hide Online Status'),
-              subtitle: const Text('Hide your online status from other users'),
+            buildSwitchListTile(
+              title: 'Hide Online Status',
+              subtitle: 'Hide your online status from other users',
               value: _hideOnlineStatus,
               onChanged: (value) {
                 setState(() {
@@ -239,9 +237,9 @@ class _PrivacyState extends State<Privacy> {
                 });
               },
             ),
-            SwitchListTile(
-              title: const Text('Allow Friend Requests'),
-              subtitle: const Text('Allow others to send you friend requests'),
+            buildSwitchListTile(
+              title: 'Allow Friend Requests',
+              subtitle: 'Allow others to send you friend requests',
               value: _allowFriendRequests,
               onChanged: (value) {
                 setState(() {
@@ -267,7 +265,10 @@ class _NotificationsState extends State<Notifications> {
   bool _notificationEnabled = true;
   bool _likes = true;
   bool _comments = true;
-  bool _shares = true;
+  // bool _shares = true;
+  bool _eventUpdates = true;
+  bool _newEventSuggestions = true;
+  bool _eventReminders = true;
 
   @override
   Widget build(BuildContext context) {
@@ -299,6 +300,15 @@ class _NotificationsState extends State<Notifications> {
                   onChanged: (value) {
                     setState(() {
                       _notificationEnabled = value;
+                      if (value) {
+                        // If main switch is turned on, turn on all sub-notifications
+                        _likes = true;
+                        _comments = true;
+                        // _shares = true;
+                        _eventUpdates = true;
+                        _newEventSuggestions = true;
+                        _eventReminders = true;
+                      }
                     });
                   },
                 ),
@@ -306,41 +316,87 @@ class _NotificationsState extends State<Notifications> {
             ),
             const SizedBox(height: 20),
             const Text(
-              'Notification Settings',
+              'Post Notifications',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            SwitchListTile(
-              title: const Text('Likes'),
-              subtitle: const Text('Receive notifications for likes'),
+            buildSwitchListTile(
+              title: 'Likes',
+              subtitle: 'Receive notifications for likes',
               value: _likes,
-              onChanged: (value) {
-                setState(() {
-                  _likes = value;
-                });
-              },
+              onChanged: _notificationEnabled
+                  ? (value) {
+                      setState(() {
+                        _likes = value;
+                      });
+                    }
+                  : null,
             ),
-            SwitchListTile(
-              title: const Text('Comments'),
-              subtitle: const Text('Receive notifications for comments'),
+            buildSwitchListTile(
+              title: 'Comments',
+              subtitle: 'Receive notifications for comments',
               value: _comments,
-              onChanged: (value) {
-                setState(() {
-                  _comments = value;
-                });
-              },
+              onChanged: _notificationEnabled
+                  ? (value) {
+                      setState(() {
+                        _comments = value;
+                      });
+                    }
+                  : null,
             ),
-            SwitchListTile(
-              title: const Text('Shares'),
-              subtitle: const Text('Receive notifications for shares'),
-              value: _shares,
-              onChanged: (value) {
-                setState(() {
-                  _shares = value;
-                });
-              },
+            // buildSwitchListTile(
+            //   title: 'Shares',
+            //   subtitle: 'Receive notifications for shares',
+            //   value: _shares,
+            //   onChanged: _notificationEnabled
+            //       ? (value) {
+            //           setState(() {
+            //             _shares = value;
+            //           });
+            //         }
+            //       : null,
+            // ),
+            const Text(
+              'Event Notifications',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            // Add more ListTile widgets for additional notification settings
+            const SizedBox(height: 10),
+            buildSwitchListTile(
+              title: 'Event Updates',
+              subtitle: 'Receive updates about events',
+              value: _eventUpdates,
+              onChanged: _notificationEnabled
+                  ? (value) {
+                      setState(() {
+                        _eventUpdates = value;
+                      });
+                    }
+                  : null,
+            ),
+            buildSwitchListTile(
+              title: 'New Event Suggestions',
+              subtitle: 'Receive suggestions for new events',
+              value: _newEventSuggestions,
+              onChanged: _notificationEnabled
+                  ? (value) {
+                      setState(() {
+                        _newEventSuggestions = value;
+                      });
+                    }
+                  : null,
+            ),
+            buildSwitchListTile(
+              title: 'Event Reminders',
+              subtitle: 'Receive reminders for upcoming events',
+              value: _eventReminders,
+              onChanged: _notificationEnabled
+                  ? (value) {
+                      setState(() {
+                        _eventReminders = value;
+                      });
+                    }
+                  : null,
+            ),
           ],
         ),
       ),
@@ -367,5 +423,19 @@ Widget buildTile({
     onTap: onTap,
     contentPadding: EdgeInsets.zero,
     trailing: const SizedBox(width: 24.0), // Adjust trailing space
+  );
+}
+
+Widget buildSwitchListTile({
+  required String title,
+  required String subtitle,
+  required bool value,
+  required Function(bool)? onChanged,
+}) {
+  return SwitchListTile(
+    title: Text(title),
+    subtitle: Text(subtitle),
+    value: value,
+    onChanged: onChanged,
   );
 }
