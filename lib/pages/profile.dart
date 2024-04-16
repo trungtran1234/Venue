@@ -28,12 +28,12 @@ class ProfilePage extends StatelessWidget {
           ),
         ],
       ),
-      //body: const SingleChildScrollView( //to remove blue underlines
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(height: 20.0), // Add space at the top
             const CircleAvatar(
               radius: 80,
               backgroundImage: AssetImage('lib/assets/Default_pfp.svg.png'),
@@ -42,9 +42,10 @@ class ProfilePage extends StatelessWidget {
             Text(
               '${user.username}',
               style: const TextStyle(
-                fontSize: 18.0,
+                fontSize: 24.0, // Increase font size for username
                 fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10.0),
             Text(
@@ -52,86 +53,50 @@ class ProfilePage extends StatelessWidget {
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 16.0),
             ),
-            Container(
-              width: 300, // Adjust width as needed
+            const SizedBox(height: 10.0),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.8,
               child: Text(
                 '${user.bio}',
                 style: const TextStyle(fontSize: 16.0),
                 textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis, // Handles overflow text
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 115.0), // Adjust the value as needed
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(width: 150.0),
-                      const SizedBox(height: 10.0),
-                      Text(
-                        '${user.friends}',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 16.0),
-                      ),
-                      const Text(
-                        'Friends',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(width: 10),
-                  const VerticalDivider(thickness: 10, color: Colors.black),
-                  const SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(width: 200.0),
-                      const SizedBox(height: 10.0),
-                      Text(
-                        '${user.eventsAttended}',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 16.0),
-                      ),
-                      const Text(
-                        'Events Attended',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(width: 200.0),
-                      const SizedBox(height: 10.0),
-                      Text(
-                        '${user.eventsHosted}',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 16.0),
-                      ),
-                      const Text(
-                        'Events Hosted',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                    ],
-                  ),
-                ],
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             const SizedBox(height: 20.0),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.spaceEvenly, // Adjust alignment
               children: [
-                // Friends, Events Attended, Events Hosted
+                _buildStatisticColumn(user.friends, 'Friends'),
+                _buildStatisticColumn(user.eventsAttended, 'Events Attended'),
+                _buildStatisticColumn(user.eventsHosted, 'Events Hosted'),
               ],
             ),
+            const SizedBox(height: 20.0),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildStatisticColumn(int value, String label) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          '$value',
+          style: const TextStyle(
+            fontSize: 18.0,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 5.0),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 16.0),
+        ),
+      ],
     );
   }
 }

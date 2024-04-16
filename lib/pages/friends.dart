@@ -9,7 +9,7 @@ class FriendsPage extends StatefulWidget {
 }
 
 class _FriendsPageState extends State<FriendsPage> {
-  int _selectedIndex = 2;
+  final int _selectedIndex = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +33,11 @@ class _FriendsPageState extends State<FriendsPage> {
 
   Container friendsList(BuildContext context) {
     return Container(
+      width: MediaQuery.of(context).size.width,
       color: Colors.white,
       child: Center(
         child: SingleChildScrollView(
-          padding: EdgeInsets.only(
-              top: MediaQuery.of(context)
-                  .padding
-                  .top), // Add padding to avoid covering the app bar
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
           child: Column(
             children: List.generate(
               8,
@@ -61,10 +59,10 @@ class _FriendsPageState extends State<FriendsPage> {
                   child: Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(25),
+                        padding: const EdgeInsets.all(10),
                         child: const CircleAvatar(
-                          radius: 40,
-                          child: CircleAvatar(radius: 8),
+                          radius: 30,
+                          child: CircleAvatar(radius: 6),
                         ),
                       ),
                       const Text("Profile Name"),
