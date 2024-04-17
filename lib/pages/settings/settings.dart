@@ -1,6 +1,6 @@
+import 'package:app/pages/login.dart';
 import 'package:app/pages/map.dart';
 import 'package:app/pages/profile.dart';
-import 'package:app/pages/signup_and_login.dart';
 import 'package:app/pages/settings/accountsettings.dart';
 import 'package:flutter/material.dart';
 
