@@ -1,18 +1,21 @@
 import 'package:app/pages/login.dart';
 import 'package:app/pages/map.dart';
 import 'package:flutter/material.dart';
+import 'package:app/pages/auth.dart';
 
 class SignUpPage extends StatelessWidget {
-  const SignUpPage({super.key});
+  const SignUpPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _emailController = TextEditingController();
+    final TextEditingController _passwordController = TextEditingController();
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(30.0),
         child: Column(
           children: [
-            // Venue title
             const Text(
               'Venue',
               style: TextStyle(
@@ -22,7 +25,6 @@ class SignUpPage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            // Container for the sign-up form
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -31,9 +33,7 @@ class SignUpPage extends StatelessWidget {
               padding: const EdgeInsets.all(30.0),
               child: Column(
                 children: [
-                  const
-                  // Title for the sign-up form
-                  Text(
+                  const Text(
                     'Create An Account',
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -42,29 +42,36 @@ class SignUpPage extends StatelessWidget {
                       fontSize: 30.0,
                     ),
                   ),
-                  const SizedBox(height: 20.0), // Spacer
-                  // Sign-up form fields
-                  SignUpForm(),
-                  const SizedBox(height: 20.0), // Spacer
-                  // Create Account button
+                  const SizedBox(height: 20.0),
+                  SignUpForm(
+                    emailController: _emailController,
+                    passwordController: _passwordController,
+                  ),
+                  const SizedBox(height: 20.0),
                   ElevatedButton(
-                    onPressed: () {
-                      newRoute(context, const LoginPage());
+                    onPressed: () async {
+                      try {
+                        await Auth().createUserWithEmailAndPassword(
+                          _emailController.text,
+                          _passwordController.text,
+                        );
+                        newRoute(context, const LoginPage());
+                      } catch (e) {
+                        print('Sign-up Error: $e');
+                      }
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
                           const Color(0xFF437AE5)),
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        const EdgeInsets.symmetric(vertical: 25.0),
-                      ),
+                          const EdgeInsets.symmetric(vertical: 25.0)),
                       shape: MaterialStateProperty.all<OutlinedBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                       minimumSize: MaterialStateProperty.all<Size>(
-                        const Size(double.infinity, 55),
-                      ),
+                          const Size(double.infinity, 55)),
                     ),
                     child: const Text(
                       'Create Account',
@@ -78,8 +85,7 @@ class SignUpPage extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 20.0), // Spacer
-            // Container for the sign-up option
+            const SizedBox(height: 20.0),
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -97,7 +103,6 @@ class SignUpPage extends StatelessWidget {
                       fontSize: 16.0,
                     ),
                   ),
-                  // GestureDetector for the login option
                   GestureDetector(
                     onTap: () {
                       newRoute(context, const LoginPage());
@@ -120,16 +125,20 @@ class SignUpPage extends StatelessWidget {
   }
 }
 
-// SignUpForm widget containing the sign-up form fields
 class SignUpForm extends StatefulWidget {
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+
+  const SignUpForm({
+    required this.emailController,
+    required this.passwordController,
+  });
+
   @override
   _SignUpFormState createState() => _SignUpFormState();
 }
 
 class _SignUpFormState extends State<SignUpForm> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _reEnterPasswordController =
       TextEditingController();
 
@@ -137,17 +146,13 @@ class _SignUpFormState extends State<SignUpForm> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildTextField(_emailController, 'Email'),
+        _buildTextField(widget.emailController, 'Email'),
         const SizedBox(height: 20.0),
-        _buildTextField(_usernameController, 'Username'),
+        _buildTextField(widget.passwordController, 'Password',
+            obscureText: true),
         const SizedBox(height: 20.0),
-        _buildTextField(_passwordController, 'Password', obscureText: true),
-        const SizedBox(height: 20.0),
-        _buildTextField(
-          _reEnterPasswordController,
-          'Re-Enter Password',
-          obscureText: true,
-        ),
+        _buildTextField(_reEnterPasswordController, 'Re-Enter Password',
+            obscureText: true),
       ],
     );
   }
@@ -160,10 +165,8 @@ class _SignUpFormState extends State<SignUpForm> {
         hintText: hintText,
         filled: true,
         fillColor: const Color(0xFFE6E6E6),
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 10,
-          horizontal: 20,
-        ),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(50.0),
           borderSide: BorderSide.none,

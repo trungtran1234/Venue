@@ -1,9 +1,19 @@
 import 'package:app/pages/map.dart';
 import 'package:app/pages/signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:app/pages/auth.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -48,16 +58,32 @@ class LoginPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 20.0), // Spacer
                   // Login form fields
-                  LoginForm(),
+                  LoginForm(
+                    emailController: _emailController,
+                    passwordController: _passwordController,
+                  ),
                   const SizedBox(height: 20.0), // Spacer
                   // Login button
                   ElevatedButton(
-                    onPressed: () {
-                      newRoute(context, const MapPage());
+                    onPressed: () async {
+                      try {
+                        final User? user =
+                            await Auth().signInWithEmailAndPassword(
+                          _emailController.text,
+                          _passwordController.text,
+                        );
+                        if (user != null) {
+                          newRoute(context, const MapPage());
+                        }
+                      } catch (e) {
+                        // Handle login errors
+                        print('Login Error: $e');
+                      }
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color(0xFF437AE5)),
+                        const Color(0xFF437AE5),
+                      ),
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                         const EdgeInsets.symmetric(vertical: 25.0),
                       ),
@@ -67,8 +93,10 @@ class LoginPage extends StatelessWidget {
                         ),
                       ),
                       minimumSize: MaterialStateProperty.all<Size>(
-                        const Size(double.infinity,
-                            55), // Set the width to be as wide as possible
+                        const Size(
+                          double.infinity,
+                          55,
+                        ), // Set the width to be as wide as possible
                       ),
                     ),
                     child: const Text(
@@ -145,22 +173,22 @@ class LoginPage extends StatelessWidget {
 }
 
 // LoginForm widget containing the login form fields
-class LoginForm extends StatefulWidget {
-  @override
-  _LoginFormState createState() => _LoginFormState();
-}
+class LoginForm extends StatelessWidget {
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
 
-class _LoginFormState extends State<LoginForm> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  const LoginForm({
+    required this.emailController,
+    required this.passwordController,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildTextField(_emailController, 'Email'),
+        _buildTextField(emailController, 'Email'),
         const SizedBox(height: 20.0),
-        _buildTextField(_passwordController, 'Password', obscureText: true),
+        _buildTextField(passwordController, 'Password', obscureText: true),
         const SizedBox(height: 20.0),
       ],
     );
