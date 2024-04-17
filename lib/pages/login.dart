@@ -18,154 +18,157 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(30.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Venue title
-            Container(
-              alignment: Alignment.center,
-              child: const Text(
-                'Venue',
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontFamily: 'Fredoka',
-                  fontSize: 75.0,
-                  fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        // Wrap with SingleChildScrollView
+        child: Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Venue title
+              Container(
+                alignment: Alignment.center,
+                child: const Text(
+                  'Venue',
+                  style: TextStyle(
+                    color: Colors.orange,
+                    fontFamily: 'Fredoka',
+                    fontSize: 75.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 10.0), // Spacer
-            // Container for the login form
-            Container(
-              padding: const EdgeInsets.all(30.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                children: [
-                  // Title for the login form
-                  const Text(
-                    'Sign into your account',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'Fredoka',
-                      color: Color(0xFF443636),
-                      fontSize: 30.0,
-                    ),
-                  ),
-                  const SizedBox(height: 20.0), // Spacer
-                  // Login form fields
-                  LoginForm(
-                    emailController: _emailController,
-                    passwordController: _passwordController,
-                  ),
-                  const SizedBox(height: 20.0), // Spacer
-                  // Login button
-                  ElevatedButton(
-                    onPressed: () async {
-                      try {
-                        final User? user =
-                            await Auth().signInWithEmailAndPassword(
-                          _emailController.text,
-                          _passwordController.text,
-                        );
-                        if (user != null) {
-                          newRoute(context, const MapPage());
-                        }
-                      } catch (e) {
-                        // Handle login errors
-                        print('Login Error: $e');
-                      }
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                        const Color(0xFF437AE5),
-                      ),
-                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        const EdgeInsets.symmetric(vertical: 25.0),
-                      ),
-                      shape: MaterialStateProperty.all<OutlinedBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                      minimumSize: MaterialStateProperty.all<Size>(
-                        const Size(
-                          double.infinity,
-                          55,
-                        ), // Set the width to be as wide as possible
-                      ),
-                    ),
-                    child: const Text(
-                      'Login',
+              const SizedBox(height: 10.0), // Spacer
+              // Container for the login form
+              Container(
+                padding: const EdgeInsets.all(30.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  children: [
+                    // Title for the login form
+                    const Text(
+                      'Sign into your account',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'Fredoka',
-                        fontSize: 15.0,
-                        color: Colors.white, // Set text color to white
+                        color: Color(0xFF443636),
+                        fontSize: 30.0,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 10.0),
-                  // Forgot password option
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          // Handle forgot password action here
-                        },
-                        child: const Text(
-                          'Forgot Password?',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 14.0,
+                    const SizedBox(height: 20.0), // Spacer
+                    // Login form fields
+                    LoginForm(
+                      emailController: _emailController,
+                      passwordController: _passwordController,
+                    ),
+                    const SizedBox(height: 20.0), // Spacer
+                    // Login button
+                    ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          final User? user =
+                              await Auth().signInWithEmailAndPassword(
+                            _emailController.text,
+                            _passwordController.text,
+                          );
+                          if (user != null) {
+                            newRoute(context, const MapPage());
+                          }
+                        } catch (e) {
+                          // Handle login errors
+                          print('Login Error: $e');
+                        }
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          const Color(0xFF437AE5),
+                        ),
+                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                          const EdgeInsets.symmetric(vertical: 25.0),
+                        ),
+                        shape: MaterialStateProperty.all<OutlinedBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
                           ),
                         ),
+                        minimumSize: MaterialStateProperty.all<Size>(
+                          const Size(
+                            double.infinity,
+                            55,
+                          ), // Set the width to be as wide as possible
+                        ),
                       ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(height: 20.0), // Spacer
-            // Container for the sign-up option
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(30.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Need an account? ',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 16.0,
+                      child: const Text(
+                        'Login',
+                        style: TextStyle(
+                          fontFamily: 'Fredoka',
+                          fontSize: 15.0,
+                          color: Colors.white, // Set text color to white
+                        ),
+                      ),
                     ),
-                  ),
-                  // GestureDetector for the sign-up option
-                  GestureDetector(
-                    onTap: () {
-                      newRoute(context, const SignUpPage());
-                    },
-                    child: const Text(
-                      'Sign Up',
+                    const SizedBox(height: 10.0),
+                    // Forgot password option
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            // Handle forgot password action here
+                          },
+                          child: const Text(
+                            'Forgot Password?',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 14.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20.0), // Spacer
+              // Container for the sign-up option
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(30.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Need an account? ',
                       style: TextStyle(
-                        color: Colors.blue,
+                        color: Colors.grey,
                         fontSize: 16.0,
                       ),
                     ),
-                  ),
-                ],
+                    // GestureDetector for the sign-up option
+                    GestureDetector(
+                      onTap: () {
+                        newRoute(context, const SignUpPage());
+                      },
+                      child: const Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

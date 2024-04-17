@@ -12,113 +12,116 @@ class SignUpPage extends StatelessWidget {
     final TextEditingController _passwordController = TextEditingController();
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(30.0),
-        child: Column(
-          children: [
-            const Text(
-              'Venue',
-              style: TextStyle(
-                color: Colors.orange,
-                fontFamily: 'Fredoka',
-                fontSize: 75.0,
-                fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        // Wrap with SingleChildScrollView
+        child: Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: Column(
+            children: [
+              const Text(
+                'Venue',
+                style: TextStyle(
+                  color: Colors.orange,
+                  fontFamily: 'Fredoka',
+                  fontSize: 75.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              padding: const EdgeInsets.all(30.0),
-              child: Column(
-                children: [
-                  const Text(
-                    'Create An Account',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Color(0xFF443636),
-                      fontFamily: 'Fredoka',
-                      fontSize: 30.0,
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: const EdgeInsets.all(30.0),
+                child: Column(
+                  children: [
+                    const Text(
+                      'Create An Account',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color(0xFF443636),
+                        fontFamily: 'Fredoka',
+                        fontSize: 30.0,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20.0),
-                  SignUpForm(
-                    emailController: _emailController,
-                    passwordController: _passwordController,
-                  ),
-                  const SizedBox(height: 20.0),
-                  ElevatedButton(
-                    onPressed: () async {
-                      try {
-                        await Auth().createUserWithEmailAndPassword(
-                          _emailController.text,
-                          _passwordController.text,
-                        );
-                        newRoute(context, const LoginPage());
-                      } catch (e) {
-                        print('Sign-up Error: $e');
-                      }
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color(0xFF437AE5)),
-                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                          const EdgeInsets.symmetric(vertical: 25.0)),
-                      shape: MaterialStateProperty.all<OutlinedBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                    const SizedBox(height: 20.0),
+                    SignUpForm(
+                      emailController: _emailController,
+                      passwordController: _passwordController,
+                    ),
+                    const SizedBox(height: 20.0),
+                    ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          await Auth().createUserWithEmailAndPassword(
+                            _emailController.text,
+                            _passwordController.text,
+                          );
+                          newRoute(context, const LoginPage());
+                        } catch (e) {
+                          print('Sign-up Error: $e');
+                        }
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            const Color(0xFF437AE5)),
+                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                            const EdgeInsets.symmetric(vertical: 25.0)),
+                        shape: MaterialStateProperty.all<OutlinedBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        minimumSize: MaterialStateProperty.all<Size>(
+                            const Size(double.infinity, 55)),
+                      ),
+                      child: const Text(
+                        'Create Account',
+                        style: TextStyle(
+                          fontFamily: 'Fredoka',
+                          fontSize: 15.0,
+                          color: Colors.white,
                         ),
                       ),
-                      minimumSize: MaterialStateProperty.all<Size>(
-                          const Size(double.infinity, 55)),
                     ),
-                    child: const Text(
-                      'Create Account',
-                      style: TextStyle(
-                        fontFamily: 'Fredoka',
-                        fontSize: 15.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 20.0),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(30.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Have an account? ',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      newRoute(context, const LoginPage());
-                    },
-                    child: const Text(
-                      'Login',
+              const SizedBox(height: 20.0),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(30.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Have an account? ',
                       style: TextStyle(
-                        color: Colors.blue,
+                        color: Colors.grey,
                         fontSize: 16.0,
                       ),
                     ),
-                  ),
-                ],
+                    GestureDetector(
+                      onTap: () {
+                        newRoute(context, const LoginPage());
+                      },
+                      child: const Text(
+                        'Login',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
