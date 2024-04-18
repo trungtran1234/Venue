@@ -83,3 +83,19 @@ void newRoute(BuildContext context, Widget newRoute) {
         .push(MaterialPageRoute(builder: (context) => newRoute));
   }
 }
+
+void showErrorBanner(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message),
+      backgroundColor: Colors.red,
+      duration: Duration(seconds: 3),
+      action: SnackBarAction(
+        label: 'OK',
+        onPressed: () {
+          // Some optional action when OK is pressed
+        },
+      ),
+    ),
+  );
+}

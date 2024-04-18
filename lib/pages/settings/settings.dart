@@ -80,7 +80,7 @@ class SettingsList extends StatelessWidget {
               newRoute(context, const Notifications());
             } else if (settingsOptions[index]['title'] == 'Devices') {
             } else {
-              newRoute(context, const LoginPage());
+              newRoute(context, LoginPage());
             }
           },
         );

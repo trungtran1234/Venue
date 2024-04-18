@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue),
         useMaterial3: true,
       ),
-      home: const LoginPage(),
+      home: LoginPage(),
     );
   }
 }
