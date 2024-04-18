@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/pages/map.dart';
+import 'package:app/functions.dart';
 
 class FriendsPage extends StatefulWidget {
   const FriendsPage({super.key});

@@ -3,9 +3,33 @@ import 'package:app/pages/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app/pages/auth.dart';
+import 'package:app/functions.dart';
+
+class LoginForm extends StatelessWidget {
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+
+  const LoginForm({
+    super.key,
+    required this.emailController,
+    required this.passwordController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        buildTextField(emailController, 'Email'),
+        const SizedBox(height: 20.0),
+        buildTextField(passwordController, 'Password', obscureText: true),
+        const SizedBox(height: 20.0),
+      ],
+    );
+  }
+}
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -171,50 +195,6 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
-    );
-  }
-}
-
-// LoginForm widget containing the login form fields
-class LoginForm extends StatelessWidget {
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
-
-  const LoginForm({
-    required this.emailController,
-    required this.passwordController,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildTextField(emailController, 'Email'),
-        const SizedBox(height: 20.0),
-        _buildTextField(passwordController, 'Password', obscureText: true),
-        const SizedBox(height: 20.0),
-      ],
-    );
-  }
-
-  Widget _buildTextField(TextEditingController controller, String hintText,
-      {bool obscureText = false}) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        hintText: hintText,
-        filled: true,
-        fillColor: const Color(0xFFE6E6E6),
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 10,
-          horizontal: 20,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(50.0),
-          borderSide: BorderSide.none,
-        ),
-      ),
-      obscureText: obscureText,
     );
   }
 }

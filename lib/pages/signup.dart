@@ -1,19 +1,18 @@
 import 'package:app/pages/login.dart';
-import 'package:app/pages/map.dart';
 import 'package:flutter/material.dart';
 import 'package:app/pages/auth.dart';
+import 'package:app/functions.dart';
 
 class SignUpPage extends StatelessWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+  const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _emailController = TextEditingController();
-    final TextEditingController _passwordController = TextEditingController();
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
 
     return Scaffold(
       body: SingleChildScrollView(
-        // Wrap with SingleChildScrollView
         child: Padding(
           padding: const EdgeInsets.all(30.0),
           child: Column(
@@ -46,16 +45,16 @@ class SignUpPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 20.0),
                     SignUpForm(
-                      emailController: _emailController,
-                      passwordController: _passwordController,
+                      emailController: emailController,
+                      passwordController: passwordController,
                     ),
                     const SizedBox(height: 20.0),
                     ElevatedButton(
                       onPressed: () async {
                         try {
                           await Auth().createUserWithEmailAndPassword(
-                            _emailController.text,
-                            _passwordController.text,
+                            emailController.text,
+                            passwordController.text,
                           );
                           newRoute(context, const LoginPage());
                         } catch (e) {
@@ -133,6 +132,7 @@ class SignUpForm extends StatefulWidget {
   final TextEditingController passwordController;
 
   const SignUpForm({
+    super.key,
     required this.emailController,
     required this.passwordController,
   });
@@ -149,33 +149,14 @@ class _SignUpFormState extends State<SignUpForm> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildTextField(widget.emailController, 'Email'),
+        buildTextField(widget.emailController, 'Email'),
         const SizedBox(height: 20.0),
-        _buildTextField(widget.passwordController, 'Password',
+        buildTextField(widget.passwordController, 'Password',
             obscureText: true),
         const SizedBox(height: 20.0),
-        _buildTextField(_reEnterPasswordController, 'Re-Enter Password',
+        buildTextField(_reEnterPasswordController, 'Re-Enter Password',
             obscureText: true),
       ],
-    );
-  }
-
-  Widget _buildTextField(TextEditingController controller, String hintText,
-      {bool obscureText = false}) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        hintText: hintText,
-        filled: true,
-        fillColor: const Color(0xFFE6E6E6),
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(50.0),
-          borderSide: BorderSide.none,
-        ),
-      ),
-      obscureText: obscureText,
     );
   }
 }
