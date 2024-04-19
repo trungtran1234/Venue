@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/pages/map.dart';
+import 'package:app/functions.dart';
 import 'package:flutter/widgets.dart';
 
 class NewsFeedPage extends StatefulWidget {
@@ -32,7 +32,6 @@ class _NewsFeedState extends State<NewsFeedPage> {
             children: List.generate(
               8,
               (index) => Column(
-                
                 children: [
                   Card(
                     child: FractionallySizedBox(
@@ -56,7 +55,8 @@ class _NewsFeedState extends State<NewsFeedPage> {
                                     radius: 14,
                                     child: CircleAvatar(
                                       radius: 12,
-                                      backgroundImage: AssetImage('lib/assets/Default_pfp.svg.png'),
+                                      backgroundImage: AssetImage(
+                                          'lib/assets/Default_pfp.svg.png'),
                                     ),
                                   ),
                                 ),
@@ -90,7 +90,8 @@ class _NewsFeedState extends State<NewsFeedPage> {
                                       onPressed: () {},
                                     ),
                                     IconButton(
-                                      icon: const Icon(Icons.chat_bubble_outline),
+                                      icon:
+                                          const Icon(Icons.chat_bubble_outline),
                                       onPressed: () {},
                                     ),
                                     IconButton(
@@ -108,7 +109,8 @@ class _NewsFeedState extends State<NewsFeedPage> {
                                   padding: const EdgeInsets.only(
                                       top: 10, bottom: 40, left: 15, right: 15),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       RichText(
                                         text: const TextSpan(

@@ -1,8 +1,5 @@
 import 'dart:convert';
-
-import 'package:app/pages/profile.dart';
-import 'package:app/pages/friends.dart';
-import 'package:app/pages/newsfeed.dart';
+import 'package:app/functions.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +35,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<String> getPlaceAddress(double latitude, double longitude) async {
-    final apiKey = '<PUT_KEY_HERE>';
+    final apiKey = '<KEY>';
     final url = Uri.parse(
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey');
 
@@ -198,64 +195,5 @@ class _MapPageState extends State<MapPage> {
       ),
       bottomNavigationBar: buildBottomNavigationBar(context, _selectedIndex),
     );
-  }
-}
-
-IconButton profile(BuildContext context) {
-  return IconButton(
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ProfilePage()),
-      );
-    },
-    icon: const Icon(Icons.person),
-  );
-}
-
-BottomNavigationBar buildBottomNavigationBar(
-    BuildContext context, int selectedIndex) {
-  return BottomNavigationBar(
-    backgroundColor: Colors.white,
-    currentIndex: selectedIndex,
-    selectedItemColor: Colors.blue,
-    items: const [
-      BottomNavigationBarItem(
-        icon: Icon(Icons.newspaper),
-        label: 'Feed',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.map),
-        label: 'Map',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.group),
-        label: 'Friends',
-      ),
-    ],
-    onTap: (index) {
-      _onItemTapped(context, index);
-    },
-  );
-}
-
-void _onItemTapped(BuildContext context, int index) {
-  if (index == 0) {
-    newRoute(context, const NewsFeedPage());
-  } else if (index == 1) {
-    newRoute(context, const MapPage());
-  } else {
-    newRoute(context, const FriendsPage());
-  }
-}
-
-void newRoute(BuildContext context, Widget newRoute) {
-  if (!Navigator.of(context).canPop()) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => newRoute));
-  } else {
-    Navigator.of(context).pop();
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => newRoute));
   }
 }

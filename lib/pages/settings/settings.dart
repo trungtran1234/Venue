@@ -1,8 +1,9 @@
-import 'package:app/pages/map.dart';
+import 'package:app/pages/login.dart';
+import 'package:app/functions.dart';
 import 'package:app/pages/profile.dart';
-import 'package:app/pages/signup_and_login.dart';
 import 'package:app/pages/settings/accountsettings.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -80,7 +81,8 @@ class SettingsList extends StatelessWidget {
               newRoute(context, const Notifications());
             } else if (settingsOptions[index]['title'] == 'Devices') {
             } else {
-              newRoute(context, const LoginPage());
+              FirebaseAuth.instance.signOut();
+              newRoute(context, LoginPage());
             }
           },
         );
