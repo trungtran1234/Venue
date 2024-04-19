@@ -3,6 +3,7 @@ import 'package:app/functions.dart';
 import 'package:app/pages/profile.dart';
 import 'package:app/pages/settings/accountsettings.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -80,6 +81,7 @@ class SettingsList extends StatelessWidget {
               newRoute(context, const Notifications());
             } else if (settingsOptions[index]['title'] == 'Devices') {
             } else {
+              FirebaseAuth.instance.signOut();
               newRoute(context, LoginPage());
             }
           },
