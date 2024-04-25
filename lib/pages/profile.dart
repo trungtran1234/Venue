@@ -2,10 +2,14 @@ import 'package:app/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:app/pages/settings/settings.dart';
 import '../objects/userprofile.dart';
+import '../connectivity_checker.dart';
+import '../reconnection_popup.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
+
+  
   @override
   Widget build(BuildContext context) {
     UserProfile user = UserProfile(username: "username", location: "location");

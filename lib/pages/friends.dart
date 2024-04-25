@@ -17,24 +17,19 @@ class _FriendsPageState extends State<FriendsPage> {
 
   late ConnectivityChecker connectivityChecker;
   late PopupManager popupManager;
-
   @override
   void initState() {
     super.initState();
     popupManager = PopupManager();
-
-    // Initialize connectivity checker with the onConnectivityChanged callback
     connectivityChecker = ConnectivityChecker(
       onStatusChanged: onConnectivityChanged,
     );
   }
 
-  // Define the method that handles connectivity changes
   void onConnectivityChanged(bool isConnected) {
     if (isConnected) {
       popupManager.dismissConnectivityPopup();
     } else {
-      // We use `addPostFrameCallback` to wait until the widget build process is complete
       WidgetsBinding.instance.addPostFrameCallback((_) {
         popupManager.showConnectivityPopup(context);
       });

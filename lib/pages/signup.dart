@@ -2,6 +2,8 @@ import 'package:app/pages/login.dart';
 import 'package:flutter/material.dart';
 import 'package:app/pages/auth.dart';
 import 'package:app/functions.dart';
+import '../connectivity_checker.dart';
+import '../reconnection_popup.dart';
 
 class SignUpForm extends StatelessWidget {
   final TextEditingController emailController;
@@ -29,6 +31,9 @@ class SignUpForm extends StatelessWidget {
     );
   }
 }
+
+
+  
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});

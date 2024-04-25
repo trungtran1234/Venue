@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:app/functions.dart';
 import 'package:flutter/widgets.dart';
+import '../connectivity_checker.dart';
+import '../reconnection_popup.dart';
 
 class NewsFeedPage extends StatefulWidget {
   const NewsFeedPage({super.key});
@@ -11,7 +13,34 @@ class NewsFeedPage extends StatefulWidget {
 
 class _NewsFeedState extends State<NewsFeedPage> {
   int _selectedIndex = 0;
+  
+  late ConnectivityChecker connectivityChecker;
+  late PopupManager popupManager;
+  @override
+  void initState() {
+    super.initState();
+    popupManager = PopupManager();
+    connectivityChecker = ConnectivityChecker(
+      onStatusChanged: onConnectivityChanged,
+    );
+  }
 
+  void onConnectivityChanged(bool isConnected) {
+    if (isConnected) {
+      popupManager.dismissConnectivityPopup();
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        popupManager.showConnectivityPopup(context);
+      });
+    }
+  }
+
+ @override
+  void dispose() {
+    connectivityChecker.dispose();
+    super.dispose();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

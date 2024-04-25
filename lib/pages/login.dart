@@ -4,16 +4,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app/pages/auth.dart';
 import 'package:app/functions.dart';
+import '../connectivity_checker.dart';
+import '../reconnection_popup.dart';
 
 class LoginForm extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
-
+  
   const LoginForm({
     super.key,
     required this.emailController,
     required this.passwordController,
   });
+
+  
+  
+
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +37,11 @@ class LoginForm extends StatelessWidget {
 class LoginPage extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+
+  
+
+
 
   LoginPage({super.key});
 
