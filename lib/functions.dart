@@ -3,6 +3,7 @@ import 'package:app/pages/map.dart';
 import 'package:app/pages/newsfeed.dart';
 import 'package:app/pages/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 TextField buildTextField(TextEditingController controller, String hintText,
     {bool obscureText = false}) {
@@ -98,4 +99,13 @@ void showErrorBanner(BuildContext context, String message) {
       ),
     ),
   );
+}
+
+pickImage(ImageSource source) async {
+  final ImagePicker _imagePicker = ImagePicker();
+  XFile? _file = await _imagePicker.pickImage(source: source);
+  if (_file != null) {
+    return await _file.readAsBytes();
+  }
+  print('No image selected');
 }
