@@ -35,7 +35,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<String> getPlaceAddress(double latitude, double longitude) async {
-    final apiKey = '<KEY>';
+    final apiKey = 'AIzaSyBuznTrerLg81eCkcf5AcPAGXpdStMuIh8';
     final url = Uri.parse(
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey');
 
