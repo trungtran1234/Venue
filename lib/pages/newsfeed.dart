@@ -1,3 +1,4 @@
+import 'package:app/pages/add_post.dart';
 import 'package:flutter/material.dart';
 import 'package:app/functions.dart';
 import 'package:flutter/widgets.dart';
@@ -57,6 +58,11 @@ class _NewsFeedState extends State<NewsFeedPage> {
     return SingleChildScrollView(
       child: Column(
         children: [
+          IconButton(
+              onPressed: () {
+                newRoute(context, const AddPostScreen());
+              },
+              icon: const Icon(Icons.add)),
           Column(
             children: List.generate(
               8,
