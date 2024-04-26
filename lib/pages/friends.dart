@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:app/functions.dart';
+import '../connectivity_checker.dart';
+import '../reconnection_popup.dart';
 
 class FriendsPage extends StatefulWidget {
   const FriendsPage({super.key});
@@ -8,8 +10,37 @@ class FriendsPage extends StatefulWidget {
   _FriendsPageState createState() => _FriendsPageState();
 }
 
+
+
 class _FriendsPageState extends State<FriendsPage> {
   final int _selectedIndex = 2;
+
+  late ConnectivityChecker connectivityChecker;
+  late PopupManager popupManager;
+  @override
+  void initState() {
+    super.initState();
+    popupManager = PopupManager();
+    connectivityChecker = ConnectivityChecker(
+      onStatusChanged: onConnectivityChanged,
+    );
+  }
+
+  void onConnectivityChanged(bool isConnected) {
+    if (isConnected) {
+      popupManager.dismissConnectivityPopup();
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        popupManager.showConnectivityPopup(context);
+      });
+    }
+  }
+
+ @override
+  void dispose() {
+    connectivityChecker.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -5,24 +5,28 @@ import 'package:flutter/material.dart';
 import 'package:app/pages/auth.dart';
 import 'package:app/functions.dart';
 
+
 class LoginForm extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
-
+  
   const LoginForm({
     super.key,
     required this.emailController,
     required this.passwordController,
   });
 
+
   @override
   Widget build(BuildContext context) {
+
     return Column(
       children: [
         buildTextField(emailController, 'Email'),
         const SizedBox(height: 20.0),
         buildTextField(passwordController, 'Password', obscureText: true),
         const SizedBox(height: 20.0),
+       
       ],
     );
   }
@@ -31,6 +35,7 @@ class LoginForm extends StatelessWidget {
 class LoginPage extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
 
   LoginPage({super.key});
 

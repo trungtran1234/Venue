@@ -4,6 +4,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../connectivity_checker.dart';
+import '../reconnection_popup.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -18,9 +20,18 @@ class _MapPageState extends State<MapPage> {
   Location _location = Location();
   Set<Marker> _markers = {};
 
+  late ConnectivityChecker connectivityChecker;
+  late PopupManager popupManager;
+ 
+  
+
   @override
   void initState() {
     super.initState();
+    popupManager = PopupManager();
+    connectivityChecker = ConnectivityChecker(
+      onStatusChanged: onConnectivityChanged,
+    );
     _location.onLocationChanged.listen((LocationData currentLocation) {
       _controller?.animateCamera(
         CameraUpdate.newCameraPosition(
@@ -33,6 +44,22 @@ class _MapPageState extends State<MapPage> {
       );
     });
   }
+
+  void onConnectivityChanged(bool isConnected) {
+      if (isConnected) {
+        popupManager.dismissConnectivityPopup();
+      } else {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          popupManager.showConnectivityPopup(context);
+        });
+      }
+    }
+
+  @override
+    void dispose() {
+      connectivityChecker.dispose();
+      super.dispose();
+    }
 
   Future<String> getPlaceAddress(double latitude, double longitude) async {
     final apiKey = 'AIzaSyBuznTrerLg81eCkcf5AcPAGXpdStMuIh8';

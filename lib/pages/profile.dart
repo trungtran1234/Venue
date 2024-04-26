@@ -2,14 +2,44 @@ import 'package:app/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:app/pages/settings/settings.dart';
 import '../objects/userprofile.dart';
+import '../connectivity_checker.dart';
+import '../reconnection_popup.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({Key? key}) : super(key: key);
 
+
+@override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  late PopupManager popupManager;
+  late ConnectivityChecker connectivityChecker;
+
+  @override
+  void initState() {
+    super.initState();
+    popupManager = PopupManager();
+    connectivityChecker = ConnectivityChecker(
+      onStatusChanged: onConnectivityChanged,
+    );
+    // If needed, start listening for connectivity changes here
+  }
+
+  void onConnectivityChanged(bool isConnected) {
+    if (isConnected) {
+      popupManager.dismissConnectivityPopup();
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        popupManager.showConnectivityPopup(context);
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     UserProfile user = UserProfile(username: "username", location: "location");
-
+    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -79,6 +109,14 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
+
+
+@override
+  void dispose() {
+    connectivityChecker.dispose(); 
+    super.dispose();
+  }
+
 
   Widget _buildStatisticColumn(int value, String label) {
     return Column(
