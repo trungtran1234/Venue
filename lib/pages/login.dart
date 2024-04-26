@@ -4,8 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app/pages/auth.dart';
 import 'package:app/functions.dart';
-import '../connectivity_checker.dart';
-import '../reconnection_popup.dart';
+
 
 class LoginForm extends StatelessWidget {
   final TextEditingController emailController;
@@ -17,18 +16,17 @@ class LoginForm extends StatelessWidget {
     required this.passwordController,
   });
 
-  
-  
-
 
   @override
   Widget build(BuildContext context) {
+
     return Column(
       children: [
         buildTextField(emailController, 'Email'),
         const SizedBox(height: 20.0),
         buildTextField(passwordController, 'Password', obscureText: true),
         const SizedBox(height: 20.0),
+       
       ],
     );
   }
@@ -37,10 +35,6 @@ class LoginForm extends StatelessWidget {
 class LoginPage extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-
-  
-
 
 
   LoginPage({super.key});
