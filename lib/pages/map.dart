@@ -36,7 +36,7 @@ class MapPageState extends State<MapPage> {
           CameraPosition(
             target:
                 LatLng(currentLocation.latitude!, currentLocation.longitude!),
-            zoom: 12.0,
+            zoom: 17.0,
           ),
         ),
       );

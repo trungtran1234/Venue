@@ -28,15 +28,14 @@ TextField buildTextField(TextEditingController controller, String hintText,
 
 IconButton profile(BuildContext context) {
   return IconButton(
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ProfilePage()),
-      );
-    },
-    icon: const Icon(Icons.person),
-    color: Colors.white
-  );
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ProfilePage()),
+        );
+      },
+      icon: const Icon(Icons.person),
+      color: Colors.white);
 }
 
 BottomNavigationBar buildBottomNavigationBar(
@@ -91,7 +90,7 @@ void showErrorBanner(BuildContext context, String message) {
     SnackBar(
       content: Text(message),
       backgroundColor: Colors.red,
-      duration: Duration(seconds: 3),
+      duration: const Duration(seconds: 3),
       action: SnackBarAction(
         label: 'OK',
         onPressed: () {
@@ -103,10 +102,10 @@ void showErrorBanner(BuildContext context, String message) {
 }
 
 pickImage(ImageSource source) async {
-  final ImagePicker _imagePicker = ImagePicker();
-  XFile? _file = await _imagePicker.pickImage(source: source);
-  if (_file != null) {
-    return await _file.readAsBytes();
+  final ImagePicker imagePicker = ImagePicker();
+  XFile? file = await imagePicker.pickImage(source: source);
+  if (file != null) {
+    return await file.readAsBytes();
   }
   print('No image selected');
 }
