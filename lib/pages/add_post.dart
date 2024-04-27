@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:app/firestore_methods.dart';
 import 'package:app/functions.dart';
+import 'package:app/pages/newsfeed.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,8 +18,12 @@ class AddPostScreen extends StatefulWidget {
 class _AddPostScreenState extends State<AddPostScreen> {
   Uint8List? _file;
   final TextEditingController _descriptionController = TextEditingController();
+  bool _isLoading = false;
 
   void postImage(String uid, String username) async {
+    setState(() {
+      _isLoading = true;
+    });
     try {
       String res = await FirestoreMethods().uploadPost(
         _descriptionController.text,
@@ -28,8 +33,15 @@ class _AddPostScreenState extends State<AddPostScreen> {
       );
 
       if (res == "success") {
+        setState(() {
+          _isLoading = false;
+        });
         showSnackBar('Posted!', context);
+        clearImage();
       } else {
+        setState(() {
+          _isLoading = false;
+        });
         showSnackBar(res, context);
       }
     } catch (e) {
@@ -87,6 +99,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
     );
   }
 
+  void clearImage() {
+    setState(() {
+      _file = null;
+    });
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -96,17 +114,27 @@ class _AddPostScreenState extends State<AddPostScreen> {
   @override
   Widget build(BuildContext context) {
     return _file == null
-        ? Center(
-            child: IconButton(
-              icon: const Icon(Icons.upload),
-              onPressed: () => _selectImage(context),
+        ? Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  newRoute(context, const NewsFeedPage());
+                },
+              ),
+            ),
+            body: Center(
+              child: IconButton(
+                icon: const Icon(Icons.upload),
+                onPressed: () => _selectImage(context),
+              ),
             ),
           )
         : Scaffold(
             appBar: AppBar(
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () {},
+                onPressed: clearImage,
               ),
               title: const Text('Post To'),
               centerTitle: false,
@@ -126,6 +154,14 @@ class _AddPostScreenState extends State<AddPostScreen> {
             ),
             body: Column(
               children: [
+                _isLoading
+                    ? const LinearProgressIndicator()
+                    : const Padding(
+                        padding: EdgeInsets.only(top: 0),
+                      ),
+                const Divider(
+                  color: Color(0x00000000),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
