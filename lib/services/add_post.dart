@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:app/firestore_methods.dart';
+import 'package:app/database/firestore_methods.dart';
 import 'package:app/functions.dart';
 import 'package:app/pages/newsfeed.dart';
 import 'package:firebase_auth/firebase_auth.dart';

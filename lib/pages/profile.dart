@@ -1,19 +1,18 @@
 import 'package:app/functions.dart';
 import 'package:flutter/material.dart';
-import 'package:app/pages/settings/settings.dart';
+import 'package:app/settings/settings.dart';
 import '../objects/userprofile.dart';
-import '../connectivity_checker.dart';
-import '../reconnection_popup.dart';
+import '../services/connectivity_checker.dart';
+import '../services/reconnection_popup.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
-
-@override
-  _ProfilePageState createState() => _ProfilePageState();
+  @override
+  ProfilePageState createState() => ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class ProfilePageState extends State<ProfilePage> {
   late PopupManager popupManager;
   late ConnectivityChecker connectivityChecker;
 
@@ -36,28 +35,27 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     UserProfile user = UserProfile(username: "username", location: "location");
-    
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back),
-          color: Colors.white
-        ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back),
+            color: Colors.white),
         actions: [
           IconButton(
-            onPressed: () {
-              newRoute(context, const SettingsPage());
-            },
-            icon: const Icon(Icons.settings),
-            color: Colors.white
-          ),
+              onPressed: () {
+                newRoute(context, SettingsPage());
+              },
+              icon: const Icon(Icons.settings),
+              color: Colors.white),
         ],
       ),
       body: SingleChildScrollView(
@@ -81,17 +79,21 @@ class _ProfilePageState extends State<ProfilePage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10.0),
-            Text(
-              '${user.location}',
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16.0, color: Colors.white,)
-            ),
+            Text('${user.location}',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.white,
+                )),
             const SizedBox(height: 10.0),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
               child: Text(
                 '${user.bio}',
-                style: const TextStyle(fontSize: 16.0, color: Colors.white,),
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.white,
+                ),
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -113,13 +115,11 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-
-@override
+  @override
   void dispose() {
-    connectivityChecker.dispose(); 
+    connectivityChecker.dispose();
     super.dispose();
   }
-
 
   Widget _buildStatisticColumn(int value, String label) {
     return Column(
@@ -136,7 +136,10 @@ class _ProfilePageState extends State<ProfilePage> {
         const SizedBox(height: 5.0),
         Text(
           label,
-          style: const TextStyle(fontSize: 16.0, color: Colors.white,),
+          style: const TextStyle(
+            fontSize: 16.0,
+            color: Colors.white,
+          ),
         ),
       ],
     );

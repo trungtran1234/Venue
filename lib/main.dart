@@ -2,7 +2,7 @@ import 'package:app/pages/map.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'firebase_options.dart';
+import 'database/firebase_options.dart';
 import 'pages/login.dart';
 
 Future<void> main() async {
@@ -23,8 +23,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Fredoka',
-        scaffoldBackgroundColor: const Color(0xFF0B1425),
-        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blueGrey),
+        scaffoldBackgroundColor: const Color(0xFF437AE5),
+        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue),
         useMaterial3: true,
       ),
       home: const AuthStateChecker(),
@@ -40,23 +40,16 @@ class AuthStateChecker extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.active) {
-          final User? user = snapshot.data;
-          // Check if user is logged in
-          if (user != null) {
-            // Navigate to the appropriate screen for logged-in users
-            return const MapPage();
-          } else {
-            // Navigate to the login screen for logged-out users
-            return LoginPage();
-          }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
         }
-        // Return a loading indicator while waiting for the authentication state
-        return const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
+
+        final User? user = snapshot.data;
+        if (user != null) {
+          return const MapPage();
+        } else {
+          return LoginPage();
+        }
       },
     );
   }
