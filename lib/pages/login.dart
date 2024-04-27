@@ -39,27 +39,55 @@ class LoginPage extends StatelessWidget {
 
   LoginPage({super.key});
 
-  @override
+   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Venue title
-              _buildVenueTitle(),
-              const SizedBox(height: 10.0),
-              // Container for the login form
-              _buildLoginForm(context),
-              const SizedBox(height: 20.0),
-              // Container for the sign-up option
-              _buildSignUpOption(context),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              const Color(0xFF133068),
+              const Color(0xFF0B1425),
             ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _buildLogo(),
+                    _buildVenueTitle(),
+                    _buildLoginForm(context),
+                    const SizedBox(height: 20.0),
+                    _buildSignUpOption(context),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLogo() {
+    return Image.asset(
+      '../lib/assets/logo.png',
+      height: 90,
+      width: 90,
     );
   }
 
@@ -69,10 +97,10 @@ class LoginPage extends StatelessWidget {
       child: const Text(
         'Venue',
         style: TextStyle(
-          color: Colors.orange,
+          color: Color(0xFFE5B80B),
           fontFamily: 'Fredoka',
-          fontSize: 75.0,
-          fontWeight: FontWeight.bold,
+          fontSize: 65.0,
+          fontWeight: FontWeight.bold,  
         ),
       ),
     );
@@ -106,6 +134,7 @@ class LoginPage extends StatelessWidget {
           // Login button
           _buildLoginButton(context),
           const SizedBox(height: 10.0),
+          
           // Forgot password option
           _buildForgotPasswordOption(),
         ],
@@ -139,7 +168,7 @@ class LoginPage extends StatelessWidget {
         }
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF437AE5),
+        backgroundColor: const Color(0xFF133068),
         padding: const EdgeInsets.symmetric(vertical: 25.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),

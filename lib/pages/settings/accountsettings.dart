@@ -7,7 +7,7 @@ class ChangeEmail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
-
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Change Email'),
@@ -17,19 +17,19 @@ class ChangeEmail extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Enter New Email:',
               style: TextStyle(
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.bold, color: Colors.white
               ),
             ),
-            InputField(hintText: 'New Email', controller: emailController),
-            SizedBox(height: 20.0),
+            InputField(hintText: '', controller: emailController),
+            const SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
                 // Handle changing email
               },
-              child: Text('Save'),
+              child: const Text('Save'),
             ),
           ],
         ),
@@ -49,7 +49,7 @@ class ChangePassword extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Change Password'),
+        title: const Text('Change Password', style: TextStyle(color: Colors.white)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -60,6 +60,7 @@ class ChangePassword extends StatelessWidget {
               'Enter Current Password:',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
+                color: Colors.white
               ),
             ),
             InputField(
@@ -71,10 +72,11 @@ class ChangePassword extends StatelessWidget {
               'Enter New Password:',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
+                color: Colors.white
               ),
             ),
             InputField(
-                hintText: 'New Password',
+                hintText: '',
                 obscureText: true,
                 controller: newPasswordController),
             const SizedBox(height: 20.0),

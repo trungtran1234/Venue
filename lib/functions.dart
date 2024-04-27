@@ -35,6 +35,7 @@ IconButton profile(BuildContext context) {
       );
     },
     icon: const Icon(Icons.person),
+    color: Colors.white
   );
 }
 

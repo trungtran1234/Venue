@@ -13,11 +13,12 @@ class SettingsPage extends StatelessWidget {
     return Theme(
       data: ThemeData(),
       child: Scaffold(
-        backgroundColor: const Color(0xFF437AE5),
+        backgroundColor: const Color(0xFF0B1425),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
+            color: Colors.white,
             onPressed: () {
               newRoute(context, const ProfilePage());
             },
@@ -36,15 +37,15 @@ class SettingsList extends StatelessWidget {
     {
       'title': 'Account',
       'icon': Icons.account_circle,
-      'textColor': Colors.black
+      'textColor': Colors.white
     },
-    {'title': 'Privacy', 'icon': Icons.shield, 'textColor': Colors.black},
+    {'title': 'Privacy', 'icon': Icons.shield, 'textColor': Colors.white},
     {
       'title': 'Notifications',
       'icon': Icons.notifications,
-      'textColor': Colors.black
+      'textColor': Colors.white
     },
-    {'title': 'Devices', 'icon': Icons.laptop, 'textColor': Colors.black},
+    {'title': 'Devices', 'icon': Icons.laptop, 'textColor': Colors.white},
     {'title': 'Log out', 'icon': Icons.exit_to_app, 'textColor': Colors.red},
   ];
 
@@ -56,7 +57,7 @@ class SettingsList extends StatelessWidget {
         return ListTile(
           leading: Icon(
             settingsOptions[index]['icon'],
-            color: Colors.black,
+            color: Colors.white,
           ),
           title: Row(
             children: [
@@ -68,7 +69,7 @@ class SettingsList extends StatelessWidget {
               ),
               const Spacer(),
               const Icon(Icons.arrow_forward_ios,
-                  size: 16, color: Colors.black),
+                  size: 16, color: Colors.white),
             ],
           ),
           contentPadding: const EdgeInsets.all(20),
@@ -104,12 +105,13 @@ class _AccountSettingsState extends State<AccountSettings> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Account Settings'),
+        title: const Text('Account Settings',
+            style: TextStyle(color: Colors.white)),
         leading: IconButton(
           onPressed: () {
             newRoute(context, const SettingsPage());
           },
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(
@@ -121,18 +123,19 @@ class _AccountSettingsState extends State<AccountSettings> {
             const Text(
               'Account Information',
               style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
             ListTile(
               title: const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text('Email Address'),
+                  Text('Email Address', style: TextStyle(color: Colors.white)),
                   Spacer(),
-                  Text('johndoe@example.com'),
-                  Icon(Icons.arrow_forward_ios, size: 16),
+                  Text('johndoe@example.com',
+                      style: TextStyle(color: Colors.white)),
+                  Icon(Icons.arrow_forward_ios, size: 16, color: Colors.white),
                 ],
               ),
               onTap: () {
@@ -140,7 +143,8 @@ class _AccountSettingsState extends State<AccountSettings> {
               },
             ),
             ListTile(
-              title: const Text('Change Password'),
+              title: const Text('Change Password',
+                  style: TextStyle(color: Colors.white)),
               onTap: () {
                 newRoute(context, const ChangePassword());
               },
@@ -149,9 +153,9 @@ class _AccountSettingsState extends State<AccountSettings> {
             const Text(
               'Account Management',
               style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
             ListTile(
               title: const Text(
@@ -187,13 +191,13 @@ class _PrivacyState extends State<Privacy> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Privacy'),
+        title: const Text('Privacy', style: TextStyle(color: Colors.white)),
         leading: IconButton(
-          onPressed: () {
-            newRoute(context, const SettingsPage());
-          },
-          icon: const Icon(Icons.arrow_back),
-        ),
+            onPressed: () {
+              newRoute(context, const SettingsPage());
+            },
+            icon: const Icon(Icons.arrow_back),
+            color: Colors.white),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -202,11 +206,20 @@ class _PrivacyState extends State<Privacy> {
           children: [
             const Text(
               'Account Privacy',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
-            buildSwitchListTile(
-              title: 'Private Profile',
-              subtitle: 'Only friends can see your posts',
+            SwitchListTile(
+              title: const Text(
+                'Private Profile',
+                style: TextStyle(color: Colors.white),
+              ),
+              subtitle: const Text(
+                'Only friends can see your posts and profile',
+                style: TextStyle(color: Colors.white54),
+              ),
               value: _privateAccount,
               onChanged: (value) {
                 setState(() {
@@ -214,9 +227,15 @@ class _PrivacyState extends State<Privacy> {
                 });
               },
             ),
-            buildSwitchListTile(
-              title: 'Hide From Search',
-              subtitle: 'Prevent your profile from appearing in search results',
+            SwitchListTile(
+              title: const Text(
+                'Hide From Search',
+                style: TextStyle(color: Colors.white),
+              ),
+              subtitle: const Text(
+                'Hide your profile from search results',
+                style: TextStyle(color: Colors.white54),
+              ),
               value: _hideFromSearch,
               onChanged: (value) {
                 setState(() {
@@ -227,11 +246,20 @@ class _PrivacyState extends State<Privacy> {
             const SizedBox(height: 20),
             const Text(
               'Activity Privacy',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
-            buildSwitchListTile(
-              title: 'Hide Online Status',
-              subtitle: 'Hide your online status from other users',
+            SwitchListTile(
+              title: const Text(
+                'Hide Online Status',
+                style: TextStyle(color: Colors.white),
+              ),
+              subtitle: const Text(
+                'Hide your online status from others',
+                style: TextStyle(color: Colors.white54),
+              ),
               value: _hideOnlineStatus,
               onChanged: (value) {
                 setState(() {
@@ -239,9 +267,15 @@ class _PrivacyState extends State<Privacy> {
                 });
               },
             ),
-            buildSwitchListTile(
-              title: 'Allow Friend Requests',
-              subtitle: 'Allow others to send you friend requests',
+            SwitchListTile(
+              title: const Text(
+                'Allow Friend Requests',
+                style: TextStyle(color: Colors.white),
+              ),
+              subtitle: const Text(
+                'Allow others to send you friend requests',
+                style: TextStyle(color: Colors.white54),
+              ),
               value: _allowFriendRequests,
               onChanged: (value) {
                 setState(() {
@@ -277,12 +311,13 @@ class _NotificationsState extends State<Notifications> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Notifications'),
+        title: const Text('Notifications', style: TextStyle(color: Colors.white)),
         leading: IconButton(
           onPressed: () {
             newRoute(context, const SettingsPage());
           },
           icon: const Icon(Icons.arrow_back),
+          color: Colors.white,
         ),
       ),
       body: Padding(
@@ -295,7 +330,7 @@ class _NotificationsState extends State<Notifications> {
               children: [
                 const Text(
                   'Receive Notifications',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
                 Switch(
                   value: _notificationEnabled,
@@ -319,12 +354,18 @@ class _NotificationsState extends State<Notifications> {
             const SizedBox(height: 20),
             const Text(
               'Post Notifications',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
             ),
             const SizedBox(height: 10),
-            buildSwitchListTile(
-              title: 'Likes',
-              subtitle: 'Receive notifications for likes',
+            SwitchListTile(
+              title: const Text(
+                'Likes',
+                style: TextStyle(color: Colors.white),
+              ),
+              subtitle: const Text(
+                'Receive notifications for likes',
+                style: TextStyle(color: Colors.white54),
+              ),
               value: _likes,
               onChanged: _notificationEnabled
                   ? (value) {
@@ -334,9 +375,15 @@ class _NotificationsState extends State<Notifications> {
                     }
                   : null,
             ),
-            buildSwitchListTile(
-              title: 'Comments',
-              subtitle: 'Receive notifications for comments',
+            SwitchListTile(
+              title: const Text(
+                'Comments',
+                style: TextStyle(color: Colors.white),
+              ),
+              subtitle: const Text(
+                'Receive notifications for comments',
+                style: TextStyle(color: Colors.white54),
+              ),
               value: _comments,
               onChanged: _notificationEnabled
                   ? (value) {
@@ -360,12 +407,18 @@ class _NotificationsState extends State<Notifications> {
             // ),
             const Text(
               'Event Notifications',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
             ),
             const SizedBox(height: 10),
-            buildSwitchListTile(
-              title: 'Event Updates',
-              subtitle: 'Receive updates about events',
+            SwitchListTile(
+              title: const Text(
+                'Event Updates',
+                style: TextStyle(color: Colors.white),
+              ),
+              subtitle: const Text(
+                'Receive updates about events',
+                style: TextStyle(color: Colors.white54),
+              ),
               value: _eventUpdates,
               onChanged: _notificationEnabled
                   ? (value) {
@@ -375,9 +428,15 @@ class _NotificationsState extends State<Notifications> {
                     }
                   : null,
             ),
-            buildSwitchListTile(
-              title: 'New Event Suggestions',
-              subtitle: 'Receive suggestions for new events',
+            SwitchListTile(
+              title: const Text(
+                'New Event Suggestions',
+                style: TextStyle(color: Colors.white),
+              ),
+              subtitle: const Text(
+                'Receive suggestions for new events',
+                style: TextStyle(color: Colors.white54),
+              ),
               value: _newEventSuggestions,
               onChanged: _notificationEnabled
                   ? (value) {
@@ -387,9 +446,15 @@ class _NotificationsState extends State<Notifications> {
                     }
                   : null,
             ),
-            buildSwitchListTile(
-              title: 'Event Reminders',
-              subtitle: 'Receive reminders for upcoming events',
+            SwitchListTile(
+              title: const Text(
+                'Event Reminders',
+                style: TextStyle(color: Colors.white),
+              ),
+              subtitle: const Text(
+                'Receive reminders for upcoming events',
+                style: TextStyle(color: Colors.white54),
+              ),
               value: _eventReminders,
               onChanged: _notificationEnabled
                   ? (value) {
