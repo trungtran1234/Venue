@@ -1,7 +1,6 @@
 import 'package:app/services/add_post.dart';
 import 'package:flutter/material.dart';
 import 'package:app/functions.dart';
-import 'package:flutter/widgets.dart';
 import '../services/connectivity_checker.dart';
 import '../services/reconnection_popup.dart';
 
@@ -13,7 +12,7 @@ class NewsFeedPage extends StatefulWidget {
 }
 
 class _NewsFeedState extends State<NewsFeedPage> {
-  int _selectedIndex = 0;
+  final int _selectedIndex = 0;
 
   late ConnectivityChecker connectivityChecker;
   late PopupManager popupManager;

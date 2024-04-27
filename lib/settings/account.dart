@@ -92,23 +92,23 @@ class ChangeEmail extends StatelessWidget {
         title: const Text('Change Email'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Enter New Email:',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
             InputField(hintText: 'New Email', controller: emailController),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
                 // Handle changing email
               },
-              child: Text('Save'),
+              child: const Text('Save'),
             ),
           ],
         ),

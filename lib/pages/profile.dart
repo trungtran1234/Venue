@@ -6,7 +6,7 @@ import '../services/connectivity_checker.dart';
 import '../services/reconnection_popup.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();

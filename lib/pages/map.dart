@@ -8,17 +8,17 @@ import '../services/connectivity_checker.dart';
 import '../services/reconnection_popup.dart';
 
 class MapPage extends StatefulWidget {
-  const MapPage({Key? key}) : super(key: key);
+  const MapPage({super.key});
 
   @override
   _MapPageState createState() => _MapPageState();
 }
 
 class _MapPageState extends State<MapPage> {
-  int _selectedIndex = 1;
+  final int _selectedIndex = 1;
   GoogleMapController? _controller;
-  Location _location = Location();
-  Set<Marker> _markers = {};
+  final Location _location = Location();
+  final Set<Marker> _markers = {};
 
   late ConnectivityChecker connectivityChecker;
   late PopupManager popupManager;
@@ -60,7 +60,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<String> getPlaceAddress(double latitude, double longitude) async {
-    final apiKey = '<FIRST-KEY>';
+    const apiKey = '<FIRST-KEY>';
     final url = Uri.parse(
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey');
 
@@ -87,21 +87,22 @@ class _MapPageState extends State<MapPage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: Text('Create Event'),
+              title: const Text('Create Event'),
               content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
                     TextFormField(
-                      decoration: InputDecoration(labelText: 'Event Name'),
+                      decoration:
+                          const InputDecoration(labelText: 'Event Name'),
                       onChanged: (value) => eventName = value,
                     ),
                     TextFormField(
                       initialValue: eventLocation,
-                      decoration: InputDecoration(labelText: 'Location'),
+                      decoration: const InputDecoration(labelText: 'Location'),
                       onChanged: (value) => eventLocation = value,
                     ),
                     ElevatedButton(
-                      child: Text('Select Start Date & Time'),
+                      child: const Text('Select Start Date & Time'),
                       onPressed: () async {
                         final picked = await pickDateTime(startDateTime);
                         if (picked != null) {
@@ -115,7 +116,7 @@ class _MapPageState extends State<MapPage> {
                         child: Text('Start: ${startDateTime.toString()}'),
                       ),
                     ElevatedButton(
-                      child: Text('Select End Date & Time'),
+                      child: const Text('Select End Date & Time'),
                       onPressed: () async {
                         final picked = await pickDateTime(endDateTime);
                         if (picked != null) {
@@ -133,13 +134,13 @@ class _MapPageState extends State<MapPage> {
               ),
               actions: <Widget>[
                 TextButton(
-                  child: Text('Cancel'),
+                  child: const Text('Cancel'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
                 TextButton(
-                  child: Text('Add'),
+                  child: const Text('Add'),
                   onPressed: () {
                     if (eventName.isNotEmpty &&
                         startDateTime != null &&
@@ -209,7 +210,7 @@ class _MapPageState extends State<MapPage> {
       ),
       body: GoogleMap(
         mapType: MapType.normal,
-        initialCameraPosition: CameraPosition(target: LatLng(0, 0)),
+        initialCameraPosition: const CameraPosition(target: LatLng(0, 0)),
         myLocationEnabled: true,
         myLocationButtonEnabled: true,
         onMapCreated: (GoogleMapController controller) {
