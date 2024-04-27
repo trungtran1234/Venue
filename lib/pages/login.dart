@@ -1,21 +1,20 @@
-import 'package:app/pages/map.dart';
+import 'package:app/pages/2fa.dart';
 import 'package:app/pages/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app/pages/auth.dart';
 import 'package:app/functions.dart';
-
+import 'package:cloud_functions/cloud_functions.dart';
 
 class LoginForm extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
-  
+
   const LoginForm({
     super.key,
     required this.emailController,
     required this.passwordController,
   });
-
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +30,25 @@ class LoginForm extends StatelessWidget {
     );
   }
 }
+
+Future<void> send2FACode(String email, BuildContext context) async {
+  try {
+    HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('send2FACode');
+    await callable.call(<String, dynamic>{
+      'email': email,
+    });
+    
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const TwoFactorAuthPage()),
+    );
+  } on FirebaseFunctionsException catch (e) {
+    
+    print('Error sending 2FA code: $e');
+  
+  }
+}
+
 
 class LoginPage extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
@@ -122,7 +140,8 @@ class LoginPage extends StatelessWidget {
             _passwordController.text,
           );
           if (user != null) {
-            newRoute(context, const MapPage());
+            await send2FACode(_emailController.text, context);
+            newRoute(context, const TwoFactorAuthPage());
           } else {
             // Handle case where user is null
             final bool emailExists =

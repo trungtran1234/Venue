@@ -11,17 +11,6 @@ class SettingsPage extends StatelessWidget {
   final LocalAuthentication auth = LocalAuthentication();
 
 
-  Future<void> authenticateAndNavigate(BuildContext context) async {
-      final bool didAuthenticate = await auth.authenticate(
-        localizedReason: 'Please authenticate to access account settings',
-        options: const AuthenticationOptions(biometricOnly: true),
-      );
-
-      if (didAuthenticate) {
-        newRoute(context, const AccountSettings());
-      }
-    }
-
 
   @override
   Widget build(BuildContext context) {
