@@ -52,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
         actions: [
           IconButton(
             onPressed: () {
-              newRoute(context, const SettingsPage());
+              newRoute(context, SettingsPage());
             },
             icon: const Icon(Icons.settings),
           ),
