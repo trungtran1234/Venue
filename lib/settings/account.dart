@@ -6,10 +6,10 @@ class Account extends StatefulWidget {
   const Account({super.key});
 
   @override
-  _AccountSettingsState createState() => _AccountSettingsState();
+  AccountSettingsState createState() => AccountSettingsState();
 }
 
-class _AccountSettingsState extends State<Account> {
+class AccountSettingsState extends State<Account> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -126,7 +126,6 @@ class SignUpPage extends StatelessWidget {
   ) {
     return ElevatedButton(
       onPressed: () async {
-        // Check if any text field is empty
         if (emailController.text.isEmpty ||
             passwordController.text.isEmpty ||
             reEnterPasswordController.text.isEmpty) {
@@ -134,37 +133,32 @@ class SignUpPage extends StatelessWidget {
           return;
         }
 
-        // Check if passwords match
         if (passwordController.text != reEnterPasswordController.text) {
-          showErrorBanner(context, 'Passwords do not match.');
+          showErrorBanner(context, 'Passwords do not match');
           return;
         }
 
-        // Check if the email already exists
         try {
           final user = await Auth().getUserByEmail(emailController.text);
+
           if (user != null) {
             showErrorBanner(context, 'This email is already registered.');
             return;
           }
-        } catch (e) {
-          print('Error checking email: $e');
-        }
 
-        // All conditions passed
-        try {
           await Auth().createUserWithEmailAndPassword(
             emailController.text,
             passwordController.text,
           );
+
           newRoute(context, LoginPage());
         } catch (e) {
-          print('Sign-up Error: $e');
+          showErrorBanner(context, 'Error during sign-up');
         }
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF437AE5),
-        padding: const EdgeInsets.symmetric(vertical: 25.0),
+        padding: const EdgeInsets.symmetric(vertical: 25),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -174,7 +168,7 @@ class SignUpPage extends StatelessWidget {
         'Create Account',
         style: TextStyle(
           fontFamily: 'Fredoka',
-          fontSize: 15.0,
+          fontSize: 15,
           color: Colors.white,
         ),
       ),

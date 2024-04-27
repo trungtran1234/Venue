@@ -6,10 +6,10 @@ class Privacy extends StatefulWidget {
   const Privacy({super.key});
 
   @override
-  _PrivacyState createState() => _PrivacyState();
+  PrivacyState createState() => PrivacyState();
 }
 
-class _PrivacyState extends State<Privacy> {
+class PrivacyState extends State<Privacy> {
   bool _privateAccount = true;
   bool _hideFromSearch = true;
   bool _hideOnlineStatus = true;

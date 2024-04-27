@@ -6,10 +6,10 @@ class Notifications extends StatefulWidget {
   const Notifications({super.key});
 
   @override
-  _NotificationsState createState() => _NotificationsState();
+  NotificationsState createState() => NotificationsState();
 }
 
-class _NotificationsState extends State<Notifications> {
+class NotificationsState extends State<Notifications> {
   bool _notificationEnabled = true;
   bool _likes = true;
   bool _comments = true;

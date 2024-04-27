@@ -59,17 +59,15 @@ class LoginPage extends StatelessWidget {
   }
 
   Widget _buildVenueTitle() {
-    return Container(
-      alignment: Alignment.center,
-      child: const Text(
-        'Venue',
-        style: TextStyle(
-          color: Colors.orange,
-          fontFamily: 'Fredoka',
-          fontSize: 75.0,
-          fontWeight: FontWeight.bold,
-        ),
+    return const Text(
+      'Venue',
+      style: TextStyle(
+        color: Colors.orange,
+        fontFamily: 'Fredoka',
+        fontSize: 75.0,
+        fontWeight: FontWeight.bold,
       ),
+      textAlign: TextAlign.center,
     );
   }
 

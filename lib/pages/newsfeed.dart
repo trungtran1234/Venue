@@ -8,10 +8,10 @@ class NewsFeedPage extends StatefulWidget {
   const NewsFeedPage({super.key});
 
   @override
-  _NewsFeedState createState() => _NewsFeedState();
+  NewsFeedState createState() => NewsFeedState();
 }
 
-class _NewsFeedState extends State<NewsFeedPage> {
+class NewsFeedState extends State<NewsFeedPage> {
   final int _selectedIndex = 0;
 
   late ConnectivityChecker connectivityChecker;

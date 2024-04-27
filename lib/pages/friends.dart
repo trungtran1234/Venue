@@ -7,14 +7,15 @@ class FriendsPage extends StatefulWidget {
   const FriendsPage({super.key});
 
   @override
-  _FriendsPageState createState() => _FriendsPageState();
+  FriendsPageState createState() => FriendsPageState();
 }
 
-class _FriendsPageState extends State<FriendsPage> {
+class FriendsPageState extends State<FriendsPage> {
   final int _selectedIndex = 2;
 
   late ConnectivityChecker connectivityChecker;
   late PopupManager popupManager;
+
   @override
   void initState() {
     super.initState();

@@ -11,10 +11,10 @@ class MapPage extends StatefulWidget {
   const MapPage({super.key});
 
   @override
-  _MapPageState createState() => _MapPageState();
+  MapPageState createState() => MapPageState();
 }
 
-class _MapPageState extends State<MapPage> {
+class MapPageState extends State<MapPage> {
   final int _selectedIndex = 1;
   GoogleMapController? _controller;
   final Location _location = Location();
@@ -60,7 +60,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<String> getPlaceAddress(double latitude, double longitude) async {
-    const apiKey = '<FIRST-KEY>';
+    const apiKey = '<key>';
     final url = Uri.parse(
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey');
 
