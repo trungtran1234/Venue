@@ -1,20 +1,20 @@
-import 'package:app/pages/add_post.dart';
+import 'package:app/services/add_post.dart';
 import 'package:app/pages/post_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:app/functions.dart';
-import '../connectivity_checker.dart';
-import '../reconnection_popup.dart';
+import '../services/connectivity_checker.dart';
+import '../services/reconnection_popup.dart';
 
 class NewsFeedPage extends StatefulWidget {
   const NewsFeedPage({super.key});
 
   @override
-  _NewsFeedState createState() => _NewsFeedState();
+  NewsFeedState createState() => NewsFeedState();
 }
 
-class _NewsFeedState extends State<NewsFeedPage> {
-  int _selectedIndex = 0;
+class NewsFeedState extends State<NewsFeedPage> {
+  final int _selectedIndex = 0;
 
   late ConnectivityChecker connectivityChecker;
   late PopupManager popupManager;

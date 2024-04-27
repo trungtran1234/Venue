@@ -4,26 +4,24 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../connectivity_checker.dart';
-import '../reconnection_popup.dart';
+import '../services/connectivity_checker.dart';
+import '../services/reconnection_popup.dart';
 
 class MapPage extends StatefulWidget {
-  const MapPage({Key? key}) : super(key: key);
+  const MapPage({super.key});
 
   @override
-  _MapPageState createState() => _MapPageState();
+  MapPageState createState() => MapPageState();
 }
 
-class _MapPageState extends State<MapPage> {
-  int _selectedIndex = 1;
+class MapPageState extends State<MapPage> {
+  final int _selectedIndex = 1;
   GoogleMapController? _controller;
-  Location _location = Location();
-  Set<Marker> _markers = {};
+  final Location _location = Location();
+  final Set<Marker> _markers = {};
 
   late ConnectivityChecker connectivityChecker;
   late PopupManager popupManager;
- 
-  
 
   @override
   void initState() {
@@ -38,7 +36,7 @@ class _MapPageState extends State<MapPage> {
           CameraPosition(
             target:
                 LatLng(currentLocation.latitude!, currentLocation.longitude!),
-            zoom: 12.0,
+            zoom: 17.0,
           ),
         ),
       );
@@ -46,23 +44,23 @@ class _MapPageState extends State<MapPage> {
   }
 
   void onConnectivityChanged(bool isConnected) {
-      if (isConnected) {
-        popupManager.dismissConnectivityPopup();
-      } else {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          popupManager.showConnectivityPopup(context);
-        });
-      }
+    if (isConnected) {
+      popupManager.dismissConnectivityPopup();
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        popupManager.showConnectivityPopup(context);
+      });
     }
+  }
 
   @override
-    void dispose() {
-      connectivityChecker.dispose();
-      super.dispose();
-    }
+  void dispose() {
+    connectivityChecker.dispose();
+    super.dispose();
+  }
 
   Future<String> getPlaceAddress(double latitude, double longitude) async {
-    final apiKey = '<key>';
+    const apiKey = '<key>';
     final url = Uri.parse(
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey');
 
@@ -89,21 +87,22 @@ class _MapPageState extends State<MapPage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: Text('Create Event'),
+              title: const Text('Create Event'),
               content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
                     TextFormField(
-                      decoration: InputDecoration(labelText: 'Event Name'),
+                      decoration:
+                          const InputDecoration(labelText: 'Event Name'),
                       onChanged: (value) => eventName = value,
                     ),
                     TextFormField(
                       initialValue: eventLocation,
-                      decoration: InputDecoration(labelText: 'Location'),
+                      decoration: const InputDecoration(labelText: 'Location'),
                       onChanged: (value) => eventLocation = value,
                     ),
                     ElevatedButton(
-                      child: Text('Select Start Date & Time'),
+                      child: const Text('Select Start Date & Time'),
                       onPressed: () async {
                         final picked = await pickDateTime(startDateTime);
                         if (picked != null) {
@@ -117,7 +116,7 @@ class _MapPageState extends State<MapPage> {
                         child: Text('Start: ${startDateTime.toString()}'),
                       ),
                     ElevatedButton(
-                      child: Text('Select End Date & Time'),
+                      child: const Text('Select End Date & Time'),
                       onPressed: () async {
                         final picked = await pickDateTime(endDateTime);
                         if (picked != null) {
@@ -135,13 +134,13 @@ class _MapPageState extends State<MapPage> {
               ),
               actions: <Widget>[
                 TextButton(
-                  child: Text('Cancel'),
+                  child: const Text('Cancel'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
                 TextButton(
-                  child: Text('Add'),
+                  child: const Text('Add'),
                   onPressed: () {
                     if (eventName.isNotEmpty &&
                         startDateTime != null &&
@@ -211,7 +210,7 @@ class _MapPageState extends State<MapPage> {
       ),
       body: GoogleMap(
         mapType: MapType.normal,
-        initialCameraPosition: CameraPosition(target: LatLng(0, 0)),
+        initialCameraPosition: const CameraPosition(target: LatLng(0, 0)),
         myLocationEnabled: true,
         myLocationButtonEnabled: true,
         onMapCreated: (GoogleMapController controller) {

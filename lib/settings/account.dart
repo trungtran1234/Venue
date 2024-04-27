@@ -1,5 +1,84 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:app/functions.dart';
+import 'package:app/settings/settings.dart';
+
+class Account extends StatefulWidget {
+  const Account({super.key});
+
+  @override
+  AccountSettingsState createState() => AccountSettingsState();
+}
+
+class AccountSettingsState extends State<Account> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: const Text('Account Settings'),
+        leading: IconButton(
+          onPressed: () {
+            newRoute(context, SettingsPage());
+          },
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20.0),
+            const Text(
+              'Account Information',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            ListTile(
+              title: const Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text('Email Address'),
+                  Spacer(),
+                  Text('johndoe@example.com'),
+                  Icon(Icons.arrow_forward_ios, size: 16),
+                ],
+              ),
+              onTap: () {
+                newRoute(context, const ChangeEmail());
+              },
+            ),
+            ListTile(
+              title: const Text('Change Password'),
+              onTap: () {
+                newRoute(context, const ChangePassword());
+              },
+            ),
+            const SizedBox(height: 20.0),
+            const Text(
+              'Account Management',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            ListTile(
+              title: const Text(
+                'Delete Account',
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              ),
+              onTap: () {},
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class ChangeEmail extends StatelessWidget {
   const ChangeEmail({super.key});
@@ -7,23 +86,23 @@ class ChangeEmail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Change Email'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
               'Enter New Email:',
               style: TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.white
+                fontWeight: FontWeight.bold,
               ),
             ),
-            InputField(hintText: '', controller: emailController),
+            InputField(hintText: 'New Email', controller: emailController),
             const SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
@@ -49,7 +128,7 @@ class ChangePassword extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Change Password', style: TextStyle(color: Colors.white)),
+        title: const Text('Change Password'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -60,7 +139,6 @@ class ChangePassword extends StatelessWidget {
               'Enter Current Password:',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.white
               ),
             ),
             InputField(
@@ -72,11 +150,10 @@ class ChangePassword extends StatelessWidget {
               'Enter New Password:',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.white
               ),
             ),
             InputField(
-                hintText: '',
+                hintText: 'New Password',
                 obscureText: true,
                 controller: newPasswordController),
             const SizedBox(height: 20.0),

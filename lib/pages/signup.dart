@@ -1,53 +1,19 @@
 import 'package:app/pages/login.dart';
 import 'package:flutter/material.dart';
-import 'package:app/pages/auth.dart';
+import 'package:app/services/auth.dart';
 import 'package:app/functions.dart';
-import '../connectivity_checker.dart';
-import '../reconnection_popup.dart';
 
-class SignUpForm extends StatefulWidget {
-  const SignUpForm({Key? key}) : super(key: key);
-  @override
-  SignUpFormState createState() => SignUpFormState();
-}
-  
+class SignUpForm extends StatelessWidget {
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final TextEditingController reEnterPasswordController;
 
- class SignUpFormState extends State<SignUpForm>{
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController reEnterPasswordController = TextEditingController();
-
-  late PopupManager popupManager;
-  late ConnectivityChecker connectivityChecker;
-
-  @override
-  void initState() {
-    super.initState();
-    popupManager = PopupManager();
-    connectivityChecker = ConnectivityChecker(
-      onStatusChanged: onConnectivityChanged,
-    );
-  }
-
-  void onConnectivityChanged(bool isConnected) {
-    if (isConnected) {
-      popupManager.dismissConnectivityPopup();
-    } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        popupManager.showConnectivityPopup(context);
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    // Dispose of the controllers and connectivity checker
-    emailController.dispose();
-    passwordController.dispose();
-    reEnterPasswordController.dispose();
-    connectivityChecker.dispose();
-    super.dispose();
-  }
+  const SignUpForm({
+    super.key,
+    required this.emailController,
+    required this.passwordController,
+    required this.reEnterPasswordController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -59,80 +25,20 @@ class SignUpForm extends StatefulWidget {
         const SizedBox(height: 20.0),
         buildTextField(reEnterPasswordController, 'Re-Enter Password',
             obscureText: true),
-        _buildSignUpButton(),
       ],
     );
   }
-
-  Widget _buildSignUpButton() {
-    return ElevatedButton(
-      onPressed: () async {
-        // Check if any text field is empty
-        if (emailController.text.isEmpty ||
-            passwordController.text.isEmpty ||
-            reEnterPasswordController.text.isEmpty) {
-          showErrorBanner(context, 'Please fill in all fields');
-          return;
-        }
-
-        // Check if passwords match
-        if (passwordController.text != reEnterPasswordController.text) {
-          showErrorBanner(context, 'Passwords do not match.');
-          return;
-        }
-
-        // Check if the email already exists
-        try {
-          final user = await Auth().getUserByEmail(emailController.text);
-          if (user != null) {
-            showErrorBanner(context, 'This email is already registered.');
-            return;
-          }
-        } catch (e) {
-          print('Error checking email: $e');
-        }
-
-        // All conditions passed
-        try {
-          await Auth().createUserWithEmailAndPassword(
-            emailController.text,
-            passwordController.text,
-          );
-          newRoute(context, LoginPage());
-        } catch (e) {
-          print('Sign-up Error: $e');
-        }
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF437AE5),
-        padding: const EdgeInsets.symmetric(vertical: 25.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        minimumSize: const Size(double.infinity, 55),
-      ),
-      child: const Text(
-        'Create Account',
-        style: TextStyle(
-          fontFamily: 'Fredoka',
-          fontSize: 15.0,
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
-
 }
 
-
-  
-
 class SignUpPage extends StatelessWidget {
-   const SignUpPage({Key? key}) : super(key: key);
+  const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
+    final TextEditingController reEnterPasswordController =
+        TextEditingController();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -143,7 +49,12 @@ class SignUpPage extends StatelessWidget {
             children: [
               _buildVenueTitle(),
               const SizedBox(height: 20.0),
-              const SignUpForm(), // No controllers are passed
+              _buildSignUpForm(
+                context,
+                emailController,
+                passwordController,
+                reEnterPasswordController,
+              ),
               const SizedBox(height: 20.0),
               _buildLoginOption(context),
             ],
@@ -168,7 +79,9 @@ class SignUpPage extends StatelessWidget {
 
   Widget _buildSignUpForm(
     BuildContext context,
-    
+    TextEditingController emailController,
+    TextEditingController passwordController,
+    TextEditingController reEnterPasswordController,
   ) {
     return Container(
       decoration: BoxDecoration(
@@ -188,13 +101,79 @@ class SignUpPage extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 20.0),
-          SignUpForm(),
+          SignUpForm(
+            emailController: emailController,
+            passwordController: passwordController,
+            reEnterPasswordController: reEnterPasswordController,
+          ),
           const SizedBox(height: 20.0),
+          _buildSignUpButton(
+            context,
+            emailController,
+            passwordController,
+            reEnterPasswordController,
+          ),
         ],
       ),
     );
   }
 
+  Widget _buildSignUpButton(
+    BuildContext context,
+    TextEditingController emailController,
+    TextEditingController passwordController,
+    TextEditingController reEnterPasswordController,
+  ) {
+    return ElevatedButton(
+      onPressed: () async {
+        if (emailController.text.isEmpty ||
+            passwordController.text.isEmpty ||
+            reEnterPasswordController.text.isEmpty) {
+          showErrorBanner(context, 'Please fill in all fields');
+          return;
+        }
+
+        if (passwordController.text != reEnterPasswordController.text) {
+          showErrorBanner(context, 'Passwords do not match');
+          return;
+        }
+
+        try {
+          final user = await Auth().getUserByEmail(emailController.text);
+
+          if (user != null) {
+            showErrorBanner(context, 'This email is already registered.');
+            return;
+          }
+
+          await Auth().createUserWithEmailAndPassword(
+            emailController.text,
+            passwordController.text,
+          );
+
+          newRoute(context, LoginPage());
+        } catch (e) {
+          showErrorBanner(context, 'Error during sign-up');
+        }
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFF437AE5),
+        padding: const EdgeInsets.symmetric(vertical: 25),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        minimumSize: const Size(double.infinity, 55),
+      ),
+      child: const Text(
+        'Create Account',
+        style: TextStyle(
+          fontFamily: 'Fredoka',
+          fontSize: 15,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
 
   Widget _buildLoginOption(BuildContext context) {
     return Container(

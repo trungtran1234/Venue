@@ -13,7 +13,7 @@ class Auth {
       );
       return userCredential.user;
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -27,7 +27,7 @@ class Auth {
       );
       return userCredential.user;
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -37,7 +37,7 @@ class Auth {
           await _auth.fetchSignInMethodsForEmail(email);
       return methods.isNotEmpty;
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -56,7 +56,7 @@ class Auth {
       }
       return null; // User with the email does not exist
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 }

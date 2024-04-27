@@ -12,18 +12,18 @@ class PopupManager {
             BackdropFilter(
               filter: ui.ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
               child: Container(
-                constraints: BoxConstraints.expand(),
-                color: Color(0xFF437AE5).withOpacity(0.5),
+                constraints: const BoxConstraints.expand(),
+                color: const Color(0xFF437AE5).withOpacity(0.5),
               ),
             ),
             Center(
               child: Container(
-                padding: EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: Text(
+                child: const Text(
                   'Connection Lost\nPlease Reconnect to WiFi or Cellular Data',
                   textAlign: TextAlign.center,
                   style: TextStyle(

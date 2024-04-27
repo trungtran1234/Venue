@@ -8,11 +8,14 @@ class ConnectivityChecker {
   void Function(bool)? onStatusChanged;
 
   ConnectivityChecker({this.onStatusChanged}) {
-    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_handleConnectivityChange);
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_handleConnectivityChange);
   }
 
   void _handleConnectivityChange(ConnectivityResult result) {
-    onStatusChanged?.call(result != ConnectivityResult.none);
+    final bool isConnected = result != ConnectivityResult.none;
+    print('Connectivity status: $isConnected'); // Debug print
+    onStatusChanged?.call(isConnected);
   }
 
   void dispose() {
