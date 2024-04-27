@@ -1,15 +1,14 @@
 import 'package:app/functions.dart';
 import 'package:flutter/material.dart';
-import 'package:app/pages/settings/settings.dart';
+import 'package:app/settings/settings.dart';
 import '../objects/userprofile.dart';
-import '../connectivity_checker.dart';
-import '../reconnection_popup.dart';
+import '../services/connectivity_checker.dart';
+import '../services/reconnection_popup.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
-
-@override
+  @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
@@ -36,10 +35,11 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     UserProfile user = UserProfile(username: "username", location: "location");
-    
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -110,13 +110,11 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-
-@override
+  @override
   void dispose() {
-    connectivityChecker.dispose(); 
+    connectivityChecker.dispose();
     super.dispose();
   }
-
 
   Widget _buildStatisticColumn(int value, String label) {
     return Column(

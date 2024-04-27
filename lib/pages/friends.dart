@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:app/functions.dart';
-import '../connectivity_checker.dart';
-import '../reconnection_popup.dart';
+import '../services/connectivity_checker.dart';
+import '../services/reconnection_popup.dart';
 
 class FriendsPage extends StatefulWidget {
   const FriendsPage({super.key});
@@ -9,8 +9,6 @@ class FriendsPage extends StatefulWidget {
   @override
   _FriendsPageState createState() => _FriendsPageState();
 }
-
-
 
 class _FriendsPageState extends State<FriendsPage> {
   final int _selectedIndex = 2;
@@ -36,7 +34,7 @@ class _FriendsPageState extends State<FriendsPage> {
     }
   }
 
- @override
+  @override
   void dispose() {
     connectivityChecker.dispose();
     super.dispose();

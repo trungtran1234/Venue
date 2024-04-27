@@ -1,9 +1,9 @@
-import 'package:app/pages/add_post.dart';
+import 'package:app/services/add_post.dart';
 import 'package:flutter/material.dart';
 import 'package:app/functions.dart';
 import 'package:flutter/widgets.dart';
-import '../connectivity_checker.dart';
-import '../reconnection_popup.dart';
+import '../services/connectivity_checker.dart';
+import '../services/reconnection_popup.dart';
 
 class NewsFeedPage extends StatefulWidget {
   const NewsFeedPage({super.key});
@@ -14,7 +14,7 @@ class NewsFeedPage extends StatefulWidget {
 
 class _NewsFeedState extends State<NewsFeedPage> {
   int _selectedIndex = 0;
-  
+
   late ConnectivityChecker connectivityChecker;
   late PopupManager popupManager;
   @override
@@ -36,12 +36,12 @@ class _NewsFeedState extends State<NewsFeedPage> {
     }
   }
 
- @override
+  @override
   void dispose() {
     connectivityChecker.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

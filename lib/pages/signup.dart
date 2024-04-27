@@ -1,53 +1,19 @@
 import 'package:app/pages/login.dart';
 import 'package:flutter/material.dart';
-import 'package:app/pages/auth.dart';
+import 'package:app/services/auth.dart';
 import 'package:app/functions.dart';
-import '../connectivity_checker.dart';
-import '../reconnection_popup.dart';
 
-class SignUpForm extends StatefulWidget {
-  const SignUpForm({Key? key}) : super(key: key);
-  @override
-  SignUpFormState createState() => SignUpFormState();
-}
-  
+class SignUpForm extends StatelessWidget {
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final TextEditingController reEnterPasswordController;
 
- class SignUpFormState extends State<SignUpForm>{
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController reEnterPasswordController = TextEditingController();
-
-  late PopupManager popupManager;
-  late ConnectivityChecker connectivityChecker;
-
-  @override
-  void initState() {
-    super.initState();
-    popupManager = PopupManager();
-    connectivityChecker = ConnectivityChecker(
-      onStatusChanged: onConnectivityChanged,
-    );
-  }
-
-  void onConnectivityChanged(bool isConnected) {
-    if (isConnected) {
-      popupManager.dismissConnectivityPopup();
-    } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        popupManager.showConnectivityPopup(context);
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    // Dispose of the controllers and connectivity checker
-    emailController.dispose();
-    passwordController.dispose();
-    reEnterPasswordController.dispose();
-    connectivityChecker.dispose();
-    super.dispose();
-  }
+  const SignUpForm({
+    super.key,
+    required this.emailController,
+    required this.passwordController,
+    required this.reEnterPasswordController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -59,12 +25,105 @@ class SignUpForm extends StatefulWidget {
         const SizedBox(height: 20.0),
         buildTextField(reEnterPasswordController, 'Re-Enter Password',
             obscureText: true),
-        _buildSignUpButton(),
       ],
     );
   }
+}
 
-  Widget _buildSignUpButton() {
+class SignUpPage extends StatelessWidget {
+  const SignUpPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
+    final TextEditingController reEnterPasswordController =
+        TextEditingController();
+
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildVenueTitle(),
+              const SizedBox(height: 20.0),
+              _buildSignUpForm(
+                context,
+                emailController,
+                passwordController,
+                reEnterPasswordController,
+              ),
+              const SizedBox(height: 20.0),
+              _buildLoginOption(context),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildVenueTitle() {
+    return const Text(
+      'Venue',
+      style: TextStyle(
+        color: Colors.orange,
+        fontFamily: 'Fredoka',
+        fontSize: 75.0,
+        fontWeight: FontWeight.bold,
+      ),
+      textAlign: TextAlign.center,
+    );
+  }
+
+  Widget _buildSignUpForm(
+    BuildContext context,
+    TextEditingController emailController,
+    TextEditingController passwordController,
+    TextEditingController reEnterPasswordController,
+  ) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      padding: const EdgeInsets.all(30.0),
+      child: Column(
+        children: [
+          const Text(
+            'Create An Account',
+            style: TextStyle(
+              color: Color(0xFF443636),
+              fontFamily: 'Fredoka',
+              fontSize: 30.0,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20.0),
+          SignUpForm(
+            emailController: emailController,
+            passwordController: passwordController,
+            reEnterPasswordController: reEnterPasswordController,
+          ),
+          const SizedBox(height: 20.0),
+          _buildSignUpButton(
+            context,
+            emailController,
+            passwordController,
+            reEnterPasswordController,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSignUpButton(
+    BuildContext context,
+    TextEditingController emailController,
+    TextEditingController passwordController,
+    TextEditingController reEnterPasswordController,
+  ) {
     return ElevatedButton(
       onPressed: () async {
         // Check if any text field is empty
@@ -121,80 +180,6 @@ class SignUpForm extends StatefulWidget {
       ),
     );
   }
-
-}
-
-
-  
-
-class SignUpPage extends StatelessWidget {
-   const SignUpPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    
-
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildVenueTitle(),
-              const SizedBox(height: 20.0),
-              const SignUpForm(), // No controllers are passed
-              const SizedBox(height: 20.0),
-              _buildLoginOption(context),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildVenueTitle() {
-    return const Text(
-      'Venue',
-      style: TextStyle(
-        color: Colors.orange,
-        fontFamily: 'Fredoka',
-        fontSize: 75.0,
-        fontWeight: FontWeight.bold,
-      ),
-      textAlign: TextAlign.center,
-    );
-  }
-
-  Widget _buildSignUpForm(
-    BuildContext context,
-    
-  ) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      padding: const EdgeInsets.all(30.0),
-      child: Column(
-        children: [
-          const Text(
-            'Create An Account',
-            style: TextStyle(
-              color: Color(0xFF443636),
-              fontFamily: 'Fredoka',
-              fontSize: 30.0,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 20.0),
-          SignUpForm(),
-          const SizedBox(height: 20.0),
-        ],
-      ),
-    );
-  }
-
 
   Widget _buildLoginOption(BuildContext context) {
     return Container(

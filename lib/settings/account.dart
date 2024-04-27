@@ -1,8 +1,84 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:local_auth/local_auth.dart';
+import 'package:app/functions.dart';
+import 'package:app/settings/settings.dart';
 
+class Account extends StatefulWidget {
+  const Account({super.key});
 
+  @override
+  _AccountSettingsState createState() => _AccountSettingsState();
+}
+
+class _AccountSettingsState extends State<Account> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: const Text('Account Settings'),
+        leading: IconButton(
+          onPressed: () {
+            newRoute(context, SettingsPage());
+          },
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20.0),
+            const Text(
+              'Account Information',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            ListTile(
+              title: const Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text('Email Address'),
+                  Spacer(),
+                  Text('johndoe@example.com'),
+                  Icon(Icons.arrow_forward_ios, size: 16),
+                ],
+              ),
+              onTap: () {
+                newRoute(context, const ChangeEmail());
+              },
+            ),
+            ListTile(
+              title: const Text('Change Password'),
+              onTap: () {
+                newRoute(context, const ChangePassword());
+              },
+            ),
+            const SizedBox(height: 20.0),
+            const Text(
+              'Account Management',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            ListTile(
+              title: const Text(
+                'Delete Account',
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              ),
+              onTap: () {},
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class ChangeEmail extends StatelessWidget {
   const ChangeEmail({super.key});
