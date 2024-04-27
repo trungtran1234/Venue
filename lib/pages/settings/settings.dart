@@ -10,19 +10,6 @@ class SettingsPage extends StatelessWidget {
   SettingsPage({super.key});
   final LocalAuthentication auth = LocalAuthentication();
 
-
-  Future<void> authenticateAndNavigate(BuildContext context) async {
-      final bool didAuthenticate = await auth.authenticate(
-        localizedReason: 'Please authenticate to access account settings',
-        options: const AuthenticationOptions(biometricOnly: true),
-      );
-
-      if (didAuthenticate) {
-        newRoute(context, const AccountSettings());
-      }
-    }
-
-
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -44,9 +31,6 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-
-
-
 class SettingsList extends StatelessWidget {
   SettingsList({super.key});
 
@@ -66,15 +50,27 @@ class SettingsList extends StatelessWidget {
     {'title': 'Log out', 'icon': Icons.exit_to_app, 'textColor': Colors.red},
   ];
 
-  final LocalAuthentication auth = LocalAuthentication();
   Future<void> authenticateAndNavigate(BuildContext context) async {
-    final bool didAuthenticate = await auth.authenticate(
-      localizedReason: 'Please authenticate to access account settings',
-      options: const AuthenticationOptions(biometricOnly: true),
-    );
+    final LocalAuthentication auth = LocalAuthentication();
+    try {
+      final bool didAuthenticate = await auth.authenticate(
+        localizedReason: 'Please authenticate to access account settings',
+        options: const AuthenticationOptions(biometricOnly: true),
+      );
 
-    if (didAuthenticate) {
-      newRoute(context, const AccountSettings());
+      if (didAuthenticate) {
+        newRoute(context, const AccountSettings());
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Authentication failed. Please try again.')),
+        );
+      }
+    } catch (e) {
+      print('Error during authentication: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error during authentication.')),
+      );
     }
   }
 
@@ -104,6 +100,7 @@ class SettingsList extends StatelessWidget {
           contentPadding: const EdgeInsets.all(20),
           onTap: () {
             if (settingsOptions[index]['title'] == 'Account') {
+              print("Account tapped");
               authenticateAndNavigate(context);
             } else if (settingsOptions[index]['title'] == 'Privacy') {
               newRoute(context, const Privacy());
