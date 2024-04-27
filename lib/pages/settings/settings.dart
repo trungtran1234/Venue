@@ -4,9 +4,24 @@ import 'package:app/pages/profile.dart';
 import 'package:app/pages/settings/accountsettings.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:local_auth/local_auth.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+  SettingsPage({super.key});
+  final LocalAuthentication auth = LocalAuthentication();
+
+
+  Future<void> authenticateAndNavigate(BuildContext context) async {
+      final bool didAuthenticate = await auth.authenticate(
+        localizedReason: 'Please authenticate to access account settings',
+        options: const AuthenticationOptions(biometricOnly: true),
+      );
+
+      if (didAuthenticate) {
+        newRoute(context, const AccountSettings());
+      }
+    }
+
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +44,9 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
+
+
+
 class SettingsList extends StatelessWidget {
   SettingsList({super.key});
 
@@ -47,6 +65,18 @@ class SettingsList extends StatelessWidget {
     {'title': 'Devices', 'icon': Icons.laptop, 'textColor': Colors.black},
     {'title': 'Log out', 'icon': Icons.exit_to_app, 'textColor': Colors.red},
   ];
+
+  final LocalAuthentication auth = LocalAuthentication();
+  Future<void> authenticateAndNavigate(BuildContext context) async {
+    final bool didAuthenticate = await auth.authenticate(
+      localizedReason: 'Please authenticate to access account settings',
+      options: const AuthenticationOptions(biometricOnly: true),
+    );
+
+    if (didAuthenticate) {
+      newRoute(context, const AccountSettings());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +104,7 @@ class SettingsList extends StatelessWidget {
           contentPadding: const EdgeInsets.all(20),
           onTap: () {
             if (settingsOptions[index]['title'] == 'Account') {
-              newRoute(context, const AccountSettings());
+              authenticateAndNavigate(context);
             } else if (settingsOptions[index]['title'] == 'Privacy') {
               newRoute(context, const Privacy());
             } else if (settingsOptions[index]['title'] == 'Notifications') {
@@ -107,7 +137,7 @@ class _AccountSettingsState extends State<AccountSettings> {
         title: const Text('Account Settings'),
         leading: IconButton(
           onPressed: () {
-            newRoute(context, const SettingsPage());
+            newRoute(context, SettingsPage());
           },
           icon: const Icon(Icons.arrow_back_ios),
         ),
@@ -190,7 +220,7 @@ class _PrivacyState extends State<Privacy> {
         title: const Text('Privacy'),
         leading: IconButton(
           onPressed: () {
-            newRoute(context, const SettingsPage());
+            newRoute(context, SettingsPage());
           },
           icon: const Icon(Icons.arrow_back),
         ),
@@ -280,7 +310,7 @@ class _NotificationsState extends State<Notifications> {
         title: const Text('Notifications'),
         leading: IconButton(
           onPressed: () {
-            newRoute(context, const SettingsPage());
+            newRoute(context, SettingsPage());
           },
           icon: const Icon(Icons.arrow_back),
         ),
