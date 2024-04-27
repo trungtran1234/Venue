@@ -48,6 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Navigator.pop(context);
           },
           icon: const Icon(Icons.arrow_back),
+          color: Colors.white
         ),
         actions: [
           IconButton(
@@ -55,6 +56,7 @@ class _ProfilePageState extends State<ProfilePage> {
               newRoute(context, const SettingsPage());
             },
             icon: const Icon(Icons.settings),
+            color: Colors.white
           ),
         ],
       ),
@@ -74,6 +76,7 @@ class _ProfilePageState extends State<ProfilePage> {
               style: const TextStyle(
                 fontSize: 24.0, // Increase font size for username
                 fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
               textAlign: TextAlign.center,
             ),
@@ -81,14 +84,14 @@ class _ProfilePageState extends State<ProfilePage> {
             Text(
               '${user.location}',
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16.0),
+              style: const TextStyle(fontSize: 16.0, color: Colors.white,)
             ),
             const SizedBox(height: 10.0),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
               child: Text(
                 '${user.bio}',
-                style: const TextStyle(fontSize: 16.0),
+                style: const TextStyle(fontSize: 16.0, color: Colors.white,),
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -126,13 +129,14 @@ class _ProfilePageState extends State<ProfilePage> {
           '$value',
           style: const TextStyle(
             fontSize: 18.0,
+            color: Colors.white,
           ),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 5.0),
         Text(
           label,
-          style: const TextStyle(fontSize: 16.0),
+          style: const TextStyle(fontSize: 16.0, color: Colors.white,),
         ),
       ],
     );
