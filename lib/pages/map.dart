@@ -22,8 +22,6 @@ class _MapPageState extends State<MapPage> {
 
   late ConnectivityChecker connectivityChecker;
   late PopupManager popupManager;
- 
-  
 
   @override
   void initState() {
@@ -38,7 +36,7 @@ class _MapPageState extends State<MapPage> {
           CameraPosition(
             target:
                 LatLng(currentLocation.latitude!, currentLocation.longitude!),
-            zoom: 12.0,
+            zoom: 16.0,
           ),
         ),
       );
@@ -46,23 +44,23 @@ class _MapPageState extends State<MapPage> {
   }
 
   void onConnectivityChanged(bool isConnected) {
-      if (isConnected) {
-        popupManager.dismissConnectivityPopup();
-      } else {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          popupManager.showConnectivityPopup(context);
-        });
-      }
+    if (isConnected) {
+      popupManager.dismissConnectivityPopup();
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        popupManager.showConnectivityPopup(context);
+      });
     }
+  }
 
   @override
-    void dispose() {
-      connectivityChecker.dispose();
-      super.dispose();
-    }
+  void dispose() {
+    connectivityChecker.dispose();
+    super.dispose();
+  }
 
   Future<String> getPlaceAddress(double latitude, double longitude) async {
-    final apiKey = 'AIzaSyBuznTrerLg81eCkcf5AcPAGXpdStMuIh8';
+    final apiKey = '<FIRST-KEY>';
     final url = Uri.parse(
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey');
 
@@ -206,7 +204,7 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         leading: profile(context),
       ),
       body: GoogleMap(
