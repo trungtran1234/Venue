@@ -31,36 +31,62 @@ class SignUpForm extends StatelessWidget {
 }
 
 class SignUpPage extends StatelessWidget {
-  const SignUpPage({super.key});
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController reEnterPasswordController =
+      TextEditingController();
+
+  SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
-    final TextEditingController reEnterPasswordController =
-        TextEditingController();
-
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildVenueTitle(),
-              const SizedBox(height: 20.0),
-              _buildSignUpForm(
-                context,
-                emailController,
-                passwordController,
-                reEnterPasswordController,
-              ),
-              const SizedBox(height: 20.0),
-              _buildLoginOption(context),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF133068),
+              Color(0xFF0B1425),
             ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _buildLogo(),
+                    _buildVenueTitle(),
+                    _buildSignUpForm(
+                      context,
+                      emailController,
+                      passwordController,
+                      reEnterPasswordController,
+                    ),
+                    const SizedBox(height: 20.0),
+                    _buildLoginOption(context),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLogo() {
+    return Image.asset(
+      'lib/assets/logo.png',
+      height: 125,
+      width: 100,
     );
   }
 
@@ -84,21 +110,21 @@ class SignUpPage extends StatelessWidget {
     TextEditingController reEnterPasswordController,
   ) {
     return Container(
+      padding: const EdgeInsets.all(30.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
       ),
-      padding: const EdgeInsets.all(30.0),
       child: Column(
         children: [
           const Text(
             'Create An Account',
+            textAlign: TextAlign.center,
             style: TextStyle(
               color: Color(0xFF443636),
               fontFamily: 'Fredoka',
               fontSize: 30.0,
             ),
-            textAlign: TextAlign.center,
           ),
           const SizedBox(height: 20.0),
           SignUpForm(
@@ -157,7 +183,7 @@ class SignUpPage extends StatelessWidget {
         }
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF437AE5),
+        backgroundColor: const Color(0xFF133068),
         padding: const EdgeInsets.symmetric(vertical: 25),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),

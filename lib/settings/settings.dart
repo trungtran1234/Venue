@@ -17,7 +17,7 @@ class SettingsPage extends StatelessWidget {
     return Theme(
       data: ThemeData(),
       child: Scaffold(
-        backgroundColor: const Color(0xFF437AE5),
+        backgroundColor: const Color(0xFF0B1425),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           leading: IconButton(
@@ -40,15 +40,15 @@ class SettingsList extends StatelessWidget {
     {
       'title': 'Account',
       'icon': Icons.account_circle,
-      'textColor': Colors.black
+      'textColor': Colors.white
     },
-    {'title': 'Privacy', 'icon': Icons.shield, 'textColor': Colors.black},
+    {'title': 'Privacy', 'icon': Icons.shield, 'textColor': Colors.white},
     {
       'title': 'Notifications',
       'icon': Icons.notifications,
-      'textColor': Colors.black
+      'textColor': Colors.white
     },
-    {'title': 'Devices', 'icon': Icons.laptop, 'textColor': Colors.black},
+    {'title': 'Devices', 'icon': Icons.laptop, 'textColor': Colors.white},
     {'title': 'Log out', 'icon': Icons.exit_to_app, 'textColor': Colors.red},
   ];
 

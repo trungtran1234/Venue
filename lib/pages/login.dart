@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app/services/auth.dart';
 import 'package:app/functions.dart';
+import 'package:flutter/widgets.dart';
 
 class LoginForm extends StatelessWidget {
   final TextEditingController emailController;
@@ -37,24 +38,47 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Venue title
-              _buildVenueTitle(),
-              const SizedBox(height: 10.0),
-              // Container for the login form
-              _buildLoginForm(context),
-              const SizedBox(height: 20.0),
-              // Container for the sign-up option
-              _buildSignUpOption(context),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF133068),
+              Color(0xFF0B1425),
             ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _buildLogo(),
+                    _buildVenueTitle(),
+                    _buildLoginForm(context),
+                    const SizedBox(height: 20.0),
+                    _buildSignUpOption(context),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLogo() {
+    return Image.asset(
+      'lib/assets/logo.png',
+      height: 125,
+      width: 100,
     );
   }
 
@@ -76,12 +100,12 @@ class LoginPage extends StatelessWidget {
       padding: const EdgeInsets.all(30.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
         children: [
           const Text(
-            'Sign into your account',
+            'Sign Into Your Account',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: 'Fredoka',
@@ -95,7 +119,6 @@ class LoginPage extends StatelessWidget {
             emailController: _emailController,
             passwordController: _passwordController,
           ),
-          const SizedBox(height: 20.0),
           // Login button
           _buildLoginButton(context),
           const SizedBox(height: 10.0),
@@ -132,8 +155,8 @@ class LoginPage extends StatelessWidget {
         }
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF437AE5),
-        padding: const EdgeInsets.symmetric(vertical: 25.0),
+        backgroundColor: const Color(0xFF133068),
+        padding: const EdgeInsets.symmetric(vertical: 25),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -143,7 +166,7 @@ class LoginPage extends StatelessWidget {
         'Login',
         style: TextStyle(
           fontFamily: 'Fredoka',
-          fontSize: 15.0,
+          fontSize: 15,
           color: Colors.white,
         ),
       ),
@@ -191,7 +214,7 @@ class LoginPage extends StatelessWidget {
           // GestureDetector for the sign-up option
           GestureDetector(
             onTap: () {
-              newRoute(context, const SignUpPage());
+              newRoute(context, SignUpPage());
             },
             child: const Text(
               'Sign Up',
