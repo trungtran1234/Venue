@@ -91,10 +91,19 @@ class SignUpPage extends StatelessWidget {
   }
 
   Widget _buildVenueTitle() {
-    return const Text(
+    return Text(
       'Venue',
       style: TextStyle(
-        color: Colors.orange,
+        foreground: Paint()
+          ..shader = const LinearGradient(
+            colors: [
+              Color(0xFFFFD700), // Gold
+              Color(0xFFFFFACD), // Light golden
+              Color(0xFFFFD700), // Gold
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
         fontFamily: 'Fredoka',
         fontSize: 75.0,
         fontWeight: FontWeight.bold,

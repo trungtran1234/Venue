@@ -23,12 +23,13 @@ class NotificationsState extends State<Notifications> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Notifications'),
+        title:
+            const Text('Notifications', style: TextStyle(color: Colors.white)),
         leading: IconButton(
           onPressed: () {
             newRoute(context, SettingsPage());
           },
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
         ),
       ),
       body: Padding(
@@ -41,7 +42,10 @@ class NotificationsState extends State<Notifications> {
               children: [
                 const Text(
                   'Receive Notifications',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
                 Switch(
                   value: _notificationEnabled,
@@ -59,13 +63,18 @@ class NotificationsState extends State<Notifications> {
                       }
                     });
                   },
-                ),
+                  activeColor: Colors.white, // Thumb color when active
+                  activeTrackColor: Colors.green, // Track color when active
+                )
               ],
             ),
             const SizedBox(height: 20),
             const Text(
               'Post Notifications',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
             const SizedBox(height: 10),
             buildSwitchListTile(
@@ -106,7 +115,10 @@ class NotificationsState extends State<Notifications> {
             // ),
             const Text(
               'Event Notifications',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
             const SizedBox(height: 10),
             buildSwitchListTile(
@@ -159,9 +171,11 @@ Widget buildSwitchListTile({
   required Function(bool)? onChanged,
 }) {
   return SwitchListTile(
-    title: Text(title),
-    subtitle: Text(subtitle),
+    title: Text(title, style: const TextStyle(color: Colors.white)),
+    subtitle: Text(subtitle, style: const TextStyle(color: Colors.grey)),
     value: value,
     onChanged: onChanged,
+    activeColor: Colors.white,
+    activeTrackColor: Colors.green,
   );
 }

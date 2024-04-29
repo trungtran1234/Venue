@@ -40,16 +40,27 @@ class SettingsList extends StatelessWidget {
     {
       'title': 'Account',
       'icon': Icons.account_circle,
-      'textColor': Colors.white
+      'textColor': Colors.white,
+      'description': 'Manage your account settings and personal information.'
     },
-    {'title': 'Privacy', 'icon': Icons.shield, 'textColor': Colors.white},
+    {
+      'title': 'Privacy',
+      'icon': Icons.shield,
+      'textColor': Colors.white,
+      'description': 'Control your privacy settings and access permissions.'
+    },
     {
       'title': 'Notifications',
       'icon': Icons.notifications,
-      'textColor': Colors.white
+      'textColor': Colors.white,
+      'description': 'Customize your notification preferences.'
     },
-    {'title': 'Devices', 'icon': Icons.laptop, 'textColor': Colors.white},
-    {'title': 'Log out', 'icon': Icons.exit_to_app, 'textColor': Colors.red},
+    {
+      'title': 'Log out',
+      'icon': Icons.exit_to_app,
+      'textColor': Colors.red,
+      'description': 'Sign out of your account on this device.'
+    },
   ];
 
   Future<void> authenticateAndNavigate(BuildContext context) async {
@@ -84,39 +95,54 @@ class SettingsList extends StatelessWidget {
         return ListTile(
           leading: Icon(
             settingsOptions[index]['icon'],
-            color: Colors.black,
+            color: Colors.white, // Icons color
           ),
-          title: Row(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 settingsOptions[index]['title'],
                 style: TextStyle(
                   color: settingsOptions[index]['textColor'],
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              const Spacer(),
-              const Icon(Icons.arrow_forward_ios,
-                  size: 16, color: Colors.black),
+              Text(
+                settingsOptions[index]['description'],
+                style: TextStyle(
+                  color: Colors.grey[400], // Light grey for the description
+                  fontSize: 12,
+                ),
+              ),
             ],
           ),
+          trailing: const Icon(Icons.arrow_forward_ios,
+              size: 16, color: Colors.white),
           contentPadding: const EdgeInsets.all(20),
           onTap: () {
-            if (settingsOptions[index]['title'] == 'Account') {
-              print("Account tapped");
-              newRoute(context, const Account());
-              // authenticateAndNavigate(context);
-            } else if (settingsOptions[index]['title'] == 'Privacy') {
-              newRoute(context, const Privacy());
-            } else if (settingsOptions[index]['title'] == 'Notifications') {
-              newRoute(context, const Notifications());
-            } else if (settingsOptions[index]['title'] == 'Devices') {
-            } else {
-              FirebaseAuth.instance.signOut();
-              newRoute(context, LoginPage());
-            }
+            handleSettingsOptionTap(context, settingsOptions[index]['title']);
           },
         );
       },
     );
+  }
+
+  void handleSettingsOptionTap(BuildContext context, String title) {
+    switch (title) {
+      case 'Account':
+        print("Account tapped");
+        newRoute(context, const Account());
+        break;
+      case 'Privacy':
+        newRoute(context, const Privacy());
+        break;
+      case 'Notifications':
+        newRoute(context, const Notifications());
+        break;
+      case 'Log out':
+        FirebaseAuth.instance.signOut();
+        newRoute(context, LoginPage());
+        break;
+    }
   }
 }

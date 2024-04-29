@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="app"
+        android:label="Venue"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -31,7 +31,7 @@
             android:name="flutterEmbedding"
             android:value="2" />
            <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="<key>"/>
+               android:value="key"/>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility?hl=en and
