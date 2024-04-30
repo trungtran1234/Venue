@@ -187,7 +187,7 @@ class SignUpPage extends StatelessWidget {
             showDialog(
               context: context,
               builder: (ctx) => AlertDialog(
-                title: Text('Verify Your Email'),
+                title: const Text('Verify Your Email'),
                 content: Text(
                     'A verification email has been sent to ${user.email}. Please verify your account before logging in.'),
                 actions: <Widget>[
@@ -198,7 +198,7 @@ class SignUpPage extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => LoginPage()),
                       );
                     },
-                    child: Text('OK'),
+                    child: const Text('OK'),
                   ),
                 ],
               ),
