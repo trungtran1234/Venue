@@ -20,12 +20,12 @@ class PrivacyState extends State<Privacy> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Privacy'),
+        title: const Text('Privacy', style: TextStyle(color: Colors.white)),
         leading: IconButton(
           onPressed: () {
             newRoute(context, SettingsPage());
           },
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
         ),
       ),
       body: Padding(
@@ -35,7 +35,10 @@ class PrivacyState extends State<Privacy> {
           children: [
             const Text(
               'Account Privacy',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
             buildSwitchListTile(
               title: 'Private Profile',
@@ -60,7 +63,10 @@ class PrivacyState extends State<Privacy> {
             const SizedBox(height: 20),
             const Text(
               'Activity Privacy',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
             buildSwitchListTile(
               title: 'Hide Online Status',
@@ -118,9 +124,11 @@ Widget buildSwitchListTile({
   required Function(bool)? onChanged,
 }) {
   return SwitchListTile(
-    title: Text(title),
-    subtitle: Text(subtitle),
+    title: Text(title, style: const TextStyle(color: Colors.white)),
+    subtitle: Text(subtitle, style: const TextStyle(color: Colors.grey)),
     value: value,
     onChanged: onChanged,
+    activeColor: Colors.white,
+    activeTrackColor: Colors.green,
   );
 }

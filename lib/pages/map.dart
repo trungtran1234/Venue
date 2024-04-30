@@ -60,7 +60,7 @@ class MapPageState extends State<MapPage> {
   }
 
   Future<String> getPlaceAddress(double latitude, double longitude) async {
-    const apiKey = '<key>';
+    const apiKey = 'key';
     final url = Uri.parse(
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey');
 

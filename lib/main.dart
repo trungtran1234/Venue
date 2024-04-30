@@ -23,8 +23,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Fredoka',
-        scaffoldBackgroundColor: const Color(0xFF437AE5),
-        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue),
+        scaffoldBackgroundColor: const Color(0xFF0B1425),
+        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blueGrey),
         useMaterial3: true,
       ),
       home: const AuthStateChecker(),
