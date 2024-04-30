@@ -1,4 +1,4 @@
-import 'package:app/services/add_post.dart';
+import 'package:app/pages/add_post.dart';
 import 'package:app/pages/post_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +54,10 @@ class NewsFeedState extends State<NewsFeedPage> {
             onPressed: () {
               newRoute(context, const AddPostScreen());
             },
-            icon: const Icon(Icons.add),
+            icon: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
           ),
         ],
       ),

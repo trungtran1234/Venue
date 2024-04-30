@@ -41,9 +41,10 @@ IconButton profile(BuildContext context) {
 BottomNavigationBar buildBottomNavigationBar(
     BuildContext context, int selectedIndex) {
   return BottomNavigationBar(
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.transparent,
     currentIndex: selectedIndex,
-    selectedItemColor: Colors.blue,
+    selectedItemColor: Colors.white,
+    unselectedItemColor: Colors.grey,
     items: const [
       BottomNavigationBarItem(
         icon: Icon(Icons.newspaper),

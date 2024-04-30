@@ -1,12 +1,9 @@
 import 'dart:typed_data';
-
 import 'package:app/database/firestore_methods.dart';
 import 'package:app/functions.dart';
 import 'package:app/pages/newsfeed.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 class AddPostScreen extends StatefulWidget {
   const AddPostScreen({super.key});
@@ -73,7 +70,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
             ),
             SimpleDialogOption(
               padding: const EdgeInsets.all(20),
-              child: const Text('Choose from gallary'),
+              child: const Text('Choose from gallery'),
               onPressed: () async {
                 Navigator.of(context).pop();
                 Uint8List file = await pickImage(
@@ -116,8 +113,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
     return _file == null
         ? Scaffold(
             appBar: AppBar(
+              backgroundColor: Colors.transparent,
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
                 onPressed: () {
                   newRoute(context, const NewsFeedPage());
                 },
