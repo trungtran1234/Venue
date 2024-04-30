@@ -1,6 +1,6 @@
 import 'package:app/pages/login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:app/services/auth.dart';
 import 'package:app/functions.dart';
 
 class SignUpForm extends StatelessWidget {
@@ -97,9 +97,9 @@ class SignUpPage extends StatelessWidget {
         foreground: Paint()
           ..shader = const LinearGradient(
             colors: [
-              Color(0xFFFFD700), // Gold
-              Color(0xFFFFFACD), // Light golden
-              Color(0xFFFFD700), // Gold
+              Color(0xFFFFD700),
+              Color(0xFFFFFACD),
+              Color(0xFFFFD700),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -174,21 +174,38 @@ class SignUpPage extends StatelessWidget {
         }
 
         try {
-          final user = await Auth().getUserByEmail(emailController.text);
+          User? user =
+              (await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: emailController.text,
+            password: passwordController.text,
+          ))
+                  .user;
 
           if (user != null) {
-            showErrorBanner(context, 'This email is already registered.');
-            return;
+            await user.sendEmailVerification(); // send verification email
+
+            showDialog(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: Text('Verify Your Email'),
+                content: Text(
+                    'A verification email has been sent to ${user.email}. Please verify your account before logging in.'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                      );
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              ),
+            );
           }
-
-          await Auth().createUserWithEmailAndPassword(
-            emailController.text,
-            passwordController.text,
-          );
-
-          newRoute(context, LoginPage());
         } catch (e) {
-          showErrorBanner(context, 'Error during sign-up');
+          showErrorBanner(context, 'Error during sign-up: ${e.toString()}');
         }
       },
       style: ElevatedButton.styleFrom(
