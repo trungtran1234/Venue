@@ -4,63 +4,32 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../services/connectivity_checker.dart';
-import '../services/reconnection_popup.dart';
 
 class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+  const MapPage({Key? key}) : super(key: key);
 
   @override
-  MapPageState createState() => MapPageState();
+  _MapPageState createState() => _MapPageState();
 }
 
-class MapPageState extends State<MapPage> {
-  final int _selectedIndex = 1;
+class _MapPageState extends State<MapPage> {
+  int _selectedIndex = 1;
   GoogleMapController? _controller;
-  final Location _location = Location();
-  final Set<Marker> _markers = {};
-
-  late ConnectivityChecker connectivityChecker;
-  late PopupManager popupManager;
-
+  Location _location = Location();
+  Set<Marker> _markers = {};
+  LatLng? currentPosition;
+  bool isLocationReady = false;
+  bool isCustomStyleApplied = false;
+  String mapStyle = '';
   @override
   void initState() {
     super.initState();
-    popupManager = PopupManager();
-    connectivityChecker = ConnectivityChecker(
-      onStatusChanged: onConnectivityChanged,
-    );
-    _location.onLocationChanged.listen((LocationData currentLocation) {
-      _controller?.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(
-            target:
-                LatLng(currentLocation.latitude!, currentLocation.longitude!),
-            zoom: 17.0,
-          ),
-        ),
-      );
-    });
-  }
-
-  void onConnectivityChanged(bool isConnected) {
-    if (isConnected) {
-      popupManager.dismissConnectivityPopup();
-    } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        popupManager.showConnectivityPopup(context);
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    connectivityChecker.dispose();
-    super.dispose();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) async => await fetchLocationUpdates());
   }
 
   Future<String> getPlaceAddress(double latitude, double longitude) async {
-    const apiKey = 'key';
+    final apiKey = 'key';
     final url = Uri.parse(
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey');
 
@@ -87,22 +56,21 @@ class MapPageState extends State<MapPage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: const Text('Create Event'),
+              title: Text('Create Event'),
               content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
                     TextFormField(
-                      decoration:
-                          const InputDecoration(labelText: 'Event Name'),
+                      decoration: InputDecoration(labelText: 'Event Name'),
                       onChanged: (value) => eventName = value,
                     ),
                     TextFormField(
                       initialValue: eventLocation,
-                      decoration: const InputDecoration(labelText: 'Location'),
+                      decoration: InputDecoration(labelText: 'Location'),
                       onChanged: (value) => eventLocation = value,
                     ),
                     ElevatedButton(
-                      child: const Text('Select Start Date & Time'),
+                      child: Text('Select Start Date & Time'),
                       onPressed: () async {
                         final picked = await pickDateTime(startDateTime);
                         if (picked != null) {
@@ -116,7 +84,7 @@ class MapPageState extends State<MapPage> {
                         child: Text('Start: ${startDateTime.toString()}'),
                       ),
                     ElevatedButton(
-                      child: const Text('Select End Date & Time'),
+                      child: Text('Select End Date & Time'),
                       onPressed: () async {
                         final picked = await pickDateTime(endDateTime);
                         if (picked != null) {
@@ -134,41 +102,20 @@ class MapPageState extends State<MapPage> {
               ),
               actions: <Widget>[
                 TextButton(
-                  child: const Text('Cancel'),
+                  child: Text('Cancel'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
                 TextButton(
-                  child: const Text('Add'),
+                  child: Text('Add'),
                   onPressed: () {
                     if (eventName.isNotEmpty &&
                         startDateTime != null &&
                         endDateTime != null) {
-                      setState(() {
-                        final markerId =
-                            MarkerId(DateTime.now().toIso8601String());
-                        _markers.add(
-                          Marker(
-                            markerId: markerId,
-                            position: position,
-                            infoWindow: InfoWindow(
-                              title: eventName,
-                              snippet:
-                                  'Start: ${startDateTime.toString()}, End: ${endDateTime.toString()}',
-                            ),
-                            icon: BitmapDescriptor.defaultMarkerWithHue(
-                                BitmapDescriptor.hueAzure),
-                          ),
-                        );
-                        // move to new marker
-                        _controller?.animateCamera(
-                          CameraUpdate.newCameraPosition(
-                            CameraPosition(target: position, zoom: 15),
-                          ),
-                        );
-                      });
-
+                        startDateTime = startDateTime!.toUtc();
+                        endDateTime = endDateTime!.toUtc();
+                      addMarker(position, eventName, startDateTime!, endDateTime!);
                       Navigator.of(context).pop(); // close dialog
                     } else {
                       // error handling here (user didn't fill everything out)
@@ -181,6 +128,27 @@ class MapPageState extends State<MapPage> {
         );
       },
     );
+  }
+   void addMarker(LatLng position, String eventName, DateTime startDateTime, DateTime endDateTime) {
+    final markerId = MarkerId(DateTime.now().toIso8601String());
+      _markers.add(
+        Marker(
+          markerId: markerId,
+          position: position,
+          infoWindow: InfoWindow(
+            title: eventName,
+            snippet: 'Start: ${startDateTime.toString()}, End: ${endDateTime.toString()}',
+          ),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+        ),
+      );
+
+      _controller?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: position, zoom: 13),
+        ),
+      );
+      print("Marker added at: ${position.latitude}, ${position.longitude}");
   }
 
   Future<DateTime?> pickDateTime(DateTime? initialDateTime) async {
@@ -201,6 +169,38 @@ class MapPageState extends State<MapPage> {
     return DateTime(date.year, date.month, date.day, time.hour, time.minute);
   }
 
+  Future<void> fetchLocationUpdates() async {
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+
+    serviceEnabled = await _location.serviceEnabled();
+    if (serviceEnabled) {
+      serviceEnabled = await _location.requestService();
+    } else {
+      return;
+    }
+
+    permissionGranted = await _location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await _location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    _location.onLocationChanged.listen((currentLocation) {
+      if (currentLocation.latitude != null &&
+          currentLocation.longitude != null) {
+        setState(() {
+          currentPosition = LatLng(
+            currentLocation.latitude!,
+            currentLocation.longitude!,
+          );
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -208,13 +208,18 @@ class MapPageState extends State<MapPage> {
         backgroundColor: Colors.transparent,
         leading: profile(context),
       ),
-      body: GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: const CameraPosition(target: LatLng(0, 0)),
+      body: currentPosition == null
+      ? const Center(child: CircularProgressIndicator())
+      : GoogleMap(
+          mapType: MapType.normal,
+          initialCameraPosition: CameraPosition(
+            target: currentPosition!,
+            zoom: 13,
+          ),
         myLocationEnabled: true,
         myLocationButtonEnabled: true,
         onMapCreated: (GoogleMapController controller) {
-          _controller = controller;
+          _controller = controller;          
         },
         markers: _markers,
         onLongPress: _onMapLongPress,
