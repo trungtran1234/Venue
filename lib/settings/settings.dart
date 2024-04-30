@@ -21,7 +21,7 @@ class SettingsPage extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
               newRoute(context, const ProfilePage());
             },
