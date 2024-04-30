@@ -149,6 +149,7 @@ class NewsFeedState extends State<NewsFeedPage> {
                 IconButton(
                   onPressed: () => {_selectImage(context)},
                   icon: const Icon(Icons.add),
+                  color: Colors.white,
                 ),
               ],
             ),
