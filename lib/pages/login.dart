@@ -2,7 +2,6 @@ import 'package:app/pages/map.dart';
 import 'package:app/pages/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:app/services/auth.dart';
 import 'package:app/functions.dart';
 
 class LoginForm extends StatelessWidget {
@@ -88,9 +87,9 @@ class LoginPage extends StatelessWidget {
         foreground: Paint()
           ..shader = const LinearGradient(
             colors: [
-              Color(0xFFFFD700), // Gold
-              Color(0xFFFFFACD), // Light golden
-              Color(0xFFFFD700), // Gold
+              Color(0xFFFFD700),
+              Color(0xFFFFFACD), 
+              Color(0xFFFFD700), 
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -122,15 +121,12 @@ class LoginPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20.0),
-          // Login form fields
           LoginForm(
             emailController: _emailController,
             passwordController: _passwordController,
           ),
-          // Login button
           _buildLoginButton(context),
           const SizedBox(height: 10.0),
-          // Forgot password option
           _buildForgotPasswordOption(),
         ],
       ),
@@ -141,25 +137,34 @@ class LoginPage extends StatelessWidget {
     return ElevatedButton(
       onPressed: () async {
         try {
-          final User? user = await Auth().signInWithEmailAndPassword(
-            _emailController.text,
-            _passwordController.text,
+          UserCredential userCredential =
+              await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim(),
           );
-          if (user != null) {
+          User? user = userCredential.user;
+          if (user != null && !user.emailVerified) {
+            showErrorBanner(
+                context, 'Please verify your email address to log in.');
+          } else if (user != null && user.emailVerified) {
             newRoute(context, const MapPage());
           } else {
-            // Handle case where user is null
-            final bool emailExists =
-                await Auth().checkEmailExists(_emailController.text);
-            if (!emailExists) {
-              showErrorBanner(context, 'Email not registered.');
-            } else {
-              showErrorBanner(context, 'Incorrect password.');
-            }
+            showErrorBanner(
+                context, 'Unexpected error occurred. Please try again.');
           }
         } catch (e) {
-          // Handle login errors
-          print('Login Error: $e');
+          if (e is FirebaseAuthException) {
+            if (e.code == 'user-not-found') {
+              showErrorBanner(context, 'No user found for that email.');
+            } else if (e.code == 'wrong-password') {
+              showErrorBanner(
+                  context, 'Wrong password provided for that user.');
+            } else {
+              showErrorBanner(context, e.message ?? 'Failed to login.');
+            }
+          } else {
+            showErrorBanner(context, 'Login error: ${e.toString()}');
+          }
         }
       },
       style: ElevatedButton.styleFrom(
@@ -168,7 +173,7 @@ class LoginPage extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        minimumSize: const Size(double.infinity, 55),
+        minimumSize: const Size(double.infinity, 55), 
       ),
       child: const Text(
         'Login',
@@ -187,7 +192,7 @@ class LoginPage extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () {
-            // Handle forgot password action here
+            //forgot password logic here
           },
           child: const Text(
             'Forgot Password?',
@@ -219,7 +224,6 @@ class LoginPage extends StatelessWidget {
               fontSize: 16.0,
             ),
           ),
-          // GestureDetector for the sign-up option
           GestureDetector(
             onTap: () {
               newRoute(context, SignUpPage());
