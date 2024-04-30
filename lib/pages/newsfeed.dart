@@ -219,9 +219,11 @@ class NewsFeedState extends State<NewsFeedPage> {
                       width: MediaQuery.of(context).size.width * 0.4,
                       child: TextField(
                         controller: _descriptionController,
+                        style: const TextStyle(color: Colors.white),
                         decoration: const InputDecoration(
                           hintText: 'Write a caption...',
                           border: InputBorder.none,
+                          hintStyle: TextStyle(color: Colors.white),
                         ),
                         maxLines: 8,
                       ),
