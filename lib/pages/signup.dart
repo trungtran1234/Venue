@@ -1,7 +1,7 @@
 import 'package:app/pages/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:app/functions.dart';
+import 'package:app/global.dart';
 
 class SignUpForm extends StatelessWidget {
   final TextEditingController emailController;
@@ -62,8 +62,8 @@ class SignUpPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _buildLogo(),
-                    _buildVenueTitle(),
+                    buildLogo(),
+                    buildVenueTitle(),
                     _buildSignUpForm(
                       context,
                       emailController,
@@ -79,36 +79,6 @@ class SignUpPage extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildLogo() {
-    return Image.asset(
-      'lib/assets/logo.png',
-      height: 125,
-      width: 100,
-    );
-  }
-
-  Widget _buildVenueTitle() {
-    return Text(
-      'Venue',
-      style: TextStyle(
-        foreground: Paint()
-          ..shader = const LinearGradient(
-            colors: [
-              Color(0xFFFFD700),
-              Color(0xFFFFFACD),
-              Color(0xFFFFD700),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
-        fontFamily: 'Fredoka',
-        fontSize: 75.0,
-        fontWeight: FontWeight.bold,
-      ),
-      textAlign: TextAlign.center,
     );
   }
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/functions.dart';
+import 'package:app/global.dart';
 import '../services/connectivity_checker.dart';
 import '../services/reconnection_popup.dart';
 
@@ -11,8 +11,6 @@ class FriendsPage extends StatefulWidget {
 }
 
 class FriendsPageState extends State<FriendsPage> {
-  final int _selectedIndex = 2;
-
   late ConnectivityChecker connectivityChecker;
   late PopupManager popupManager;
 
@@ -46,7 +44,6 @@ class FriendsPageState extends State<FriendsPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        leading: profile(context),
         actions: [
           IconButton(
             onPressed: () {
@@ -57,7 +54,6 @@ class FriendsPageState extends State<FriendsPage> {
         ],
       ),
       body: friendsList(context),
-      bottomNavigationBar: buildBottomNavigationBar(context, _selectedIndex),
     );
   }
 

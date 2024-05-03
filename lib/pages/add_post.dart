@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:app/database/firestore_methods.dart';
-import 'package:app/functions.dart';
+import 'package:app/global.dart';
 import 'package:app/pages/newsfeed.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';

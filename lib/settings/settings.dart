@@ -1,5 +1,5 @@
 import 'package:app/pages/login.dart';
-import 'package:app/functions.dart';
+import 'package:app/global.dart';
 import 'package:app/pages/profile.dart';
 import 'package:app/settings/account.dart';
 import 'package:app/settings/notifications.dart';

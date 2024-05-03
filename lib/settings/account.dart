@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/functions.dart';
+import 'package:app/global.dart';
 import 'package:app/settings/settings.dart';
 
 class Account extends StatefulWidget {
@@ -15,12 +15,20 @@ class AccountSettingsState extends State<Account> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Account Settings'),
+        title: const Text(
+          'Account Settings',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
         leading: IconButton(
           onPressed: () {
             newRoute(context, SettingsPage());
           },
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -34,16 +42,27 @@ class AccountSettingsState extends State<Account> {
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
             ListTile(
               title: const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text('Email Address'),
+                  Text(
+                    'Email Address',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   Spacer(),
-                  Text('johndoe@example.com'),
-                  Icon(Icons.arrow_forward_ios, size: 16),
+                  Text(
+                    'johndoe@example.com',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                    color: Colors.white,
+                  ),
                 ],
               ),
               onTap: () {
@@ -51,7 +70,10 @@ class AccountSettingsState extends State<Account> {
               },
             ),
             ListTile(
-              title: const Text('Change Password'),
+              title: const Text(
+                'Change Password',
+                style: TextStyle(color: Colors.white),
+              ),
               onTap: () {
                 newRoute(context, const ChangePassword());
               },
@@ -62,6 +84,7 @@ class AccountSettingsState extends State<Account> {
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
             ListTile(

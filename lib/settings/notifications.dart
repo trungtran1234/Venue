@@ -1,4 +1,4 @@
-import 'package:app/functions.dart';
+import 'package:app/global.dart';
 import 'package:flutter/material.dart';
 import 'package:app/settings/settings.dart';
 

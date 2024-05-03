@@ -1,9 +1,41 @@
 import 'package:app/pages/friends.dart';
 import 'package:app/pages/map.dart';
 import 'package:app/pages/newsfeed.dart';
+import 'package:app/pages/notifications.dart';
 import 'package:app/pages/profile.dart';
+import 'package:app/settings/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
+Widget buildLogo() {
+  return Image.asset(
+    'lib/assets/logo.png',
+    height: 125,
+    width: 100,
+  );
+}
+
+Widget buildVenueTitle() {
+  return Text(
+    'Venue',
+    style: TextStyle(
+      foreground: Paint()
+        ..shader = const LinearGradient(
+          colors: [
+            Color(0xFFFFD700),
+            Color(0xFFFFFACD),
+            Color(0xFFFFD700),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+      fontFamily: 'Fredoka',
+      fontSize: 75.0,
+      fontWeight: FontWeight.bold,
+    ),
+    textAlign: TextAlign.center,
+  );
+}
 
 TextField buildTextField(TextEditingController controller, String hintText,
     {bool obscureText = false}) {
@@ -26,18 +58,6 @@ TextField buildTextField(TextEditingController controller, String hintText,
   );
 }
 
-IconButton profile(BuildContext context) {
-  return IconButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const ProfilePage()),
-        );
-      },
-      icon: const Icon(Icons.person),
-      color: Colors.white);
-}
-
 BottomNavigationBar buildBottomNavigationBar(
     BuildContext context, int selectedIndex) {
   return BottomNavigationBar(
@@ -45,18 +65,24 @@ BottomNavigationBar buildBottomNavigationBar(
     currentIndex: selectedIndex,
     selectedItemColor: Colors.white,
     unselectedItemColor: Colors.grey,
+    showSelectedLabels: false,
+    showUnselectedLabels: false,
     items: const [
       BottomNavigationBarItem(
-        icon: Icon(Icons.newspaper),
-        label: 'Feed',
+        icon: Icon(Icons.home_filled),
+        label: 'Home',
       ),
       BottomNavigationBarItem(
-        icon: Icon(Icons.map),
-        label: 'Map',
+        icon: Icon(Icons.search),
+        label: 'Discover',
       ),
       BottomNavigationBarItem(
-        icon: Icon(Icons.group),
-        label: 'Friends',
+        icon: Icon(Icons.notifications),
+        label: 'Notifications',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.person),
+        label: 'Profile',
       ),
     ],
     onTap: (index) {
@@ -70,20 +96,17 @@ void _onItemTapped(BuildContext context, int index) {
     newRoute(context, const NewsFeedPage());
   } else if (index == 1) {
     newRoute(context, const MapPage());
+  } else if (index == 2) {
+    newRoute(context, const NotificationsPage());
   } else {
-    newRoute(context, const FriendsPage());
+    newRoute(context, const ProfilePage());
   }
 }
 
 void newRoute(BuildContext context, Widget newRoute) {
-  if (!Navigator.of(context).canPop()) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => newRoute));
-  } else {
-    Navigator.of(context).pop();
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => newRoute));
-  }
+  Navigator.of(context).pushReplacement(
+    MaterialPageRoute(builder: (context) => newRoute),
+  );
 }
 
 void showErrorBanner(BuildContext context, String message) {

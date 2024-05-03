@@ -1,4 +1,4 @@
-import 'package:app/functions.dart';
+import 'package:app/global.dart';
 import 'package:flutter/material.dart';
 import 'package:app/settings/settings.dart';
 import '../objects/userprofile.dart';
@@ -15,6 +15,7 @@ class ProfilePage extends StatefulWidget {
 class ProfilePageState extends State<ProfilePage> {
   late PopupManager popupManager;
   late ConnectivityChecker connectivityChecker;
+  final int _selectedIndex = 3;
 
   @override
   void initState() {
@@ -43,12 +44,7 @@ class ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back),
-            color: Colors.white),
+        title: const Text('Profile', style: TextStyle(color: Colors.white)),
         actions: [
           IconButton(
               onPressed: () {
@@ -112,6 +108,7 @@ class ProfilePageState extends State<ProfilePage> {
           ],
         ),
       ),
+      bottomNavigationBar: buildBottomNavigationBar(context, _selectedIndex),
     );
   }
 

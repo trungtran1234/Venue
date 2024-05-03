@@ -4,7 +4,7 @@ import 'package:app/database/firestore_methods.dart';
 import 'package:app/pages/post_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:app/functions.dart';
+import 'package:app/global.dart';
 import 'package:image_picker/image_picker.dart';
 import '../services/connectivity_checker.dart';
 import '../services/reconnection_popup.dart';
@@ -144,7 +144,7 @@ class NewsFeedState extends State<NewsFeedPage> {
         ? Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.transparent,
-              leading: profile(context),
+              title: const Text('Venue', style: TextStyle(color: Colors.white)),
               actions: [
                 IconButton(
                   onPressed: () => {_selectImage(context)},
