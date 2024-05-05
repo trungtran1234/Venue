@@ -21,7 +21,7 @@ class PostCard extends StatelessWidget {
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(25),
                     topRight: Radius.circular(25)),
-                color: Colors.white,
+                color: Colors.black,
               ),
               child: Row(
                 children: [
@@ -64,7 +64,7 @@ class PostCard extends StatelessWidget {
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(25),
                     bottomRight: Radius.circular(25)),
-                color: Colors.white,
+                color: Colors.black,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,12 +103,13 @@ class PostCard extends StatelessWidget {
                               TextSpan(
                                 text: snap['username'],
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
                               ),
                               const TextSpan(text: ' '),
                               TextSpan(
                                 text: snap['description'],
+                                style: const TextStyle(color: Colors.white),
                               ),
                             ],
                           ),

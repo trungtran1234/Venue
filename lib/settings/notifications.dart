@@ -2,6 +2,18 @@ import 'package:app/global.dart';
 import 'package:flutter/material.dart';
 import 'package:app/settings/settings.dart';
 
+class NotificationOption {
+  String title;
+  String subtitle;
+  bool value;
+
+  NotificationOption({
+    required this.title,
+    required this.subtitle,
+    required this.value,
+  });
+}
+
 class Notifications extends StatefulWidget {
   const Notifications({super.key});
 
@@ -11,12 +23,42 @@ class Notifications extends StatefulWidget {
 
 class NotificationsState extends State<Notifications> {
   bool _notificationEnabled = true;
-  bool _likes = true;
-  bool _comments = true;
-  // bool _shares = true;
-  bool _eventUpdates = true;
-  bool _newEventSuggestions = true;
-  bool _eventReminders = true;
+  List<NotificationOption> postNotifications = [
+    NotificationOption(
+        title: 'Likes',
+        subtitle: 'Receive notifications for likes',
+        value: true),
+    NotificationOption(
+        title: 'Comments',
+        subtitle: 'Receive notifications for comments',
+        value: true),
+  ];
+
+  List<NotificationOption> eventNotifications = [
+    NotificationOption(
+        title: 'Event Updates',
+        subtitle: 'Receive updates about events',
+        value: true),
+    NotificationOption(
+        title: 'New Event Suggestions',
+        subtitle: 'Receive suggestions for new events',
+        value: true),
+    NotificationOption(
+        title: 'Event Reminders',
+        subtitle: 'Receive reminders for upcoming events',
+        value: true),
+  ];
+
+  List<NotificationOption> friendNotifications = [
+    NotificationOption(
+        title: 'Friend Requests',
+        subtitle: 'Receive notifications for friend requests',
+        value: true),
+    NotificationOption(
+        title: 'Friend Activity',
+        subtitle: 'Receive notifications when friends post or update events',
+        value: true),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -40,142 +82,72 @@ class NotificationsState extends State<Notifications> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Receive Notifications',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
+                const Text('Receive Notifications',
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
                 Switch(
                   value: _notificationEnabled,
                   onChanged: (value) {
                     setState(() {
                       _notificationEnabled = value;
-                      if (value) {
-                        // If main switch is turned on, turn on all sub-notifications
-                        _likes = true;
-                        _comments = true;
-                        // _shares = true;
-                        _eventUpdates = true;
-                        _newEventSuggestions = true;
-                        _eventReminders = true;
+                      for (var option in postNotifications) {
+                        option.value = value;
+                      }
+                      for (var option in eventNotifications) {
+                        option.value = value;
+                      }
+                      for (var option in friendNotifications) {
+                        option.value = value;
                       }
                     });
                   },
-                  activeColor: Colors.white, // Thumb color when active
-                  activeTrackColor: Colors.green, // Track color when active
+                  activeColor: Colors.white,
+                  activeTrackColor: Colors.green,
                 )
               ],
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Post Notifications',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
-            const SizedBox(height: 10),
-            buildSwitchListTile(
-              title: 'Likes',
-              subtitle: 'Receive notifications for likes',
-              value: _likes,
-              onChanged: _notificationEnabled
-                  ? (value) {
-                      setState(() {
-                        _likes = value;
-                      });
-                    }
-                  : null,
-            ),
-            buildSwitchListTile(
-              title: 'Comments',
-              subtitle: 'Receive notifications for comments',
-              value: _comments,
-              onChanged: _notificationEnabled
-                  ? (value) {
-                      setState(() {
-                        _comments = value;
-                      });
-                    }
-                  : null,
-            ),
-            // buildSwitchListTile(
-            //   title: 'Shares',
-            //   subtitle: 'Receive notifications for shares',
-            //   value: _shares,
-            //   onChanged: _notificationEnabled
-            //       ? (value) {
-            //           setState(() {
-            //             _shares = value;
-            //           });
-            //         }
-            //       : null,
-            // ),
-            const Text(
-              'Event Notifications',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
-            const SizedBox(height: 10),
-            buildSwitchListTile(
-              title: 'Event Updates',
-              subtitle: 'Receive updates about events',
-              value: _eventUpdates,
-              onChanged: _notificationEnabled
-                  ? (value) {
-                      setState(() {
-                        _eventUpdates = value;
-                      });
-                    }
-                  : null,
-            ),
-            buildSwitchListTile(
-              title: 'New Event Suggestions',
-              subtitle: 'Receive suggestions for new events',
-              value: _newEventSuggestions,
-              onChanged: _notificationEnabled
-                  ? (value) {
-                      setState(() {
-                        _newEventSuggestions = value;
-                      });
-                    }
-                  : null,
-            ),
-            buildSwitchListTile(
-              title: 'Event Reminders',
-              subtitle: 'Receive reminders for upcoming events',
-              value: _eventReminders,
-              onChanged: _notificationEnabled
-                  ? (value) {
-                      setState(() {
-                        _eventReminders = value;
-                      });
-                    }
-                  : null,
-            ),
+            buildNotificationSection('Post Notifications', postNotifications),
+            buildNotificationSection('Event Notifications', eventNotifications),
+            buildNotificationSection(
+                'Friend Notifications', friendNotifications),
           ],
         ),
       ),
     );
   }
-}
 
-Widget buildSwitchListTile({
-  required String title,
-  required String subtitle,
-  required bool value,
-  required Function(bool)? onChanged,
-}) {
-  return SwitchListTile(
-    title: Text(title, style: const TextStyle(color: Colors.white)),
-    subtitle: Text(subtitle, style: const TextStyle(color: Colors.grey)),
-    value: value,
-    onChanged: onChanged,
-    activeColor: Colors.white,
-    activeTrackColor: Colors.green,
-  );
+  Widget buildNotificationSection(
+      String title, List<NotificationOption> options) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title,
+            style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white)),
+        const SizedBox(height: 10),
+        ...options.map((option) => buildSwitchListTile(option)).toList(),
+      ],
+    );
+  }
+
+  Widget buildSwitchListTile(NotificationOption option) {
+    return SwitchListTile(
+      title: Text(option.title, style: const TextStyle(color: Colors.white)),
+      subtitle:
+          Text(option.subtitle, style: const TextStyle(color: Colors.grey)),
+      value: option.value,
+      onChanged: _notificationEnabled
+          ? (newValue) {
+              setState(() => option.value = newValue);
+            }
+          : null,
+      activeColor: Colors.white,
+      activeTrackColor: Colors.green,
+    );
+  }
 }

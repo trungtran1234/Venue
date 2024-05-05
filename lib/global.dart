@@ -1,9 +1,7 @@
-import 'package:app/pages/friends.dart';
 import 'package:app/pages/map.dart';
 import 'package:app/pages/newsfeed.dart';
 import 'package:app/pages/notifications.dart';
 import 'package:app/pages/profile.dart';
-import 'package:app/settings/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -41,10 +39,16 @@ TextField buildTextField(TextEditingController controller, String hintText,
     {bool obscureText = false}) {
   return TextField(
     controller: controller,
+    style: const TextStyle(
+      color: Colors.white,
+    ),
     decoration: InputDecoration(
       hintText: hintText,
+      hintStyle: TextStyle(
+        color: Colors.grey[500],
+      ),
       filled: true,
-      fillColor: const Color(0xFFE6E6E6),
+      fillColor: const Color(0xFF2C2C2C),
       contentPadding: const EdgeInsets.symmetric(
         vertical: 10,
         horizontal: 20,
@@ -55,52 +59,56 @@ TextField buildTextField(TextEditingController controller, String hintText,
       ),
     ),
     obscureText: obscureText,
+    cursorColor: Colors.white,
   );
 }
 
-BottomNavigationBar buildBottomNavigationBar(
-    BuildContext context, int selectedIndex) {
-  return BottomNavigationBar(
-    backgroundColor: Colors.transparent,
-    currentIndex: selectedIndex,
-    selectedItemColor: Colors.white,
-    unselectedItemColor: Colors.grey,
-    showSelectedLabels: false,
-    showUnselectedLabels: false,
-    items: const [
-      BottomNavigationBarItem(
-        icon: Icon(Icons.home_filled),
-        label: 'Home',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.search),
-        label: 'Discover',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.notifications),
-        label: 'Notifications',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.person),
-        label: 'Profile',
-      ),
-    ],
-    onTap: (index) {
-      _onItemTapped(context, index);
-    },
+Widget buildBottomNavigationBar(BuildContext context, int selectedIndex) {
+  return SizedBox(
+    height: 55,
+    child: BottomNavigationBar(
+      backgroundColor: Colors.black,
+      currentIndex: selectedIndex,
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Colors.grey,
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home_filled, size: 20),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.search, size: 20),
+          label: 'Discover',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.notifications, size: 20),
+          label: 'Notifications',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person, size: 20),
+          label: 'Profile',
+        ),
+      ],
+      onTap: (index) {
+        switch (index) {
+          case 0:
+            newRoute(context, const NewsFeedPage());
+            break;
+          case 1:
+            newRoute(context, const MapPage());
+            break;
+          case 2:
+            newRoute(context, const NotificationsPage());
+            break;
+          case 3:
+            newRoute(context, const ProfilePage());
+            break;
+        }
+      },
+    ),
   );
-}
-
-void _onItemTapped(BuildContext context, int index) {
-  if (index == 0) {
-    newRoute(context, const NewsFeedPage());
-  } else if (index == 1) {
-    newRoute(context, const MapPage());
-  } else if (index == 2) {
-    newRoute(context, const NotificationsPage());
-  } else {
-    newRoute(context, const ProfilePage());
-  }
 }
 
 void newRoute(BuildContext context, Widget newRoute) {

@@ -17,7 +17,7 @@ class SettingsPage extends StatelessWidget {
     return Theme(
       data: ThemeData(),
       child: Scaffold(
-        backgroundColor: const Color(0xFF0B1425),
+        backgroundColor: Color.fromARGB(255, 0, 0, 0),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           leading: IconButton(

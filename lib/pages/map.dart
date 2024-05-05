@@ -210,7 +210,7 @@ class MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         title: const Text('Discover', style: TextStyle(color: Colors.white)),
       ),
       body: currentPosition == null

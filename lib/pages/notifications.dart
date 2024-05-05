@@ -11,8 +11,7 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class NotificationsPageState extends State<NotificationsPage> {
-  final int _selectedIndex =
-      2; // Assuming Notifications is the fourth item in your BottomNavBar
+  final int _selectedIndex = 2;
 
   late ConnectivityChecker connectivityChecker;
   late PopupManager popupManager;
@@ -46,7 +45,7 @@ class NotificationsPageState extends State<NotificationsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         title:
             const Text('Notifications', style: TextStyle(color: Colors.white)),
       ),
@@ -57,7 +56,6 @@ class NotificationsPageState extends State<NotificationsPage> {
 
   Container notificationsList(BuildContext context) {
     return Container(
-      color: Colors.white,
       child: ListView.builder(
         itemCount: 10, // Simulate 10 notifications
         itemBuilder: (context, index) {
