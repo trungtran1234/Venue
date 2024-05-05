@@ -1,5 +1,5 @@
 import 'package:app/pages/login.dart';
-import 'package:app/functions.dart';
+import 'package:app/global.dart';
 import 'package:app/pages/profile.dart';
 import 'package:app/settings/account.dart';
 import 'package:app/settings/notifications.dart';
@@ -17,7 +17,7 @@ class SettingsPage extends StatelessWidget {
     return Theme(
       data: ThemeData(),
       child: Scaffold(
-        backgroundColor: const Color(0xFF0B1425),
+        backgroundColor: Color.fromARGB(255, 0, 0, 0),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           leading: IconButton(

@@ -1,8 +1,8 @@
-import 'package:app/pages/map.dart';
+import 'package:app/pages/newsfeed.dart';
 import 'package:app/pages/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:app/functions.dart';
+import 'package:app/global.dart';
 
 class LoginForm extends StatelessWidget {
   final TextEditingController emailController;
@@ -42,8 +42,8 @@ class LoginPage extends StatelessWidget {
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0xFF133068),
-              Color(0xFF0B1425),
+              Color(0xFF121212),
+              Color.fromARGB(255, 16, 19, 24),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -57,8 +57,8 @@ class LoginPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _buildLogo(),
-                    _buildVenueTitle(),
+                    buildLogo(),
+                    buildVenueTitle(),
                     _buildLoginForm(context),
                     const SizedBox(height: 20.0),
                     _buildSignUpOption(context),
@@ -72,42 +72,20 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _buildLogo() {
-    return Image.asset(
-      'lib/assets/logo.png',
-      height: 125,
-      width: 100,
-    );
-  }
-
-  Widget _buildVenueTitle() {
-    return Text(
-      'Venue',
-      style: TextStyle(
-        foreground: Paint()
-          ..shader = const LinearGradient(
-            colors: [
-              Color(0xFFFFD700),
-              Color(0xFFFFFACD), 
-              Color(0xFFFFD700), 
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
-        fontFamily: 'Fredoka',
-        fontSize: 75.0,
-        fontWeight: FontWeight.bold,
-      ),
-      textAlign: TextAlign.center,
-    );
-  }
-
   Widget _buildLoginForm(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(30.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF1E1E1E),
         borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            spreadRadius: 1,
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -116,7 +94,7 @@ class LoginPage extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: 'Fredoka',
-              color: Color(0xFF443636),
+              color: Colors.white,
               fontSize: 30.0,
             ),
           ),
@@ -147,7 +125,7 @@ class LoginPage extends StatelessWidget {
             showErrorBanner(
                 context, 'Please verify your email address to log in.');
           } else if (user != null && user.emailVerified) {
-            newRoute(context, const MapPage());
+            newRoute(context, const NewsFeedPage());
           } else {
             showErrorBanner(
                 context, 'Unexpected error occurred. Please try again.');
@@ -168,12 +146,12 @@ class LoginPage extends StatelessWidget {
         }
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF133068),
+        backgroundColor: const Color(0xFF007AFF),
         padding: const EdgeInsets.symmetric(vertical: 25),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        minimumSize: const Size(double.infinity, 55), 
+        minimumSize: const Size(double.infinity, 55),
       ),
       child: const Text(
         'Login',
@@ -197,7 +175,7 @@ class LoginPage extends StatelessWidget {
           child: const Text(
             'Forgot Password?',
             style: TextStyle(
-              color: Colors.blue,
+              color: Color(0xFF007AFF),
               fontSize: 14.0,
             ),
           ),
@@ -209,8 +187,16 @@ class LoginPage extends StatelessWidget {
   Widget _buildSignUpOption(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        color: const Color(0xFF1E1E1E),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            spreadRadius: 1,
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ),
       alignment: Alignment.center,
       padding: const EdgeInsets.all(30.0),
@@ -231,7 +217,7 @@ class LoginPage extends StatelessWidget {
             child: const Text(
               'Sign Up',
               style: TextStyle(
-                color: Colors.blue,
+                color: Color(0xFF007AFF),
                 fontSize: 16.0,
               ),
             ),
