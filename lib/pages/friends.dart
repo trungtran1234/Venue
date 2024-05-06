@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:app/global.dart';
 import '../services/connectivity_checker.dart';
 import '../services/reconnection_popup.dart';
 
