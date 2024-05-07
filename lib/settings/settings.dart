@@ -4,6 +4,8 @@ import 'package:app/pages/profile.dart';
 import 'package:app/settings/account.dart';
 import 'package:app/settings/notifications.dart';
 import 'package:app/settings/privacy.dart';
+import 'package:app/settings/activity.dart';
+import 'package:app/settings/security.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:local_auth/local_auth.dart';
@@ -56,10 +58,17 @@ class SettingsList extends StatelessWidget {
       'description': 'Customize your notification preferences.'
     },
     {
-      'title': 'Log out',
-      'icon': Icons.exit_to_app,
-      'textColor': Colors.red,
-      'description': 'Sign out of your account on this device.'
+      'title': 'Activity',
+      'icon': Icons.timeline,
+      'textColor': Colors.white,
+      'description': 'Review your recent activity and history.'
+    },
+    {
+      'title': 'Security',
+      'icon': Icons.security,
+      'textColor': Colors.white,
+      'description':
+          'Manage your security settings like passwords and authentication.'
     },
   ];
 
@@ -89,48 +98,71 @@ class SettingsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: settingsOptions.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          leading: Icon(
-            settingsOptions[index]['icon'],
-            color: Colors.white, // Icons color
+    return ListView(
+      children: <Widget>[
+        ...settingsOptions
+            .map((option) => ListTile(
+                  leading: Icon(
+                    option['icon'],
+                    color: Colors.white,
+                  ),
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        option['title'],
+                        style: TextStyle(
+                          color: option['textColor'],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        option['description'],
+                        style: TextStyle(
+                          color: Colors.grey[400],
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                  trailing: const Icon(Icons.arrow_forward_ios,
+                      size: 16, color: Colors.white),
+                  contentPadding: const EdgeInsets.all(20),
+                  onTap: () =>
+                      handleSettingsOptionTap(context, option['title']),
+                ))
+            .toList(),
+        const Divider(color: Colors.white, height: 40),
+        ListTile(
+          leading: const Icon(
+            Icons.exit_to_app,
+            color: Colors.red,
           ),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                settingsOptions[index]['title'],
-                style: TextStyle(
-                  color: settingsOptions[index]['textColor'],
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                settingsOptions[index]['description'],
-                style: TextStyle(
-                  color: Colors.grey[400], // Light grey for the description
-                  fontSize: 12,
-                ),
-              ),
-            ],
+          title: const Text(
+            'Log out',
+            style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           trailing: const Icon(Icons.arrow_forward_ios,
               size: 16, color: Colors.white),
           contentPadding: const EdgeInsets.all(20),
           onTap: () {
-            handleSettingsOptionTap(context, settingsOptions[index]['title']);
+            FirebaseAuth.instance.signOut();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
           },
-        );
-      },
+        ),
+      ],
     );
   }
 
   void handleSettingsOptionTap(BuildContext context, String title) {
     switch (title) {
       case 'Account':
-        print("Account tapped");
         newRoute(context, const Account());
         break;
       case 'Privacy':
@@ -138,6 +170,12 @@ class SettingsList extends StatelessWidget {
         break;
       case 'Notifications':
         newRoute(context, const Notifications());
+        break;
+      case 'Activity':
+        newRoute(context, const ActivityPage());
+        break;
+      case 'Security':
+        newRoute(context, const SecurityPage());
         break;
       case 'Log out':
         FirebaseAuth.instance.signOut();

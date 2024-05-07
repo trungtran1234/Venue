@@ -14,6 +14,9 @@ class PrivacyState extends State<Privacy> {
   bool _hideFromSearch = true;
   bool _hideOnlineStatus = true;
   bool _allowFriendRequests = true;
+  bool _hideFriendCount = false;
+  bool _hideEventsAttended = false;
+  bool _hideEventsHosted = false;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +63,16 @@ class PrivacyState extends State<Privacy> {
                 });
               },
             ),
+            buildSwitchListTile(
+              title: 'Hide Friend Count',
+              subtitle: 'Do not show your friend count to others',
+              value: _hideFriendCount,
+              onChanged: (value) {
+                setState(() {
+                  _hideFriendCount = value;
+                });
+              },
+            ),
             const SizedBox(height: 20),
             const Text(
               'Activity Privacy',
@@ -88,33 +101,31 @@ class PrivacyState extends State<Privacy> {
                 });
               },
             ),
+            buildSwitchListTile(
+              title: 'Hide Events Attended',
+              subtitle: 'Keep your event attendance private',
+              value: _hideEventsAttended,
+              onChanged: (value) {
+                setState(() {
+                  _hideEventsAttended = value;
+                });
+              },
+            ),
+            buildSwitchListTile(
+              title: 'Hide Events Hosted',
+              subtitle: 'Hide your events from public view',
+              value: _hideEventsHosted,
+              onChanged: (value) {
+                setState(() {
+                  _hideEventsHosted = value;
+                });
+              },
+            ),
           ],
         ),
       ),
     );
   }
-}
-
-Widget buildTile({
-  required String title,
-  String? subtitle,
-  Color textColor = Colors.black,
-  VoidCallback? onTap,
-}) {
-  return ListTile(
-    title: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Text(title),
-        const Spacer(),
-        if (subtitle != null) Text(subtitle),
-        const Icon(Icons.arrow_forward_ios, size: 16),
-      ],
-    ),
-    onTap: onTap,
-    contentPadding: EdgeInsets.zero,
-    trailing: const SizedBox(width: 24.0), // Adjust trailing space
-  );
 }
 
 Widget buildSwitchListTile({

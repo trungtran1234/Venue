@@ -82,7 +82,7 @@ class NotificationsState extends State<Notifications> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Receive Notifications',
+                const Text('Receive Push Notifications',
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
