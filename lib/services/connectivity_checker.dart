@@ -14,7 +14,6 @@ class ConnectivityChecker {
 
   void _handleConnectivityChange(ConnectivityResult result) {
     final bool isConnected = result != ConnectivityResult.none;
-    print('Connectivity status: $isConnected'); // Debug print
     onStatusChanged?.call(isConnected);
   }
 

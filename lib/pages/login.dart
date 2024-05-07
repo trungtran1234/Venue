@@ -118,17 +118,17 @@ class LoginPage extends StatelessWidget {
         String email = _emailController.text.trim();
         String password = _passwordController.text.trim();
 
-        // Handle cases for missing input
+        String errorMessage = '';
         if (email.isEmpty && password.isEmpty) {
-          showErrorBanner(context, 'Please enter your email and password.');
-          return;
+          errorMessage = 'Please enter your email and password.';
+        } else if (email.isEmpty) {
+          errorMessage = 'Please enter your email.';
+        } else if (password.isEmpty) {
+          errorMessage = 'Please enter your password.';
         }
-        if (email.isEmpty) {
-          showErrorBanner(context, 'Please enter your email.');
-          return;
-        }
-        if (password.isEmpty) {
-          showErrorBanner(context, 'Please enter your password.');
+
+        if (errorMessage.isNotEmpty) {
+          showTopSnackBar(context, errorMessage);
           return;
         }
 
@@ -138,33 +138,35 @@ class LoginPage extends StatelessWidget {
             email: email,
             password: password,
           );
-          // Check if user's email is verified
+
+          // Handle email verification status
           User? user = userCredential.user;
-          if (user != null && !user.emailVerified) {
-            showErrorBanner(
-                context, 'Please verify your email address to log in.');
-          } else if (user != null && user.emailVerified) {
-            newRoute(context, const NewsFeedPage());
+          if (user != null) {
+            if (!user.emailVerified) {
+              showTopSnackBar(
+                  context, 'Please verify your email address to log in.');
+            } else {
+              newRoute(context, const NewsFeedPage());
+            }
           }
         } catch (e) {
+          errorMessage = 'Login error: Please try again later.';
           if (e is FirebaseAuthException) {
             switch (e.code) {
               case 'user-not-found':
               case 'invalid-email':
-                showErrorBanner(context, 'Invalid email address provided.');
+                errorMessage = 'Invalid email address provided.';
                 break;
               case 'wrong-password':
-                showErrorBanner(
-                    context, 'Incorrect password, please try again.');
+                errorMessage = 'Incorrect password, please try again.';
                 break;
               default:
-                showErrorBanner(context,
-                    'Login error: ${e.message ?? "Please try again later."}');
+                errorMessage =
+                    'Login error: ${e.message ?? "Please try again later."}';
                 break;
             }
-          } else {
-            showErrorBanner(context, 'Login error: ${e.toString()}');
           }
+          showTopSnackBar(context, errorMessage);
         }
       },
       style: ElevatedButton.styleFrom(
@@ -419,7 +421,7 @@ class ForgotPasswordPage extends StatelessWidget {
     } catch (e) {
       showTopSnackBar(
         context,
-        const Text('Error sending reset email. Please try again.',
+        const Text('Please enter your email.',
             style: TextStyle(color: Colors.white)),
         Colors.red,
       );

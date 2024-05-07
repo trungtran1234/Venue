@@ -72,9 +72,9 @@ class ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 20.0),
             Text(
-              '${user.username}',
+              user.username,
               style: const TextStyle(
-                fontSize: 24.0, // Increase font size for username
+                fontSize: 24.0,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
@@ -92,7 +92,7 @@ class ProfilePageState extends State<ProfilePage> {
               child: const Text('Edit Profile'),
             ),
             const SizedBox(height: 10.0),
-            Text('${user.location}',
+            Text(user.location,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 16.0,
@@ -102,7 +102,7 @@ class ProfilePageState extends State<ProfilePage> {
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
               child: Text(
-                '${user.bio}',
+                user.bio,
                 style: const TextStyle(
                   fontSize: 16.0,
                   color: Colors.white,
@@ -234,7 +234,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                 Container(
                   height: 30,
                   width: 30,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.blue, // Camera icon background color
                     shape: BoxShape.circle,
                   ),

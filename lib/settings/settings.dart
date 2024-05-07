@@ -19,7 +19,7 @@ class SettingsPage extends StatelessWidget {
     return Theme(
       data: ThemeData(),
       child: Scaffold(
-        backgroundColor: Color.fromARGB(255, 0, 0, 0),
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           leading: IconButton(
@@ -89,7 +89,6 @@ class SettingsList extends StatelessWidget {
         );
       }
     } catch (e) {
-      print('Error during authentication: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Error during authentication.')),
       );
@@ -100,38 +99,35 @@ class SettingsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
-        ...settingsOptions
-            .map((option) => ListTile(
-                  leading: Icon(
-                    option['icon'],
-                    color: Colors.white,
+        ...settingsOptions.map((option) => ListTile(
+              leading: Icon(
+                option['icon'],
+                color: Colors.white,
+              ),
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    option['title'],
+                    style: TextStyle(
+                      color: option['textColor'],
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        option['title'],
-                        style: TextStyle(
-                          color: option['textColor'],
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        option['description'],
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    option['description'],
+                    style: TextStyle(
+                      color: Colors.grey[400],
+                      fontSize: 12,
+                    ),
                   ),
-                  trailing: const Icon(Icons.arrow_forward_ios,
-                      size: 16, color: Colors.white),
-                  contentPadding: const EdgeInsets.all(20),
-                  onTap: () =>
-                      handleSettingsOptionTap(context, option['title']),
-                ))
-            .toList(),
+                ],
+              ),
+              trailing: const Icon(Icons.arrow_forward_ios,
+                  size: 16, color: Colors.white),
+              contentPadding: const EdgeInsets.all(20),
+              onTap: () => handleSettingsOptionTap(context, option['title']),
+            )),
         const Divider(color: Colors.white, height: 40),
         ListTile(
           leading: const Icon(

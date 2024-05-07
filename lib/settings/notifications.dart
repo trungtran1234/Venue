@@ -130,7 +130,7 @@ class NotificationsState extends State<Notifications> {
                 fontWeight: FontWeight.bold,
                 color: Colors.white)),
         const SizedBox(height: 10),
-        ...options.map((option) => buildSwitchListTile(option)).toList(),
+        ...options.map((option) => buildSwitchListTile(option)),
       ],
     );
   }

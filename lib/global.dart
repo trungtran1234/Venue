@@ -117,20 +117,38 @@ void newRoute(BuildContext context, Widget newRoute) {
   );
 }
 
-void showErrorBanner(BuildContext context, String message) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(message),
-      backgroundColor: Colors.red,
-      duration: const Duration(seconds: 3),
-      action: SnackBarAction(
-        label: 'OK',
-        onPressed: () {
-          // Some optional action when OK is pressed
-        },
+void showTopSnackBar(BuildContext context, String message) {
+  final overlay = Overlay.of(context);
+  final overlayEntry = OverlayEntry(
+    builder: (context) => Positioned(
+      top: MediaQuery.of(context)
+          .padding
+          .top, // Position right below the status bar
+      left: 10,
+      right: 10,
+      child: Material(
+        elevation: 10.0,
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(
+            message,
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
       ),
     ),
   );
+
+  overlay.insert(overlayEntry);
+
+  // Automatically remove the overlay after 3 seconds
+  Future.delayed(const Duration(seconds: 3))
+      .then((value) => overlayEntry.remove());
 }
 
 pickImage(ImageSource source) async {
@@ -139,7 +157,6 @@ pickImage(ImageSource source) async {
   if (file != null) {
     return await file.readAsBytes();
   }
-  print('No image selected');
 }
 
 showSnackBar(String content, BuildContext context) {

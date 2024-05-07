@@ -6,10 +6,10 @@ class ActivityPage extends StatefulWidget {
   const ActivityPage({super.key});
 
   @override
-  _ActivityPageState createState() => _ActivityPageState();
+  ActivityPageState createState() => ActivityPageState();
 }
 
-class _ActivityPageState extends State<ActivityPage> {
+class ActivityPageState extends State<ActivityPage> {
   bool _showLikes = true;
   bool _showShares = true;
   bool _showComments = true;

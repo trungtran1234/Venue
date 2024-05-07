@@ -74,7 +74,7 @@ class AccountSettingsState extends State<Account> {
                   ),
                   Text(
                     userEmail, // Display the current user's email
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
                   const Icon(
                     Icons.arrow_forward_ios,
@@ -325,7 +325,7 @@ class ChangePasswordState extends State<ChangePassword> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            newRoute(context, SettingsPage());
+            newRoute(context, const Account());
           },
         ),
       ),

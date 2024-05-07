@@ -142,12 +142,12 @@ class SignUpPage extends StatelessWidget {
         if (emailController.text.isEmpty ||
             passwordController.text.isEmpty ||
             reEnterPasswordController.text.isEmpty) {
-          showErrorBanner(context, 'Please fill in all fields');
+          showTopSnackBar(context, 'Please fill in all fields');
           return;
         }
 
         if (passwordController.text != reEnterPasswordController.text) {
-          showErrorBanner(context, 'Passwords do not match');
+          showTopSnackBar(context, 'Passwords do not match');
           return;
         }
 
@@ -172,9 +172,7 @@ class SignUpPage extends StatelessWidget {
                   TextButton(
                     onPressed: () {
                       Navigator.of(ctx).pop();
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => LoginPage()),
-                      );
+                      newRoute(context, LoginPage());
                     },
                     child: const Text('OK'),
                   ),
@@ -183,7 +181,8 @@ class SignUpPage extends StatelessWidget {
             );
           }
         } catch (e) {
-          showErrorBanner(context, 'Error during sign-up: ${e.toString()}');
+          showTopSnackBar(
+              context, 'The email is already in use by another account.');
         }
       },
       style: ElevatedButton.styleFrom(

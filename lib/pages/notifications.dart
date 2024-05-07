@@ -63,7 +63,7 @@ class NotificationsPageState extends State<NotificationsPage> {
             leading:
                 const Icon(Icons.notification_important, color: Colors.blue),
             title: Text('Notification ${index + 1}',
-                style: TextStyle(fontSize: 16)),
+                style: const TextStyle(fontSize: 16)),
             subtitle: Text('Details about notification ${index + 1}',
                 style: TextStyle(color: Colors.grey[600])),
             onTap: () {
