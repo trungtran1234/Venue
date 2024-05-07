@@ -276,63 +276,100 @@ class ForgotPasswordPage extends StatelessWidget {
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(30.0),
-                child: Container(
-                  padding: const EdgeInsets.all(30.0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1E1E1E),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        spreadRadius: 1,
-                        blurRadius: 15,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text(
-                        'Reset Your Password',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: 'Fredoka',
-                          color: Colors.white,
-                          fontSize: 24.0,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      buildTextField(_emailController, 'Email'),
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () => _resetPassword(context),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF007AFF),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 25),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    buildLogo(),
+                    buildVenueTitle(),
+                    Container(
+                      padding: const EdgeInsets.all(30.0),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1E1E1E),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            spreadRadius: 1,
+                            blurRadius: 15,
+                            offset: const Offset(0, 5),
                           ),
-                          minimumSize: const Size(double.infinity, 55),
-                        ),
-                        child: const Text('Send Reset Link'),
+                        ],
                       ),
-                      const SizedBox(height: 20),
-                      GestureDetector(
-                        onTap: () {
-                          newRoute(context, LoginPage());
-                        },
-                        child: const Text(
-                          'Back to Login',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14,
+                      child: Column(
+                        children: [
+                          const Text(
+                            'Find Your Account',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'Fredoka',
+                              color: Colors.white,
+                              fontSize: 30.0,
+                            ),
                           ),
-                        ),
+                          const SizedBox(height: 20),
+                          const Text(
+                            "Enter your email and we'll send you a link to reset your password.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          buildTextField(_emailController, 'Email'),
+                          const SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () => _resetPassword(context),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF007AFF),
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 25),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              minimumSize: const Size(double.infinity, 55),
+                            ),
+                            child: const Text('Send Reset Link'),
+                          ),
+                          const SizedBox(height: 20),
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Divider(
+                                  color: Colors.grey,
+                                  thickness: 1,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('OR'),
+                              ),
+                              Expanded(
+                                child: Divider(
+                                  color: Colors.grey,
+                                  thickness: 1,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          GestureDetector(
+                            onTap: () {
+                              newRoute(context, LoginPage());
+                            },
+                            child: const Text(
+                              'Back to Login',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -361,7 +398,7 @@ class ForgotPasswordPage extends StatelessWidget {
       ),
     );
 
-    overlay?.insert(overlayEntry);
+    overlay.insert(overlayEntry);
 
     // Automatically remove the snackbar after some duration
     Future.delayed(const Duration(seconds: 3))
