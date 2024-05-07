@@ -1,14 +1,26 @@
+import 'package:app/services/like_animation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class PostCard extends StatelessWidget {
+class PostCard extends StatefulWidget {
   final snap;
   const PostCard({
-    super.key,
+    Key? key,
     required this.snap,
-  });
+  }) : super(key: key);
+
+  @override
+  State<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard> {
+  bool isLikeAnimating = false;
 
   @override
   Widget build(BuildContext context) {
+    //final User user = Provider.of<UserProvider>(context).getUser;
+
     return Card(
       child: FractionallySizedBox(
         widthFactor: 1.0,
@@ -18,9 +30,6 @@ class PostCard extends StatelessWidget {
             //Post Header
             Container(
               decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25)),
                 color: Colors.black,
               ),
               child: Row(
@@ -38,7 +47,7 @@ class PostCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    snap['username'],
+                    widget.snap['username'],
                   ),
                   const Spacer(),
                   IconButton(
@@ -49,71 +58,72 @@ class PostCard extends StatelessWidget {
               ),
             ),
             //Image Display
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .35,
-              width: double.infinity,
-              child: Image.network(
-                snap['postUrl'],
-                fit: BoxFit.cover,
+            GestureDetector(
+              onDoubleTap: () {
+                setState(() {
+                  isLikeAnimating = true;
+                });
+              },
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .35,
+                    width: double.infinity,
+                    child: Image.network(
+                      widget.snap['postUrl'],
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  AnimatedOpacity(
+                    duration: const Duration(milliseconds: 200),
+                    opacity: isLikeAnimating ? 1 : 0,
+                    child: LikeAnimation(
+                      child: const Icon(Icons.favorite,
+                          color: Colors.white, size: 120),
+                      isAnimating: isLikeAnimating,
+                      duration: const Duration(
+                        milliseconds: 400,
+                      ),
+                      onEnd: () {
+                        setState(() {
+                          isLikeAnimating = false;
+                        });
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
 
             //Post Footer
             Container(
               decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.circular(25)),
                 color: Colors.black,
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
                     children: [
-                      IconButton(
-                        icon: const Icon(Icons.favorite_border),
-                        onPressed: () {},
+                      LikeAnimation(
+                        isAnimating: widget.snap['likes'].contains('testUser'),
+                        smallLike: true,
+                        child: IconButton(
+                          icon: const Icon(Icons.favorite, color: Colors.red),
+                          onPressed: () {},
+                        ),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.chat_bubble_outline),
-                        onPressed: () {},
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.label_outline),
-                        onPressed: () {},
-                      ),
-                      const Spacer(),
-                      IconButton(
-                        icon: const Icon(Icons.bookmark_border),
-                        onPressed: () {},
-                      )
+                      const Text('727'),
                     ],
                   ),
                   Container(
                     padding: const EdgeInsets.only(
                         top: 10, bottom: 40, left: 15, right: 15),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      //crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Text('727 likes'),
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: snap['username'],
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                              ),
-                              const TextSpan(text: ' '),
-                              TextSpan(
-                                text: snap['description'],
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
+                        Text(widget.snap['description']),
                       ],
                     ),
                   )
