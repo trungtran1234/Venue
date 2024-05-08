@@ -78,10 +78,14 @@ class _NewsFeedState extends State<NewsFeedPage> {
         username,
       );
       setState(() => _isLoading = false);
-      showSnackBar(res == "success" ? 'Posted!' : res, context);
+      showTopSnackBar(
+        context,
+        res == "success" ? 'Posted!' : res,
+        backgroundColor: res == "success" ? Colors.green : Colors.red,
+      );
       if (res == "success") clearImage();
     } catch (e) {
-      showSnackBar(e.toString(), context);
+      showTopSnackBar(context, e.toString());
     }
   }
 

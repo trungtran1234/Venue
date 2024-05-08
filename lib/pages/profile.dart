@@ -1,4 +1,5 @@
 import 'package:app/global.dart';
+import 'package:app/pages/friends.dart';
 import 'package:flutter/material.dart';
 import 'package:app/settings/settings.dart';
 import '../objects/userprofile.dart';
@@ -80,16 +81,34 @@ class ProfilePageState extends State<ProfilePage> {
               ),
               textAlign: TextAlign.center,
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditProfilePage(userProfile: user),
-                  ),
-                );
-              },
-              child: const Text('Edit Profile'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment
+                  .center, // Align buttons in the center of the Row
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            EditProfilePage(userProfile: user),
+                      ),
+                    );
+                  },
+                  child: const Text('Edit Profile'),
+                ),
+                const SizedBox(width: 10), // Space between the buttons
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const FriendsPage()),
+                    );
+                  },
+                  child: const Text('Friends'),
+                ),
+              ],
             ),
             const SizedBox(height: 10.0),
             Text(user.location,

@@ -1,8 +1,14 @@
 import 'package:app/pages/newsfeed.dart';
+import 'package:app/pages/resetpassword.dart';
 import 'package:app/pages/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app/global.dart';
+
+const kBackgroundColor = Color(0xFF121212);
+const kBoxDecorationColor = Color(0xFF1E1E1E);
+const kPrimaryColor = Color(0xFF007AFF);
+const kErrorColor = Colors.red;
 
 class LoginForm extends StatelessWidget {
   final TextEditingController emailController;
@@ -41,10 +47,7 @@ class LoginPage extends StatelessWidget {
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xFF121212),
-              Color.fromARGB(255, 16, 19, 24),
-            ],
+            colors: [kBackgroundColor, Color.fromARGB(255, 16, 19, 24)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -76,7 +79,7 @@ class LoginPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(30.0),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
+        color: kBoxDecorationColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -113,64 +116,9 @@ class LoginPage extends StatelessWidget {
 
   Widget _buildLoginButton(BuildContext context) {
     return ElevatedButton(
-      onPressed: () async {
-        // Trim the input and check for empty fields
-        String email = _emailController.text.trim();
-        String password = _passwordController.text.trim();
-
-        String errorMessage = '';
-        if (email.isEmpty && password.isEmpty) {
-          errorMessage = 'Please enter your email and password.';
-        } else if (email.isEmpty) {
-          errorMessage = 'Please enter your email.';
-        } else if (password.isEmpty) {
-          errorMessage = 'Please enter your password.';
-        }
-
-        if (errorMessage.isNotEmpty) {
-          showTopSnackBar(context, errorMessage);
-          return;
-        }
-
-        try {
-          UserCredential userCredential =
-              await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: email,
-            password: password,
-          );
-
-          // Handle email verification status
-          User? user = userCredential.user;
-          if (user != null) {
-            if (!user.emailVerified) {
-              showTopSnackBar(
-                  context, 'Please verify your email address to log in.');
-            } else {
-              newRoute(context, const NewsFeedPage());
-            }
-          }
-        } catch (e) {
-          errorMessage = 'Login error: Please try again later.';
-          if (e is FirebaseAuthException) {
-            switch (e.code) {
-              case 'user-not-found':
-              case 'invalid-email':
-                errorMessage = 'Invalid email address provided.';
-                break;
-              case 'wrong-password':
-                errorMessage = 'Incorrect password, please try again.';
-                break;
-              default:
-                errorMessage =
-                    'Login error: ${e.message ?? "Please try again later."}';
-                break;
-            }
-          }
-          showTopSnackBar(context, errorMessage);
-        }
-      },
+      onPressed: () => _login(context),
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF007AFF),
+        backgroundColor: kPrimaryColor,
         padding: const EdgeInsets.symmetric(vertical: 25),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -188,18 +136,62 @@ class LoginPage extends StatelessWidget {
     );
   }
 
+  void _login(BuildContext context) async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    String? errorMessage;
+    if (email.isEmpty || password.isEmpty) {
+      errorMessage = 'Please enter your email and password.';
+    } else {
+      try {
+        final userCredential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password);
+
+        final user = userCredential.user;
+        if (user != null && user.emailVerified) {
+          newRoute(context, const NewsFeedPage());
+        } else {
+          showTopSnackBar(
+              context, 'Please verify your email address to log in.');
+        }
+      } on FirebaseAuthException catch (e) {
+        errorMessage = _getErrorMessage(e.code);
+      } catch (e) {
+        errorMessage = 'An unexpected error occurred. Please try again later.';
+      }
+    }
+
+    if (errorMessage != null) {
+      showTopSnackBar(context, errorMessage);
+    }
+  }
+
+  String _getErrorMessage(String code) {
+    switch (code) {
+      case 'user-not-found':
+        return 'Email not registered. Please sign up first.';
+      case 'invalid-email':
+        return 'Invalid email format. Please check your email address.';
+      case 'wrong-password':
+        return 'Incorrect password, please try again.';
+      default:
+        return 'Login error: ${code}';
+    }
+  }
+
   Widget _buildForgotPasswordOption(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         GestureDetector(
           onTap: () {
-            newRoute(context, ForgotPasswordPage());
+            newRoute(context, ResetPasswordPage());
           },
           child: const Text(
             'Forgot Password?',
             style: TextStyle(
-              color: Color(0xFF007AFF),
+              color: kPrimaryColor,
               fontSize: 14.0,
             ),
           ),
@@ -211,7 +203,7 @@ class LoginPage extends StatelessWidget {
   Widget _buildSignUpOption(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
+        color: kBoxDecorationColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -241,7 +233,7 @@ class LoginPage extends StatelessWidget {
             child: const Text(
               'Sign Up',
               style: TextStyle(
-                color: Color(0xFF007AFF),
+                color: kPrimaryColor,
                 fontSize: 16.0,
               ),
             ),
@@ -249,182 +241,5 @@ class LoginPage extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class ForgotPasswordPage extends StatelessWidget {
-  final TextEditingController _emailController = TextEditingController();
-
-  ForgotPasswordPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF121212),
-              Color.fromARGB(255, 16, 19, 24),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(30.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    buildLogo(),
-                    buildVenueTitle(),
-                    Container(
-                      padding: const EdgeInsets.all(30.0),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1E1E1E),
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            spreadRadius: 1,
-                            blurRadius: 15,
-                            offset: const Offset(0, 5),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          const Text(
-                            'Find Your Account',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: 'Fredoka',
-                              color: Colors.white,
-                              fontSize: 30.0,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          const Text(
-                            "Enter your email and we'll send you a link to reset your password.",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 14,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          buildTextField(_emailController, 'Email'),
-                          const SizedBox(height: 20),
-                          ElevatedButton(
-                            onPressed: () => _resetPassword(context),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF007AFF),
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 25),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              minimumSize: const Size(double.infinity, 55),
-                            ),
-                            child: const Text('Send Reset Link'),
-                          ),
-                          const SizedBox(height: 20),
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Divider(
-                                  color: Colors.grey,
-                                  thickness: 1,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('OR'),
-                              ),
-                              Expanded(
-                                child: Divider(
-                                  color: Colors.grey,
-                                  thickness: 1,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          GestureDetector(
-                            onTap: () {
-                              newRoute(context, LoginPage());
-                            },
-                            child: const Text(
-                              'Back to Login',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void showTopSnackBar(
-      BuildContext context, Widget content, Color backgroundColor) {
-    final overlay = Overlay.of(context);
-    final overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        top: 0,
-        left: 0,
-        right: 0,
-        child: Material(
-          color: Colors.transparent,
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            color: backgroundColor,
-            child: content,
-          ),
-        ),
-      ),
-    );
-
-    overlay.insert(overlayEntry);
-
-    // Automatically remove the snackbar after some duration
-    Future.delayed(const Duration(seconds: 3))
-        .then((value) => overlayEntry.remove());
-  }
-
-  Future<void> _resetPassword(BuildContext context) async {
-    try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(
-        email: _emailController.text.trim(),
-      );
-      showTopSnackBar(
-        context,
-        const Text('Password reset link sent! Check your email.',
-            style: TextStyle(color: Colors.white)),
-        Colors.green,
-      );
-    } catch (e) {
-      showTopSnackBar(
-        context,
-        const Text('Please enter your email.',
-            style: TextStyle(color: Colors.white)),
-        Colors.red,
-      );
-    }
   }
 }

@@ -117,27 +117,26 @@ void newRoute(BuildContext context, Widget newRoute) {
   );
 }
 
-void showTopSnackBar(BuildContext context, String message) {
+void showTopSnackBar(BuildContext context, String message,
+    {Color backgroundColor = Colors.red}) {
   final overlay = Overlay.of(context);
   final overlayEntry = OverlayEntry(
     builder: (context) => Positioned(
-      top: MediaQuery.of(context)
-          .padding
-          .top, // Position right below the status bar
+      top: MediaQuery.of(context).padding.top,
       left: 10,
       right: 10,
       child: Material(
         elevation: 10.0,
         borderRadius: BorderRadius.circular(10),
         child: Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(25),
           decoration: BoxDecoration(
-            color: Colors.red,
+            color: backgroundColor,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Text(
             message,
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white, fontSize: 16),
           ),
         ),
       ),
@@ -157,12 +156,4 @@ pickImage(ImageSource source) async {
   if (file != null) {
     return await file.readAsBytes();
   }
-}
-
-showSnackBar(String content, BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(content),
-    ),
-  );
 }
