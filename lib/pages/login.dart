@@ -116,7 +116,7 @@ class LoginPage extends StatelessWidget {
 
   Widget _buildLoginButton(BuildContext context) {
     return ElevatedButton(
-      onPressed: () => _login(context),
+      onPressed: () => _handleLogin(context),
       style: ElevatedButton.styleFrom(
         backgroundColor: kPrimaryColor,
         padding: const EdgeInsets.symmetric(vertical: 25),
@@ -136,7 +136,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  void _login(BuildContext context) async {
+  void _handleLogin(BuildContext context) async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
@@ -147,7 +147,6 @@ class LoginPage extends StatelessWidget {
       try {
         final userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
-
         final user = userCredential.user;
         if (user != null && user.emailVerified) {
           newRoute(context, const NewsFeedPage());
@@ -156,27 +155,13 @@ class LoginPage extends StatelessWidget {
               context, 'Please verify your email address to log in.');
         }
       } on FirebaseAuthException catch (e) {
-        errorMessage = _getErrorMessage(e.code);
+        errorMessage = 'Incorrect password. Please try again.';
       } catch (e) {
         errorMessage = 'An unexpected error occurred. Please try again later.';
       }
     }
-
     if (errorMessage != null) {
       showTopSnackBar(context, errorMessage);
-    }
-  }
-
-  String _getErrorMessage(String code) {
-    switch (code) {
-      case 'user-not-found':
-        return 'Email not registered. Please sign up first.';
-      case 'invalid-email':
-        return 'Invalid email format. Please check your email address.';
-      case 'wrong-password':
-        return 'Incorrect password, please try again.';
-      default:
-        return 'Login error: ${code}';
     }
   }
 

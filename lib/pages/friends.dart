@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/connectivity_checker.dart';
 import '../services/reconnection_popup.dart';
+import 'package:app/global.dart';
 
 class FriendsPage extends StatefulWidget {
   const FriendsPage({super.key});
@@ -35,7 +36,7 @@ class FriendsPageState extends State<FriendsPage> {
     if (isConnected) {
       popupManager.dismissConnectivityPopup();
     } else {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         popupManager.showConnectivityPopup(context);
       });
     }
@@ -168,10 +169,18 @@ class FriendsPageState extends State<FriendsPage> {
   }
 
   void _addFriend(String username) {
-    print('Added $username as friend');
+    showTopSnackBar(
+      context,
+      'Friend request sent to $username',
+      backgroundColor: Colors.green,
+    );
   }
 
   void _unfriend(String friendName) {
-    print('Unfriended $friendName');
+    showTopSnackBar(
+      context,
+      'Unfriended $friendName',
+      backgroundColor: Colors.orange,
+    );
   }
 }
