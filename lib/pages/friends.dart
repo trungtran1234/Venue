@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/connectivity_checker.dart';
 import '../services/reconnection_popup.dart';
+import 'package:app/global.dart';
 
 class FriendsPage extends StatefulWidget {
   const FriendsPage({super.key});
@@ -12,6 +13,15 @@ class FriendsPage extends StatefulWidget {
 class FriendsPageState extends State<FriendsPage> {
   late ConnectivityChecker connectivityChecker;
   late PopupManager popupManager;
+  final TextEditingController _searchController = TextEditingController();
+  final List<String> _searchResults = [];
+  final List<String> _friendsList = [
+    'Friend 1',
+    'Friend 2',
+    'Friend 3',
+    'Friend 4',
+    'Friend 5',
+  ];
 
   @override
   void initState() {
@@ -35,6 +45,7 @@ class FriendsPageState extends State<FriendsPage> {
   @override
   void dispose() {
     connectivityChecker.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -52,53 +63,124 @@ class FriendsPageState extends State<FriendsPage> {
           ),
         ],
       ),
-      body: friendsList(context),
+      body: Column(
+        children: [
+          _buildSearchBar(),
+          Expanded(
+            child: _searchResults.isNotEmpty
+                ? _buildSearchResults()
+                : _buildFriendsList(),
+          ),
+        ],
+      ),
     );
   }
 
-  Container friendsList(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      color: Colors.white,
-      child: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 5.0),
-          child: Column(
-            children: List.generate(
-              8,
-              (index) => GestureDetector(
-                onTap: () {
-                  // Handle tap on each friend
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(1),
-                        spreadRadius: 1,
-                        blurRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        child: const CircleAvatar(
-                          radius: 30,
-                          child: CircleAvatar(radius: 6),
-                        ),
-                      ),
-                      const Text("Profile Name"),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+  Widget _buildSearchBar() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        controller: _searchController,
+        decoration: InputDecoration(
+          hintText: 'Search by username',
+          suffixIcon: IconButton(
+            onPressed: () {
+              // Clear search input
+              _searchController.clear();
+              setState(() {
+                _searchResults.clear();
+              });
+            },
+            icon: const Icon(Icons.clear),
           ),
         ),
+        onChanged: (query) {
+          _performSearch(query);
+        },
       ),
+    );
+  }
+
+  void _performSearch(String query) {
+    setState(() {
+      _searchResults.clear();
+      if (query.isNotEmpty) {
+        _searchResults.addAll([
+          'User 1',
+          'User 2',
+          'User 3',
+        ]);
+      }
+    });
+  }
+
+  Widget _buildSearchResults() {
+    return ListView.builder(
+      itemCount: _searchResults.length,
+      itemBuilder: (context, index) {
+        final username = _searchResults[index];
+        return ListTile(
+          title: Text(username),
+          trailing: IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              _addFriend(username);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildFriendsList() {
+    return ListView.builder(
+      itemCount: _friendsList.length,
+      itemBuilder: (context, index) {
+        final friendName = _friendsList[index];
+        return ListTile(
+          title: Text(friendName),
+          trailing: PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert),
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem<String>(
+                value: 'invite',
+                child: ListTile(
+                  title: const Text('Invite'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+              PopupMenuItem<String>(
+                value: 'unfriend',
+                child: ListTile(
+                  title: const Text('Unfriend'),
+                  onTap: () {
+                    _unfriend(friendName);
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _addFriend(String username) {
+    showTopSnackBar(
+      context,
+      'Friend request sent to $username',
+      backgroundColor: Colors.green,
+    );
+  }
+
+  void _unfriend(String friendName) {
+    showTopSnackBar(
+      context,
+      'Unfriended $friendName',
+      backgroundColor: Colors.orange,
     );
   }
 }

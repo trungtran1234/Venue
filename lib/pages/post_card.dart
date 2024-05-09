@@ -1,14 +1,12 @@
 import 'package:app/services/like_animation.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class PostCard extends StatefulWidget {
   final snap;
   const PostCard({
-    Key? key,
+    super.key,
     required this.snap,
-  }) : super(key: key);
+  });
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -79,8 +77,6 @@ class _PostCardState extends State<PostCard> {
                     duration: const Duration(milliseconds: 200),
                     opacity: isLikeAnimating ? 1 : 0,
                     child: LikeAnimation(
-                      child: const Icon(Icons.favorite,
-                          color: Colors.white, size: 120),
                       isAnimating: isLikeAnimating,
                       duration: const Duration(
                         milliseconds: 400,
@@ -90,6 +86,8 @@ class _PostCardState extends State<PostCard> {
                           isLikeAnimating = false;
                         });
                       },
+                      child: const Icon(Icons.favorite,
+                          color: Colors.white, size: 120),
                     ),
                   ),
                 ],

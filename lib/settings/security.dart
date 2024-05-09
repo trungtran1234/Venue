@@ -7,10 +7,10 @@ class SecurityPage extends StatefulWidget {
   const SecurityPage({super.key});
 
   @override
-  _SecurityPageState createState() => _SecurityPageState();
+  SecurityPageState createState() => SecurityPageState();
 }
 
-class _SecurityPageState extends State<SecurityPage> {
+class SecurityPageState extends State<SecurityPage> {
   bool _twoFactorEnabled = false; // Assume this is fetched from the backend
 
   @override
