@@ -1,9 +1,11 @@
 import 'package:app/pages/newsfeed.dart';
 import 'package:app/pages/resetpassword.dart';
 import 'package:app/pages/signup.dart';
+import 'package:app/services/secure_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app/global.dart';
+import 'package:local_auth/local_auth.dart';
 
 const kBackgroundColor = Color(0xFF121212);
 const kBoxDecorationColor = Color(0xFF1E1E1E);
@@ -107,6 +109,8 @@ class LoginPage extends StatelessWidget {
             passwordController: _passwordController,
           ),
           _buildLoginButton(context),
+          const Divider(color: Colors.grey),
+          _buildLoginBioButton(context),
           const SizedBox(height: 10.0),
           _buildForgotPasswordOption(context),
         ],
@@ -123,10 +127,32 @@ class LoginPage extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        minimumSize: const Size(double.infinity, 55),
+        minimumSize: const Size(double.infinity, 20),
       ),
       child: const Text(
         'Login',
+        style: TextStyle(
+          fontFamily: 'Fredoka',
+          fontSize: 15,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoginBioButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () => _handleBioLogin(context),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: kPrimaryColor,
+        padding: const EdgeInsets.symmetric(vertical: 25),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        minimumSize: const Size(double.infinity, 20),
+      ),
+      child: const Text(
+        'Biometric Login',
         style: TextStyle(
           fontFamily: 'Fredoka',
           fontSize: 15,
@@ -148,6 +174,8 @@ class LoginPage extends StatelessWidget {
         final userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
         final user = userCredential.user;
+        SecureStorage().writeSecureData('email', email);
+        SecureStorage().writeSecureData('password', password);
         if (user != null && user.emailVerified) {
           newRoute(context, const NewsFeedPage());
         } else {
@@ -159,6 +187,45 @@ class LoginPage extends StatelessWidget {
       } catch (e) {
         errorMessage = 'An unexpected error occurred. Please try again later.';
       }
+    }
+    if (errorMessage != null) {
+      showTopSnackBar(context, errorMessage);
+    }
+  }
+
+  static Future<bool> canCheckBiometrics() async =>
+      await LocalAuthentication().canCheckBiometrics;
+  void _handleBioLogin(BuildContext context) async {
+    String? errorMessage;
+    try {
+      if (await canCheckBiometrics()) {
+        try {
+          bool isAuthenticated = await LocalAuthentication().authenticate(
+              localizedReason: 'Authenticate to access the User Authenication');
+          if (isAuthenticated) {
+            final email = SecureStorage().readSecureData('email');
+            final password = SecureStorage().readSecureData('password');
+            final UserCredential userCredential =
+                await FirebaseAuth.instance.signInWithEmailAndPassword(
+              email: await email,
+              password: await password,
+            );
+            final user = userCredential.user;
+            if (user != null && user.emailVerified) {
+              newRoute(context, const NewsFeedPage());
+            } else {
+              showTopSnackBar(
+                  context, 'Please verify your email address to log in.');
+            }
+          }
+        } catch (e) {
+          errorMessage = e.toString();
+        }
+      }
+    } on FirebaseAuthException catch (e) {
+      errorMessage = 'Incorrect password. Please try again.';
+    } catch (e) {
+      errorMessage = 'An unexpected error occurred. Please try again later.';
     }
     if (errorMessage != null) {
       showTopSnackBar(context, errorMessage);
