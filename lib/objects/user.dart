@@ -9,23 +9,36 @@ class User {
   int friends;
   int posts;
   String bio;
-  // File? profilePicture;
-  // static const String defaultProfilePicturePath =
-  //     'lib/assets/Default_pfp.svg.png';
+  File?
+      profilePicture; // Uncomment if you want to use File for profile pictures
 
-  User(
-      {required this.uid,
-      required this.email,
-      this.username = '',
-      this.firstName = '',
-      this.lastName = '',
-      this.friends = 0,
-      this.posts = 0,
-      this.bio = "No Bio"
-      //File? profilePicture
-      });
+  User({
+    required this.uid,
+    required this.email,
+    this.username = '',
+    this.firstName = '',
+    this.lastName = '',
+    this.friends = 0,
+    this.posts = 0,
+    this.bio = "No Bio",
+    this.profilePicture, // Uncomment if you are using File for profile pictures
+  });
 
-  Map<String, dynamic> toJso() => {
+  factory User.fromFirestore(Map<String, dynamic> firestoreData) {
+    return User(
+      uid: firestoreData['uid'],
+      email: firestoreData['email'],
+      username: firestoreData['username'] ?? '',
+      firstName: firestoreData['firstName'] ?? '',
+      lastName: firestoreData['lastName'] ?? '',
+      friends: firestoreData['friends'] ?? 0,
+      posts: firestoreData['posts'] ?? 0,
+      bio: firestoreData['bio'] ?? "No Bio",
+      // profilePicture: File(firestoreData['profilePicturePath']), // Uncomment if you store the path and want to use File
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
         "uid": uid,
         "email": email,
         "username": username,
@@ -33,43 +46,7 @@ class User {
         "lastName": lastName,
         "friends": friends,
         "posts": posts,
-        "bio": bio
+        "bio": bio,
+        // "profilePicturePath": profilePicture?.path, // Uncomment if using File for profile pictures
       };
-
-  // ///changes username
-  // void changeUsername(String newUsername) {
-  //   username = newUsername;
-  // }
-
-  // ///Changes the user location
-  // void changelocation(String newlocation) {
-  //   location = newlocation;
-  // }
-
-  // ///Update the user bio
-  // void changeBio(String newBio) {
-  //   bio = newBio;
-  // }
-
-  // /// Method that increments or decrements
-  // /// users friend count
-  // void friendsChange() {
-  //   friends++;
-  // }
-
-  // /// Method that increments or decrements
-  // /// users events attended count
-  // void attendedChange() {
-  //   eventsAttended++;
-  // }
-
-  // /// Method that increments or decrements
-  // /// users events hosted count
-  // void hostedChange() {
-  //   eventsHosted++;
-  // }
-
-  // void uploadProfilePicture(String filePath) {
-  //   profilePicture = File(filePath);
-  // }
 }

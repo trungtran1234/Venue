@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:app/pages/login.dart';
@@ -107,11 +108,20 @@ class SignUpPage extends StatelessWidget {
       );
       User? user = userCredential.user;
       if (user != null) {
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'uid': user.uid,
+          'email': _emailController.text,
+          'username': '',
+          'firstName': '',
+          'lastName': '',
+          'friends': 0,
+          'posts': 0,
+          'bio': '',
+        });
+
         await user.sendEmailVerification();
-        await FirebaseAuth.instance
-            .signOut(); // Sign out the user immediately after account creation
-        showVerificationDialog(context,
-            user); // This will now handle the navigation after user presses 'OK'
+        await FirebaseAuth.instance.signOut();
+        showVerificationDialog(context, user);
       }
     } catch (e) {
       showTopSnackBar(
