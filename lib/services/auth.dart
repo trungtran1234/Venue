@@ -6,6 +6,22 @@ import 'package:local_auth/local_auth.dart';
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  Future<User?> createUserWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      final UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      SecureStorage().writeSecureData('email', email);
+      SecureStorage().writeSecureData('password', password);
+      return userCredential.user;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<User?> signInWithEmailAndPassword(
       String email, String password) async {
     try {
@@ -53,7 +69,7 @@ class Auth {
       String email, String password) async {
     try {
       final UserCredential userCredential =
-          await _auth.createUserWithEmailAndPassword(
+          await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );

@@ -2,7 +2,7 @@ import 'package:app/global.dart';
 import 'package:app/pages/friends.dart';
 import 'package:flutter/material.dart';
 import 'package:app/settings/settings.dart';
-import '../objects/userprofile.dart';
+import '../objects/user.dart';
 import '../services/connectivity_checker.dart';
 import '../services/reconnection_popup.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,11 +19,13 @@ class ProfilePageState extends State<ProfilePage> {
   late PopupManager popupManager;
   late ConnectivityChecker connectivityChecker;
   final int _selectedIndex = 3;
-  final UserProfile user = UserProfile(
-    username: "username",
-    firstName: "firstname",
-    lastName: "lastName",
-    location: "location",
+  final User user = User(
+    uid: "uid",
+    email: "email",
+    // username: "username",
+    // firstName: "firstname",
+    // lastName: "lastName",
+    // location: "location",
   );
 
   @override
@@ -72,23 +74,23 @@ class ProfilePageState extends State<ProfilePage> {
               backgroundImage: AssetImage('lib/assets/Default_pfp.svg.png'),
             ),
             const SizedBox(height: 20.0),
-            Text(
-              '${user.firstName} ${user.lastName}',
-              style: const TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              user.username,
-              style: const TextStyle(
-                fontSize: 14.0,
-                color: Colors.grey,
-              ),
-              textAlign: TextAlign.center,
-            ),
+            // Text(
+            //   '${user.firstName} ${user.lastName}',
+            //   style: const TextStyle(
+            //     fontSize: 24.0,
+            //     fontWeight: FontWeight.bold,
+            //     color: Colors.white,
+            //   ),
+            //   textAlign: TextAlign.center,
+            // ),
+            // Text(
+            //   user.username,
+            //   style: const TextStyle(
+            //     fontSize: 14.0,
+            //     color: Colors.grey,
+            //   ),
+            //   textAlign: TextAlign.center,
+            // ),
             const SizedBox(height: 10.0),
             Row(
               mainAxisAlignment: MainAxisAlignment
@@ -97,7 +99,7 @@ class ProfilePageState extends State<ProfilePage> {
                 ElevatedButton(
                   onPressed: () async {
                     // Navigate to EditProfilePage and await result
-                    final UserProfile? updatedProfile = await Navigator.push(
+                    final User? updatedProfile = await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
@@ -107,12 +109,12 @@ class ProfilePageState extends State<ProfilePage> {
 
                     // Update user profile if there's an updated profile
                     if (updatedProfile != null) {
-                      setState(() {
-                        user.username = updatedProfile.username;
-                        user.firstName = updatedProfile.firstName;
-                        user.lastName = updatedProfile.lastName;
-                        user.bio = updatedProfile.bio;
-                      });
+                      // setState(() {
+                      //   user.username = updatedProfile.username;
+                      //   user.firstName = updatedProfile.firstName;
+                      //   user.lastName = updatedProfile.lastName;
+                      //   user.bio = updatedProfile.bio;
+                      // });
                     }
                   },
                   child: const Text('Edit Profile'),
@@ -132,34 +134,26 @@ class ProfilePageState extends State<ProfilePage> {
               ],
             ),
             const SizedBox(height: 10.0),
-            Text(
-              user.location,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 16.0,
-                color: Colors.white,
-              ),
-            ),
             const SizedBox(height: 10.0),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
-              child: Text(
-                user.bio,
-                style: const TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white,
-                ),
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-              ),
+              // child: Text(
+              //   user.bio,
+              //   style: const TextStyle(
+              //     fontSize: 16.0,
+              //     color: Colors.white,
+              //   ),
+              //   textAlign: TextAlign.center,
+              //   overflow: TextOverflow.ellipsis,
+              // ),
             ),
             const SizedBox(height: 20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildStatisticColumn(user.friends, 'Friends'),
-                _buildStatisticColumn(user.eventsAttended, 'Events Attended'),
-                _buildStatisticColumn(user.eventsHosted, 'Events Hosted'),
+                // _buildStatisticColumn(user.friends, 'Friends'),
+                // _buildStatisticColumn(user.eventsAttended, 'Events Attended'),
+                // _buildStatisticColumn(user.eventsHosted, 'Events Hosted'),
               ],
             ),
             const SizedBox(height: 20.0),
@@ -202,7 +196,7 @@ class ProfilePageState extends State<ProfilePage> {
 }
 
 class EditProfilePage extends StatefulWidget {
-  final UserProfile userProfile;
+  final User userProfile;
 
   const EditProfilePage({super.key, required this.userProfile});
 
@@ -246,10 +240,10 @@ class EditProfilePageState extends State<EditProfilePage> {
           IconButton(
             icon: const Icon(Icons.check),
             onPressed: () {
-              widget.userProfile.username = _usernameController.text;
-              widget.userProfile.firstName = _firstNameController.text;
-              widget.userProfile.lastName = _lastNameController.text;
-              widget.userProfile.bio = _bioController.text;
+              // widget.userProfile.username = _usernameController.text;
+              // widget.userProfile.firstName = _firstNameController.text;
+              // widget.userProfile.lastName = _lastNameController.text;
+              // widget.userProfile.bio = _bioController.text;
 
               // Navigate back to ProfilePage with updated userProfile
               Navigator.pop(context, widget.userProfile);
@@ -266,15 +260,14 @@ class EditProfilePageState extends State<EditProfilePage> {
               children: [
                 GestureDetector(
                   onTap: _pickImage,
-                  child: CircleAvatar(
-                    radius: 60,
-                    backgroundImage: _image != null
-                        ? FileImage(_image!)
-                        : const AssetImage(
-                                UserProfile.defaultProfilePicturePath)
-                            as ImageProvider,
-                    backgroundColor: Colors.grey[200],
-                  ),
+                  // child: CircleAvatar(
+                  //   radius: 60,
+                  //   backgroundImage: _image != null
+                  //       ? FileImage(_image!)
+                  //       : const AssetImage(User.defaultProfilePicturePath)
+                  //           as ImageProvider,
+                  //   backgroundColor: Colors.grey[200],
+                  // ),
                 ),
                 Container(
                   height: 30,
