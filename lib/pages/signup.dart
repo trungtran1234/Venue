@@ -100,14 +100,18 @@ class SignUpPage extends StatelessWidget {
       return;
     }
     try {
-      User? user = (await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
-      ))
-          .user;
+      );
+      User? user = userCredential.user;
       if (user != null) {
         await user.sendEmailVerification();
-        showVerificationDialog(context, user);
+        await FirebaseAuth.instance
+            .signOut(); // Sign out the user immediately after account creation
+        showVerificationDialog(context,
+            user); // This will now handle the navigation after user presses 'OK'
       }
     } catch (e) {
       showTopSnackBar(
@@ -168,8 +172,10 @@ class SignUpPage extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(ctx).pop();
-              newRoute(context, LoginPage());
+              Navigator.of(ctx).pop(); // Close the dialog
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) =>
+                      LoginPage())); // Navigate to login page after closing the dialog
             },
             child: const Text('OK'),
           ),
