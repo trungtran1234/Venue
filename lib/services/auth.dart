@@ -65,20 +65,6 @@ class Auth {
     }
   }
 
-  Future<User?> createUserWithEmailAndPassword(
-      String email, String password) async {
-    try {
-      final UserCredential userCredential =
-          await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      return userCredential.user;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
   Future<bool> checkEmailExists(String email) async {
     try {
       final List<String> methods =
