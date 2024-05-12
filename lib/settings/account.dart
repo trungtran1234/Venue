@@ -207,8 +207,7 @@ class ChangeEmail extends StatefulWidget {
 
 class ChangeEmailState extends State<ChangeEmail> {
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController =
-      TextEditingController(); // For re-authentication
+  final TextEditingController passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool isLoading = false;
 
@@ -275,10 +274,14 @@ class ChangeEmailState extends State<ChangeEmail> {
       _showDialog('Confirmation Needed',
           'Please confirm your new email. A confirmation link has been sent to $newEmail.');
     } on FirebaseAuthException catch (e) {
+      print('Firebase Auth Exception: ${e.code} - ${e.message}');
       _showDialog(
           'Error',
           e.message ??
               'An unexpected error occurred. Please ensure the email is formatted correctly and try again.');
+    } catch (e) {
+      print('General Exception: $e');
+      _showDialog('Error', 'An unexpected error occurred. Please try again.');
     } finally {
       setState(() {
         isLoading = false;
