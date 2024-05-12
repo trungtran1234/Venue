@@ -1,4 +1,5 @@
 import 'package:app/pages/login.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:app/global.dart';
 import 'package:app/settings/settings.dart';
@@ -145,6 +146,10 @@ class AccountSettingsState extends State<Account> {
 
                   if (user != null) {
                     try {
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(user.uid)
+                          .delete();
                       await user.delete();
                       // Log out from Firebase Auth after deletion
                       await FirebaseAuth.instance.signOut();
