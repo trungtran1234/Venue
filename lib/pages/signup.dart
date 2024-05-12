@@ -5,6 +5,9 @@ import 'package:app/pages/login.dart';
 import 'package:app/global.dart';
 
 class SignUpPage extends StatelessWidget {
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _reEnterPasswordController =
@@ -65,6 +68,12 @@ class SignUpPage extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white, fontSize: 30.0)),
             const SizedBox(height: 20),
+            buildTextField(_firstNameController, 'First Name'),
+            const SizedBox(height: 20),
+            buildTextField(_lastNameController, 'Last Name'),
+            const SizedBox(height: 20),
+            buildTextField(_usernameController, 'Username'),
+            const SizedBox(height: 20),
             buildTextField(_emailController, 'Email'),
             const SizedBox(height: 20),
             buildTextField(_passwordController, 'Password', obscureText: true),
@@ -90,7 +99,10 @@ class SignUpPage extends StatelessWidget {
   }
 
   void _handleSignUp(BuildContext context) async {
-    if (_emailController.text.isEmpty ||
+    if (_firstNameController.text.isEmpty ||
+        _lastNameController.text.isEmpty ||
+        _usernameController.text.isEmpty ||
+        _emailController.text.isEmpty ||
         _passwordController.text.isEmpty ||
         _reEnterPasswordController.text.isEmpty) {
       showTopSnackBar(context, 'Please fill in all fields');
@@ -98,6 +110,16 @@ class SignUpPage extends StatelessWidget {
     }
     if (_passwordController.text != _reEnterPasswordController.text) {
       showTopSnackBar(context, 'Passwords do not match');
+      return;
+    }
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('users')
+        .where('username', isEqualTo: _usernameController.text)
+        .limit(1)
+        .get();
+
+    if (result.docs.isNotEmpty) {
+      showTopSnackBar(context, 'Username is already taken');
       return;
     }
     try {
@@ -111,9 +133,9 @@ class SignUpPage extends StatelessWidget {
         await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
           'uid': user.uid,
           'email': _emailController.text,
-          'username': '',
-          'firstName': '',
-          'lastName': '',
+          'username': _usernameController.text,
+          'firstName': _firstNameController.text,
+          'lastName': _lastNameController.text,
           'friends': 0,
           'posts': 0,
           'bio': '',
