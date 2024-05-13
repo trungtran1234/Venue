@@ -198,28 +198,36 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> uploadImageAndUpdateProfile() async {
-    if (_image != null && user != null) {
-      String fileName = 'profile_${user!.uid}.jpg';
-      Reference storageRef = FirebaseStorage.instance
-          .ref()
-          .child('profile_images')
-          .child(fileName);
-      await storageRef.putFile(_image!);
-      String imageUrl = await storageRef.getDownloadURL();
+    if (user != null) {
+      String imageUrl = '';
+      // Check if an image is selected
+      if (_image != null) {
+        String fileName = 'profile_${user!.uid}.jpg';
+        Reference storageRef = FirebaseStorage.instance
+            .ref()
+            .child('profile_images')
+            .child(fileName);
+        await storageRef.putFile(_image!);
+        imageUrl = await storageRef.getDownloadURL();
+      }
 
       Map<String, dynamic> updatedData = {
         'firstName': _firstNameController.text,
         'lastName': _lastNameController.text,
         'username': _usernameController.text,
         'bio': _bioController.text,
-        'profilePictureUrl': imageUrl,
       };
+
+      // Only update the profile picture URL if a new image was uploaded
+      if (imageUrl.isNotEmpty) {
+        updatedData['profilePictureUrl'] = imageUrl;
+      }
 
       await FirebaseFirestore.instance
           .collection('users')
           .doc(user!.uid)
           .update(updatedData);
-      Navigator.pop(context);
+      newRoute(context, const ProfilePage());
     }
   }
 
