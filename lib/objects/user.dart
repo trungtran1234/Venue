@@ -6,11 +6,10 @@ class User {
   String username;
   String firstName;
   String lastName;
-  int friends;
+  List<String> friends; // Changed from int to List<String>
   int posts;
   String bio;
-  File?
-      profilePicture; // Uncomment if you want to use File for profile pictures
+  File? profilePicture;
 
   User({
     required this.uid,
@@ -18,10 +17,10 @@ class User {
     this.username = '',
     this.firstName = '',
     this.lastName = '',
-    this.friends = 0,
+    this.friends = const [], // Default to empty list
     this.posts = 0,
     this.bio = "No Bio",
-    this.profilePicture, // Uncomment if you are using File for profile pictures
+    this.profilePicture,
   });
 
   factory User.fromFirestore(Map<String, dynamic> firestoreData) {
@@ -31,10 +30,13 @@ class User {
       username: firestoreData['username'] ?? '',
       firstName: firestoreData['firstName'] ?? '',
       lastName: firestoreData['lastName'] ?? '',
-      friends: firestoreData['friends'] ?? 0,
+      friends: List<String>.from(firestoreData['friends'] ??
+          []), // Convert dynamic list to List<String>
       posts: firestoreData['posts'] ?? 0,
       bio: firestoreData['bio'] ?? "No Bio",
-      // profilePicture: File(firestoreData['profilePicturePath']), // Uncomment if you store the path and want to use File
+      profilePicture: firestoreData['profilePicturePath'] != null
+          ? File(firestoreData['profilePicturePath'])
+          : null,
     );
   }
 
@@ -44,9 +46,9 @@ class User {
         "username": username,
         "firstName": firstName,
         "lastName": lastName,
-        "friends": friends,
+        "friends": friends, // Serialize list of friend UIDs
         "posts": posts,
         "bio": bio,
-        // "profilePicturePath": profilePicture?.path, // Uncomment if using File for profile pictures
+        "profilePicturePath": profilePicture?.path,
       };
 }
