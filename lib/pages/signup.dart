@@ -136,9 +136,11 @@ class SignUpPage extends StatelessWidget {
           'username': _usernameController.text,
           'firstName': _firstNameController.text,
           'lastName': _lastNameController.text,
-          'friends': 0,
+          'friends': [],
           'posts': 0,
           'bio': '',
+          'profilePicturePath':
+              'lib/assets/Default_pfp.svg.png', // Default profile picture path
         });
 
         await user.sendEmailVerification();

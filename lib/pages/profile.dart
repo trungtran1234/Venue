@@ -1,11 +1,14 @@
+import 'dart:io';
 import 'package:app/global.dart';
 import 'package:app/pages/friends.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:app/settings/settings.dart';
 import '../services/connectivity_checker.dart';
 import '../services/reconnection_popup.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -91,11 +94,6 @@ class ProfilePageState extends State<ProfilePage> {
                   // Display user data when isLoading is false
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    const CircleAvatar(
-                      radius: 80,
-                      backgroundImage:
-                          AssetImage('lib/assets/Default_pfp.svg.png'),
-                    ),
                     const SizedBox(height: 20),
                     Text(
                       '${userData['firstName']} ${userData['lastName']}',
@@ -115,7 +113,7 @@ class ProfilePageState extends State<ProfilePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Friends: ${userData['friends'] ?? 0}'),
+                        Text('Friends: ${userData['friends']?.length ?? 0}'),
                         const Text(' | '),
                         Text('Posts: ${userData['posts'] ?? 0}'),
                       ],
@@ -165,6 +163,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
+  File? _image;
+  final picker = ImagePicker();
   final firebase_auth.User? user =
       firebase_auth.FirebaseAuth.instance.currentUser;
 
@@ -172,6 +172,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void initState() {
     super.initState();
     loadInitialData();
+  }
+
+  Future<void> pickImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
   }
 
   void loadInitialData() async {
@@ -188,21 +197,29 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-  Future<void> updateProfileData() async {
-    Map<String, dynamic> updatedData = {
-      'firstName': _firstNameController.text,
-      'lastName': _lastNameController.text,
-      'username': _usernameController.text,
-      'bio': _bioController.text,
-    };
+  Future<void> uploadImageAndUpdateProfile() async {
+    if (_image != null && user != null) {
+      String fileName = 'profile_${user!.uid}.jpg';
+      Reference storageRef = FirebaseStorage.instance
+          .ref()
+          .child('profile_images')
+          .child(fileName);
+      await storageRef.putFile(_image!);
+      String imageUrl = await storageRef.getDownloadURL();
 
-    if (user != null) {
+      Map<String, dynamic> updatedData = {
+        'firstName': _firstNameController.text,
+        'lastName': _lastNameController.text,
+        'username': _usernameController.text,
+        'bio': _bioController.text,
+        'profilePictureUrl': imageUrl,
+      };
+
       await FirebaseFirestore.instance
           .collection('users')
           .doc(user!.uid)
           .update(updatedData);
-      newRoute(context,
-          const ProfilePage()); // Optionally pop back to profile page after update
+      Navigator.pop(context);
     }
   }
 
@@ -214,7 +231,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.check_rounded),
-            onPressed: updateProfileData,
+            onPressed: uploadImageAndUpdateProfile,
           ),
         ],
       ),
