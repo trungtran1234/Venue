@@ -31,10 +31,6 @@ class NotificationsState extends State<Notifications> {
         title: 'Likes',
         subtitle: 'Receive notifications for likes',
         value: true),
-    NotificationOption(
-        title: 'Comments',
-        subtitle: 'Receive notifications for comments',
-        value: true),
   ];
 
   List<NotificationOption> eventNotifications = [
