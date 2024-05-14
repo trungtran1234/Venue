@@ -314,15 +314,26 @@ class MapPageState extends State<MapPage>
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   TextField(
-                      controller: titleController,
-                      decoration: InputDecoration(labelText: 'Title')),
+                    controller: titleController,
+                    decoration: InputDecoration(labelText: 'Title'),
+                    maxLines: null,
+                    minLines: 1,
+                  ),
                   TextField(
-                      controller: descriptionController,
-                      decoration: InputDecoration(labelText: 'Description')),
-                  TextFormField(
-                      initialValue: address,
-                      readOnly: true,
-                      decoration: InputDecoration(labelText: 'Location')),
+                    controller: descriptionController,
+                    decoration: InputDecoration(labelText: 'Description'),
+                    maxLines: null,
+                    minLines: 1,
+                  ),
+                  Flexible(
+                    child: TextFormField(
+                        initialValue: address,
+                        readOnly: true,
+                        maxLines: null,
+                        decoration: InputDecoration(
+                          labelText: 'Location',
+                        )),
+                  ),
                   ListTile(
                     title: Text('Select Start Date and Time'),
                     subtitle: Text(selectedStartDate == null
