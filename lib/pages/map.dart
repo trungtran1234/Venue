@@ -153,64 +153,79 @@ class MapPageState extends State<MapPage>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                              Icons.account_circle,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                          
-                            Text(
-                              doc.data()['firstName'] + ' ' + doc.data()['lastName'] + ' @' + doc.data()['username'],
-                              style:
-                                  Theme.of(context).textTheme.headline6?.copyWith(
-                                        color: Colors.white,
-                                      ),
-                            ),
+                                Icons.account_circle,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                              Text(
+                                doc.data()['firstName'] +
+                                    ' ' +
+                                    doc.data()['lastName'] +
+                                    ' @' +
+                                    doc.data()['username'],
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    ?.copyWith(
+                                      color: Colors.white,
+                                    ),
+                              ),
                               SizedBox(
-                              height: 8.0, 
-                            ),
-                            Text(
-                              doc.data()['title'],
-                              style:
-                                  Theme.of(context).textTheme.headline6?.copyWith(
-                                        color: Colors.white,
-                                      ),
-                            ),
-                            Text(
-                              doc.data()['description'],
-                              style:
-                                  Theme.of(context).textTheme.headline6?.copyWith(
-                                        color: Colors.white,
-                            )
-                            ),
-                            Text(
-                              doc.data()['address'],
-                              style: Theme.of(context).textTheme.headline6?.copyWith(
-                              color: Colors.white,
-                              fontSize: 16,
-                              ),
-                            ),
-                              Text(
-                              'From: ${DateFormat('hh:mm a MM/dd/yyyy').format(DateTime.parse(doc.data()['startDateTime']).toLocal())}',
-                              style:
-                                Theme.of(context).textTheme.headline6?.copyWith(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                  ),
+                                height: 8.0,
                               ),
                               Text(
-                              'To: ${DateFormat(' hh:mm a MM/dd/yyyy').format(DateTime.parse(doc.data()['endDateTime']).toLocal())}',
-                              style:
-                                Theme.of(context).textTheme.headline6?.copyWith(
-                                    color: Colors.white,
-                                    fontSize: 14
-                                  ),
+                                doc.data()['title'],
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    ?.copyWith(
+                                      color: Colors.white,
+                                    ),
+                              ),
+                              Text(doc.data()['description'],
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      ?.copyWith(
+                                        color: Colors.white,
+                                      )),
+                              Text(
+                                doc.data()['address'],
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    ?.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                              ),
+                              Text(
+                                'From: ${DateFormat('hh:mm a MM/dd/yyyy').format(DateTime.parse(doc.data()['startDateTime']).toLocal())}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    ?.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
+                              ),
+                              Text(
+                                'To: ${DateFormat(' hh:mm a MM/dd/yyyy').format(DateTime.parse(doc.data()['endDateTime']).toLocal())}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    ?.copyWith(
+                                        color: Colors.white, fontSize: 14),
                               ),
                               Text(
                                 'Visibility: ${doc.data()['visibility'] == 'friendsOnly' ? 'Friends Only' : 'Public'}',
-                                style: Theme.of(context).textTheme.headline6?.copyWith(
-                                  color: Colors.white,
-                                  fontSize: 14, 
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    ?.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
                               ),
                               SizedBox(height: 10),
                               TextButton(
@@ -280,6 +295,7 @@ class MapPageState extends State<MapPage>
 
     final TextEditingController titleController = TextEditingController();
     final TextEditingController descriptionController = TextEditingController();
+    final TextEditingController errorController = TextEditingController();
 
     final List<DropdownMenuItem<EventVisibility>> dropdownItems = [
       DropdownMenuItem(value: EventVisibility.public, child: Text('Public')),
@@ -303,23 +319,26 @@ class MapPageState extends State<MapPage>
                   TextField(
                       controller: descriptionController,
                       decoration: InputDecoration(labelText: 'Description')),
-                  TextFormField(initialValue: address, readOnly: true),
+                  TextFormField(
+                      initialValue: address,
+                      readOnly: true,
+                      decoration: InputDecoration(labelText: 'Location')),
                   ListTile(
                     title: Text('Select Start Date and Time'),
                     subtitle: Text(selectedStartDate == null
                         ? 'No date and time chosen'
                         : DateFormat('yyyy-MM-dd – kk:mm')
-                                .format(selectedStartDate!) +
-                            ' hrs'),
+                            .format(selectedStartDate!)),
                     onTap: () async {
-                      final date = await showDatePicker(
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                      final DateTime? date = await showDatePicker(
                         context: context,
                         initialDate: DateTime.now(),
                         firstDate: DateTime.now(),
                         lastDate: DateTime(2100),
                       );
                       if (date != null) {
-                        final time = await showTimePicker(
+                        final TimeOfDay? time = await showTimePicker(
                           context: context,
                           initialTime: TimeOfDay.now(),
                         );
@@ -332,6 +351,7 @@ class MapPageState extends State<MapPage>
                               time.hour,
                               time.minute,
                             );
+                            errorController.clear();
                           });
                         }
                       }
@@ -342,30 +362,44 @@ class MapPageState extends State<MapPage>
                     subtitle: Text(selectedEndDate == null
                         ? 'No date and time chosen'
                         : DateFormat('yyyy-MM-dd – kk:mm')
-                                .format(selectedEndDate!) +
-                            ' hrs'),
+                            .format(selectedEndDate!)),
                     onTap: () async {
-                      final date = await showDatePicker(
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                      if (selectedStartDate == null) {
+                        errorController.clear();
+                        errorController.text =
+                            "Please select a start date first.";
+                        return;
+                      }
+                      final DateTime? date = await showDatePicker(
                         context: context,
-                        initialDate: selectedStartDate ?? DateTime.now(),
-                        firstDate: DateTime.now(),
+                        initialDate: selectedStartDate!,
+                        firstDate: selectedStartDate!,
                         lastDate: DateTime(2100),
                       );
                       if (date != null) {
-                        final time = await showTimePicker(
+                        final TimeOfDay? time = await showTimePicker(
                           context: context,
                           initialTime: TimeOfDay.now(),
                         );
                         if (time != null) {
-                          setState(() {
-                            selectedEndDate = DateTime(
-                              date.year,
-                              date.month,
-                              date.day,
-                              time.hour,
-                              time.minute,
-                            );
-                          });
+                          DateTime tempEndDate = DateTime(
+                            date.year,
+                            date.month,
+                            date.day,
+                            time.hour,
+                            time.minute,
+                          );
+                          if (tempEndDate.isBefore(selectedStartDate!)) {
+                            errorController.clear();
+                            errorController.text =
+                                "End date must be after the start date.";
+                          } else {
+                            setState(() {
+                              selectedEndDate = tempEndDate;
+                              errorController.clear();
+                            });
+                          }
                         }
                       }
                     },
@@ -375,10 +409,22 @@ class MapPageState extends State<MapPage>
                     onChanged: (EventVisibility? newValue) {
                       setState(() {
                         visibility = newValue!;
+                        errorController.clear();
                       });
                     },
                     items: dropdownItems,
                   ),
+                  TextField(
+                    controller: errorController,
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                    ),
+                    style: TextStyle(
+                        color: errorController.text.isEmpty
+                            ? Colors.transparent
+                            : Colors.red),
+                  )
                 ],
               ),
             );
@@ -387,17 +433,27 @@ class MapPageState extends State<MapPage>
         actions: <Widget>[
           TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
-                _addMarker(
-                    position, address, selectedStartDate, selectedEndDate);
-                _saveEventToFirestore(
-                    position,
-                    titleController.text,
-                    descriptionController.text,
-                    address,
-                    selectedStartDate,
-                    selectedEndDate,
-                    visibility);
+                if (titleController.text.isEmpty ||
+                    descriptionController.text.isEmpty ||
+                    selectedStartDate == null ||
+                    selectedEndDate == null) {
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                  errorController.clear();
+                  errorController.text = "Please fill in all fields.";
+                } else {
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                  Navigator.of(context).pop();
+                  _addMarker(
+                      position, address, selectedStartDate, selectedEndDate);
+                  _saveEventToFirestore(
+                      position,
+                      titleController.text,
+                      descriptionController.text,
+                      address,
+                      selectedStartDate,
+                      selectedEndDate,
+                      visibility);
+                }
               },
               child: const Text('Submit')),
         ],
@@ -415,7 +471,6 @@ class MapPageState extends State<MapPage>
       EventVisibility visibility) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      // Retrieve user details
       Map<String, dynamic> userDetails = userCache[user.uid] ?? {};
       if (userDetails.isEmpty) {
         var userDoc = await FirebaseFirestore.instance
@@ -428,18 +483,15 @@ class MapPageState extends State<MapPage>
         }
       }
 
-      // Prepare user information
       String username = userDetails['username'] ?? 'Unknown';
       String firstName = userDetails['firstName'] ?? 'Unknown';
       String lastName = userDetails['lastName'] ?? 'Unknown';
 
-      // Create a new document reference with an auto-generated ID
       DocumentReference eventRef =
           FirebaseFirestore.instance.collection('events').doc();
 
-      // Now set the data with the new ID already known
       await eventRef.set({
-        'id': eventRef.id, // Store the document ID within the document itself
+        'id': eventRef.id,
         'userId': user.uid,
         'userEmail': user.email,
         'username': username,
