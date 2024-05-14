@@ -327,7 +327,7 @@ class MapPageState extends State<MapPage>
                     title: Text('Select Start Date and Time'),
                     subtitle: Text(selectedStartDate == null
                         ? 'No date and time chosen'
-                        : DateFormat('yyyy-MM-dd – kk:mm')
+                        : DateFormat('hh:mm a MM/dd/yyyy')
                             .format(selectedStartDate!)),
                     onTap: () async {
                       FocusScope.of(context).requestFocus(new FocusNode());
@@ -361,7 +361,7 @@ class MapPageState extends State<MapPage>
                     title: Text('Select End Date and Time'),
                     subtitle: Text(selectedEndDate == null
                         ? 'No date and time chosen'
-                        : DateFormat('yyyy-MM-dd – kk:mm')
+                        : DateFormat('hh:mm a MM/dd/yyyy')
                             .format(selectedEndDate!)),
                     onTap: () async {
                       FocusScope.of(context).requestFocus(new FocusNode());
