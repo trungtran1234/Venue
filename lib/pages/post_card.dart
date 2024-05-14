@@ -1,4 +1,7 @@
+import 'package:app/database/firestore_methods.dart';
 import 'package:app/services/like_animation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
 
 class PostCard extends StatefulWidget {
@@ -14,6 +17,39 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   bool isLikeAnimating = false;
+  bool _isLoading = false;
+  firebase_auth.User? user = firebase_auth.FirebaseAuth.instance.currentUser;
+  Map<String, dynamic> userData = {};
+
+  void fetchUserData() async {
+    if (user != null) {
+      try {
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user!.uid)
+            .get();
+        if (userDoc.exists) {
+          setState(() {
+            userData = userDoc.data() as Map<String, dynamic>;
+            _isLoading =
+                false; // Set isLoading to false when data is successfully fetched
+          });
+        }
+      } catch (e) {
+        // Handle exceptions by setting isLoading to false and logging error or showing a message
+        setState(() {
+          _isLoading = false;
+        });
+        print('Error fetching user data: $e');
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,34 +66,44 @@ class _PostCardState extends State<PostCard> {
               decoration: const BoxDecoration(
                 color: Colors.black,
               ),
-              child: Row(
+              child: Column(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    child: const CircleAvatar(
-                      radius: 14,
-                      child: CircleAvatar(
-                        radius: 12,
-                        backgroundImage:
-                            //change to network image later
-                            AssetImage('lib/assets/Default_pfp.svg.png'),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        child: const CircleAvatar(
+                          radius: 14,
+                          child: CircleAvatar(
+                            radius: 12,
+                            backgroundImage:
+                                //change to network image later
+                                AssetImage('lib/assets/Default_pfp.svg.png'),
+                          ),
+                        ),
                       ),
-                    ),
+                      Text(
+                          '${widget.snap['firstName']} ${widget.snap['lastName']} @ ${widget.snap['event']}'),
+                      const Spacer(),
+                      IconButton(
+                        icon: const Icon(Icons.more_vert),
+                        onPressed: () {},
+                      )
+                    ],
                   ),
                   Text(
-                    widget.snap['username'],
+                    '${widget.snap['username']}',
+                    style: const TextStyle(color: Colors.grey),
+                    textAlign: TextAlign.left,
                   ),
-                  const Spacer(),
-                  IconButton(
-                    icon: const Icon(Icons.more_vert),
-                    onPressed: () {},
-                  )
                 ],
               ),
             ),
             //Image Display
             GestureDetector(
-              onDoubleTap: () {
+              onDoubleTap: () async {
+                await FirestoreMethods().likePost(widget.snap['postId'],
+                    userData['username'], widget.snap['likes']);
                 setState(() {
                   isLikeAnimating = true;
                 });
@@ -105,14 +151,22 @@ class _PostCardState extends State<PostCard> {
                   Row(
                     children: [
                       LikeAnimation(
-                        isAnimating: widget.snap['likes'].contains('testUser'),
+                        isAnimating:
+                            widget.snap['likes'].contains(userData['username']),
                         smallLike: true,
                         child: IconButton(
-                          icon: const Icon(Icons.favorite, color: Colors.red),
-                          onPressed: () {},
+                          icon: widget.snap['likes']
+                                  .contains(userData['username'])
+                              ? const Icon(Icons.favorite, color: Colors.red)
+                              : const Icon(Icons.favorite_border),
+                          onPressed: () => FirestoreMethods().likePost(
+                            widget.snap['postId'].toString(),
+                            userData['username'],
+                            widget.snap['likes'],
+                          ),
                         ),
                       ),
-                      const Text('727'),
+                      Text('${widget.snap['likes'].length}'),
                     ],
                   ),
                   Container(

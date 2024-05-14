@@ -137,14 +137,12 @@ class ResetPasswordPage extends StatelessWidget {
       await FirebaseAuth.instance.sendPasswordResetEmail(
         email: _emailController.text.trim(),
       );
-      // Pass the message string with green color for success
       showTopSnackBar(
         context,
         'If the email is associated with an account, a password reset link will be sent to it.',
         backgroundColor: Colors.green,
       );
     } catch (e) {
-      // Pass the error message string with default red color for errors
       showTopSnackBar(context, 'Please enter your email.');
     }
   }

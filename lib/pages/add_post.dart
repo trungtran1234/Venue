@@ -2,6 +2,8 @@ import 'dart:typed_data';
 import 'package:app/database/firestore_methods.dart';
 import 'package:app/global.dart';
 import 'package:app/pages/newsfeed.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -17,8 +19,41 @@ class _AddPostScreenState extends State<AddPostScreen> {
   Uint8List? _file;
   final TextEditingController _descriptionController = TextEditingController();
   bool _isLoading = false;
+  firebase_auth.User? user = firebase_auth.FirebaseAuth.instance.currentUser;
+  Map<String, dynamic> userData = {};
 
-  void postImage(String uid, String username) async {
+  void fetchUserData() async {
+    if (user != null) {
+      try {
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user!.uid)
+            .get();
+        if (userDoc.exists) {
+          setState(() {
+            userData = userDoc.data() as Map<String, dynamic>;
+            _isLoading =
+                false; // Set isLoading to false when data is successfully fetched
+          });
+        }
+      } catch (e) {
+        // Handle exceptions by setting isLoading to false and logging error or showing a message
+        setState(() {
+          _isLoading = false;
+        });
+        print('Error fetching user data: $e');
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  void postImage(String uid, String firstName, String lastName, String username,
+      String event) async {
     setState(() {
       _isLoading = true;
     });
@@ -28,6 +63,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
         _file!,
         uid,
         username,
+        firstName,
+        lastName,
+        event,
         widget.eventId,
       );
 
@@ -150,7 +188,13 @@ class _AddPostScreenState extends State<AddPostScreen> {
               centerTitle: false,
               actions: [
                 TextButton(
-                  onPressed: () => postImage("test_id", "test_user"),
+                  onPressed: () => postImage(
+                    userData['uid'],
+                    userData['firstName'],
+                    userData['lastName'],
+                    userData['username'],
+                    "event",
+                  ),
                   child: const Text(
                     'Post',
                     style: TextStyle(

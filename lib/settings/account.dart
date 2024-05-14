@@ -13,7 +13,7 @@ class Account extends StatefulWidget {
 }
 
 class AccountSettingsState extends State<Account> {
-  String userEmail = ''; // Variable to store user's email
+  String userEmail = '';
 
   @override
   void initState() {
@@ -74,7 +74,7 @@ class AccountSettingsState extends State<Account> {
                     style: TextStyle(color: Colors.white),
                   ),
                   Text(
-                    userEmail, // Display the current user's email
+                    userEmail,
                     style: const TextStyle(color: Colors.white),
                   ),
                   const Icon(
@@ -114,7 +114,6 @@ class AccountSettingsState extends State<Account> {
                 ),
               ),
               onTap: () async {
-                // Show a confirmation dialog
                 final bool confirmDelete = await showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -124,22 +123,20 @@ class AccountSettingsState extends State<Account> {
                         actions: <Widget>[
                           TextButton(
                             onPressed: () {
-                              Navigator.of(context)
-                                  .pop(false); // User presses "No"
+                              Navigator.of(context).pop(false);
                             },
                             child: const Text('No'),
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.of(context)
-                                  .pop(true); // User presses "Yes"
+                              Navigator.of(context).pop(true);
                             },
                             child: const Text('Yes'),
                           ),
                         ],
                       ),
                     ) ??
-                    false; // if null, consider it as "false"
+                    false;
 
                 if (confirmDelete) {
                   final user = FirebaseAuth.instance.currentUser;
@@ -151,13 +148,10 @@ class AccountSettingsState extends State<Account> {
                           .doc(user.uid)
                           .delete();
                       await user.delete();
-                      // Log out from Firebase Auth after deletion
                       await FirebaseAuth.instance.signOut();
-                      // If deletion and sign out are successful, navigate to a login or home screen
                       newRoute(context, LoginPage());
                     } on FirebaseAuthException catch (e) {
                       if (e.code == 'requires-recent-login') {
-                        // Handle the case where the user needs to re-authenticate
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
@@ -176,7 +170,6 @@ class AccountSettingsState extends State<Account> {
                           ),
                         );
                       } else {
-                        // Handle other errors
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
@@ -268,11 +261,9 @@ class ChangeEmailState extends State<ChangeEmail> {
     });
 
     try {
-      // Re-authenticate user
       UserCredential credential = await _auth.signInWithEmailAndPassword(
           email: _auth.currentUser!.email!, password: password);
 
-      // Update email after successful re-authentication
       await credential.user!.updateEmail(newEmail);
       await credential.user!.sendEmailVerification();
 
@@ -376,7 +367,6 @@ class ChangePasswordState extends State<ChangePassword> {
       _isLoading = true;
     });
 
-    // Attempt to re-authenticate the user
     try {
       User? user = _auth.currentUser;
       final cred = EmailAuthProvider.credential(
@@ -386,7 +376,6 @@ class ChangePasswordState extends State<ChangePassword> {
 
       await user.reauthenticateWithCredential(cred);
 
-      // If re-authentication is successful, proceed to update the password
       await user.updatePassword(newPassword);
       _showDialog('Success', 'Your password has been updated successfully.');
     } on FirebaseAuthException catch (e) {
@@ -433,15 +422,14 @@ class InputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          const EdgeInsets.only(bottom: 8.0), // Added padding for consistency
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: TextField(
         controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(
           labelText: labelText,
           border: const OutlineInputBorder(),
-          isDense: true, // Added isDense for consistency
+          isDense: true,
         ),
       ),
     );

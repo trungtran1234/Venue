@@ -205,7 +205,7 @@ class SignUpPage extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(ctx).pop(); // Close the dialog
+              Navigator.of(ctx).pop();
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (_) => LoginPage()));
             },

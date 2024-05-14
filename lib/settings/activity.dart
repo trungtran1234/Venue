@@ -11,10 +11,10 @@ class ActivityPage extends StatefulWidget {
 }
 
 class ActivityPageState extends State<ActivityPage> {
-  bool? _showLikes; // Use nullable bools to track uninitialized state
+  bool? _showLikes;
   bool? _showShares;
   bool? _showComments;
-  bool _isLoading = true; // Track loading state
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class ActivityPageState extends State<ActivityPage> {
         await PreferencesService().getBool('showComments', defaultValue: true);
     if (mounted) {
       setState(() {
-        _isLoading = false; // Update loading state
+        _isLoading = false;
       });
     }
   }
@@ -64,9 +64,7 @@ class ActivityPageState extends State<ActivityPage> {
         ),
       ),
       body: _isLoading
-          ? const Center(
-              child:
-                  CircularProgressIndicator()) // Show loading indicator while loading
+          ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(

@@ -63,6 +63,7 @@ class Auth {
         }
       }
     }
+    return null;
   }
 
   Future<bool> checkEmailExists(String email) async {
