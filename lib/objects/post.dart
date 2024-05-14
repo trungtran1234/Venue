@@ -10,6 +10,7 @@ class Post {
   final String postId;
   final DateTime datePublished;
   final String postUrl;
+  final String eventId;
   final String event;
 
   const Post({
@@ -22,6 +23,7 @@ class Post {
     required this.postId,
     required this.datePublished,
     required this.postUrl,
+    required this.eventId,
     required this.event,
   });
 
@@ -38,8 +40,11 @@ class Post {
         lastName: usersnapshot["lastName"],
         username: usersnapshot["username"],
         postUrl: snapshot['postUrl'],
-        event: snapshot['event']);
+        event: snapshot['event'],
+        eventId: snapshot["eventId"]);
   }
+
+
 
   Map<String, dynamic> toJson() => {
         "description": description,
@@ -52,5 +57,6 @@ class Post {
         "datePublished": datePublished,
         "postUrl": postUrl,
         "event": event,
+        "eventId": eventId,
       };
 }

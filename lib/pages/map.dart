@@ -9,8 +9,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:clippy_flutter/triangle.dart';
-enum EventVisibility { public, friendsOnly }
+import './event_feed.dart';
 
+enum EventVisibility { public, friendsOnly }
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -26,8 +27,8 @@ class MapPageState extends State<MapPage>
   Set<Marker> _markers = {};
   LatLng? currentPosition;
   Map<String, Map<String, dynamic>> userCache = {};
-  CustomInfoWindowController _customInfoWindowController = CustomInfoWindowController();
-  
+  CustomInfoWindowController _customInfoWindowController =
+      CustomInfoWindowController();
 
   @override
   bool get wantKeepAlive => true;
@@ -95,25 +96,25 @@ class MapPageState extends State<MapPage>
     });
   }
 
-  
-
-
   void _loadEvents() async {
-  final user = FirebaseAuth.instance.currentUser;
-  List<String> friendsList = [];
+    final user = FirebaseAuth.instance.currentUser;
+    List<String> friendsList = [];
 
-  if (user != null) {
-    var userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
-    if (userDoc.exists && userDoc.data()!.containsKey('friends')) {
-      friendsList = List<String>.from(userDoc.data()!['friends']);
+    if (user != null) {
+      var userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      if (userDoc.exists && userDoc.data()!.containsKey('friends')) {
+        friendsList = List<String>.from(userDoc.data()!['friends']);
+      }
     }
-  }
 
-  FirebaseFirestore.instance
-    .collection('events')
-    .orderBy('createdAt', descending: true)
-    .snapshots()
-    .listen((snapshot) {
+    FirebaseFirestore.instance
+        .collection('events')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .listen((snapshot) {
       var newMarkers = <Marker>{};
       for (var doc in snapshot.docs) {
         double lat = doc.data()['latitude'];
@@ -123,17 +124,11 @@ class MapPageState extends State<MapPage>
 
         bool shouldDisplay = false;
 
-        if (eventCreatorId == user?.uid) {
+        if (eventCreatorId == user?.uid ||
+            eventVisibility == 'public' ||
+            (eventVisibility == 'friendsOnly' &&
+                friendsList.contains(eventCreatorId))) {
           shouldDisplay = true;
-        } else {
-          switch (eventVisibility) {
-            case 'public':
-              shouldDisplay = true;
-              break;
-            case 'friendsOnly':
-              shouldDisplay = friendsList.contains(eventCreatorId);
-              break;
-          }
         }
 
         if (shouldDisplay) {
@@ -142,98 +137,127 @@ class MapPageState extends State<MapPage>
             markerId: markerId,
             position: LatLng(lat, lng),
             onTap: () {
-               _customInfoWindowController.addInfoWindow!(
+              _customInfoWindowController.addInfoWindow!(
                 Column(
-                children: [
-                  Expanded(
-                    child: Container( 
-                      width: double.infinity,
-                      height: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(10.0, 0, 4.0, 0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.account_circle,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                          
-                            Text(
-                              doc.data()['firstName'] + ' ' + doc.data()['lastName'] + ' @' + doc.data()['username'],
-                              style:
-                                  Theme.of(context).textTheme.headline6?.copyWith(
-                                        color: Colors.white,
-                                      ),
-                            ),
+                  children: [
+                    Expanded(
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.account_circle,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                              Text(
+                                doc.data()['firstName'] +
+                                    ' ' +
+                                    doc.data()['lastName'] +
+                                    ' @' +
+                                    doc.data()['username'],
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    ?.copyWith(
+                                      color: Colors.white,
+                                    ),
+                              ),
                               SizedBox(
-                              height: 8.0, 
-                            ),
-                            Text(
-                              doc.data()['title'],
-                              style:
-                                  Theme.of(context).textTheme.headline6?.copyWith(
-                                        color: Colors.white,
-                                      ),
-                            ),
-                            Text(
-                              doc.data()['description'],
-                              style:
-                                  Theme.of(context).textTheme.headline6?.copyWith(
-                                        color: Colors.white,
-                            )
-                            ),
-                            Text(
-                              doc.data()['address'],
-                              style: Theme.of(context).textTheme.headline6?.copyWith(
-                              color: Colors.white,
-                              fontSize: 16,
-                              ),
-                            ),
-                              Text(
-                              'From: ${DateFormat('hh:mm a MM/dd/yyyy').format(DateTime.parse(doc.data()['startDateTime']).toLocal())}',
-                              style:
-                                Theme.of(context).textTheme.headline6?.copyWith(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                  ),
+                                height: 8.0,
                               ),
                               Text(
-                              'To: ${DateFormat(' hh:mm a MM/dd/yyyy').format(DateTime.parse(doc.data()['endDateTime']).toLocal())}',
-                              style:
-                                Theme.of(context).textTheme.headline6?.copyWith(
-                                    color: Colors.white,
-                                    fontSize: 14
-                                  ),
+                                doc.data()['title'],
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    ?.copyWith(
+                                      color: Colors.white,
+                                    ),
+                              ),
+                              Text(doc.data()['description'],
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      ?.copyWith(
+                                        color: Colors.white,
+                                      )),
+                              Text(
+                                doc.data()['address'],
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    ?.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                              ),
+                              Text(
+                                'From: ${DateFormat('hh:mm a MM/dd/yyyy').format(DateTime.parse(doc.data()['startDateTime']).toLocal())}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    ?.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
+                              ),
+                              Text(
+                                'To: ${DateFormat(' hh:mm a MM/dd/yyyy').format(DateTime.parse(doc.data()['endDateTime']).toLocal())}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    ?.copyWith(
+                                        color: Colors.white, fontSize: 14),
                               ),
                               Text(
                                 'Visibility: ${doc.data()['visibility'] == 'friendsOnly' ? 'Friends Only' : 'Public'}',
-                                style: Theme.of(context).textTheme.headline6?.copyWith(
-                                  color: Colors.white,
-                                  fontSize: 14, 
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    ?.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
+                              ),
+                              SizedBox(height: 10),
+                              TextButton(
+                                onPressed: () {
+                                  _customInfoWindowController.hideInfoWindow!();
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => EventDetailPage(
+                                          eventDoc: doc.data(),
+                                          eventId: doc.id),
+                                    ),
+                                  );
+                                },
+                                child: Text('View Details',
+                                    style:
+                                        TextStyle(color: Colors.yellowAccent)),
                               )
-                          
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Triangle.isosceles(
-                    edge: Edge.BOTTOM,
-                    child: Container(
-                      color: Colors.blue,
-                      width: 20.0,
-                      height: 10.0,
+                    Triangle.isosceles(
+                      edge: Edge.BOTTOM,
+                      child: Container(
+                        color: Colors.blue,
+                        width: 20.0,
+                        height: 10.0,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
                 LatLng(lat, lng),
               );
             },
@@ -244,9 +268,7 @@ class MapPageState extends State<MapPage>
       }
       setState(() => _markers = newMarkers);
     });
-}
-
-
+  }
 
   void _addMarker(LatLng position, String address, DateTime? startDateTime,
       DateTime? endDateTime) {
@@ -264,175 +286,242 @@ class MapPageState extends State<MapPage>
     });
   }
 
-void _onMapLongPress(LatLng position) async {
-  String address = await getPlaceAddress(position.latitude, position.longitude);
-  DateTime? selectedStartDate;
-  DateTime? selectedEndDate;
-  EventVisibility visibility = EventVisibility.public;
+  void _onMapLongPress(LatLng position) async {
+    String address =
+        await getPlaceAddress(position.latitude, position.longitude);
+    DateTime? selectedStartDate;
+    DateTime? selectedEndDate;
+    EventVisibility visibility = EventVisibility.public;
 
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
+    final TextEditingController titleController = TextEditingController();
+    final TextEditingController descriptionController = TextEditingController();
+    final TextEditingController errorController = TextEditingController();
 
-  final List<DropdownMenuItem<EventVisibility>> dropdownItems = [
-    DropdownMenuItem(value: EventVisibility.public, child: Text('Public')),
-    DropdownMenuItem(value: EventVisibility.friendsOnly, child: Text('Friends Only')),
+    final List<DropdownMenuItem<EventVisibility>> dropdownItems = [
+      DropdownMenuItem(value: EventVisibility.public, child: Text('Public')),
+      DropdownMenuItem(
+          value: EventVisibility.friendsOnly, child: Text('Friends Only')),
     ];
 
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text('Create Event'),
-      content: StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Create Event'),
+        content: StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
                     controller: titleController,
-                    decoration: InputDecoration(labelText: 'Title')),
-                TextField(
+                    decoration: InputDecoration(labelText: 'Title'),
+                    maxLines: null,
+                    minLines: 1,
+                  ),
+                  TextField(
                     controller: descriptionController,
-                    decoration: InputDecoration(labelText: 'Description')),
-                TextFormField(initialValue: address, readOnly: true),
-                ListTile(
-                  title: Text('Select Start Date and Time'),
-                  subtitle: Text(selectedStartDate == null
-                      ? 'No date and time chosen'
-                      : DateFormat('yyyy-MM-dd – kk:mm').format(selectedStartDate!) + ' hrs'),
-                  onTap: () async {
-                    final date = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime(2100),
-                    );
-                    if (date != null) {
-                      final time = await showTimePicker(
+                    decoration: InputDecoration(labelText: 'Description'),
+                    maxLines: null,
+                    minLines: 1,
+                  ),
+                  Flexible(
+                    child: TextFormField(
+                        initialValue: address,
+                        readOnly: true,
+                        maxLines: null,
+                        decoration: InputDecoration(
+                          labelText: 'Location',
+                        )),
+                  ),
+                  ListTile(
+                    title: Text('Select Start Date and Time'),  
+                    subtitle: Text(selectedStartDate == null
+                        ? 'No date and time chosen'
+                        : DateFormat('hh:mm a MM/dd/yyyy')
+                            .format(selectedStartDate!)),
+                    onTap: () async {
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                      final DateTime? date = await showDatePicker(
                         context: context,
-                        initialTime: TimeOfDay.now(),
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime(2100),
                       );
-                      if (time != null) {
-                        setState(() {
-                          selectedStartDate = DateTime(
+                      if (date != null) {
+                        final TimeOfDay? time = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        );
+                        if (time != null) {
+                          setState(() {
+                            selectedStartDate = DateTime(
+                              date.year,
+                              date.month,
+                              date.day,
+                              time.hour,
+                              time.minute,
+                            );
+                            errorController.clear();
+                          });
+                        }
+                      }
+                    },
+                  ),
+                  ListTile(
+                    title: Text('Select End Date and Time'),
+                    subtitle: Text(selectedEndDate == null
+                        ? 'No date and time chosen'
+                        : DateFormat('hh:mm a MM/dd/yyyy')
+                            .format(selectedEndDate!)),
+                    onTap: () async {
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                      if (selectedStartDate == null) {
+                        errorController.clear();
+                        errorController.text =
+                            "Please select a start date first.";
+                        return;
+                      }
+                      final DateTime? date = await showDatePicker(
+                        context: context,
+                        initialDate: selectedStartDate!,
+                        firstDate: selectedStartDate!,
+                        lastDate: DateTime(2100),
+                      );
+                      if (date != null) {
+                        final TimeOfDay? time = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        );
+                        if (time != null) {
+                          DateTime tempEndDate = DateTime(
                             date.year,
                             date.month,
                             date.day,
                             time.hour,
                             time.minute,
                           );
-                        });
+                          if (tempEndDate.isBefore(selectedStartDate!)) {
+                            errorController.clear();
+                            errorController.text =
+                                "End date must be after the start date.";
+                          } else {
+                            setState(() {
+                              selectedEndDate = tempEndDate;
+                              errorController.clear();
+                            });
+                          }
+                        }
                       }
-                    }
-                  },
-                ),
-                ListTile(
-                  title: Text('Select End Date and Time'),
-                  subtitle: Text(selectedEndDate == null
-                      ? 'No date and time chosen'
-                      : DateFormat('yyyy-MM-dd – kk:mm').format(selectedEndDate!) + ' hrs'),
-                  onTap: () async {
-                    final date = await showDatePicker(
-                      context: context,
-                      initialDate: selectedStartDate ?? DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime(2100),
-                    );
-                    if (date != null) {
-                      final time = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.now(),
-                      );
-                      if (time != null) {
-                        setState(() {
-                          selectedEndDate = DateTime(
-                            date.year,
-                            date.month,
-                            date.day,
-                            time.hour,
-                            time.minute,
-                          );
-                        });
-                      }
-                    }
-                  },
-                ),
-                DropdownButton<EventVisibility>(
-                  value: visibility,
-                  onChanged: (EventVisibility? newValue) {
-                    setState(() {
-                      visibility = newValue!;
-                    });
-                  },
-                  items: dropdownItems,
-                ),
-              ],
-            ),
-          );
-        },
+                    },
+                  ),
+                  DropdownButton<EventVisibility>(
+                    value: visibility,
+                    onChanged: (EventVisibility? newValue) {
+                      setState(() {
+                        visibility = newValue!;
+                        errorController.clear();
+                      });
+                    },
+                    items: dropdownItems,
+                  ),
+                  TextField(
+                    controller: errorController,
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                    ),
+                    style: TextStyle(
+                        color: errorController.text.isEmpty
+                            ? Colors.transparent
+                            : Colors.red),
+                  )
+                ],
+              ),
+            );
+          },
+        ),
+        actions: <Widget>[
+          TextButton(
+              onPressed: () {
+                if (titleController.text.isEmpty ||
+                    descriptionController.text.isEmpty ||
+                    selectedStartDate == null ||
+                    selectedEndDate == null) {
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                  errorController.clear();
+                  errorController.text = "Please fill in all fields.";
+                } else {
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                  Navigator.of(context).pop();
+                  _addMarker(
+                      position, address, selectedStartDate, selectedEndDate);
+                  _saveEventToFirestore(
+                      position,
+                      titleController.text,
+                      descriptionController.text,
+                      address,
+                      selectedStartDate,
+                      selectedEndDate,
+                      visibility);
+                }
+              },
+              child: const Text('Submit')),
+        ],
       ),
-      actions: <Widget>[
-        TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              _addMarker(
-                  position, address, selectedStartDate, selectedEndDate);
-              _saveEventToFirestore(
-                  position,
-                  titleController.text,
-                  descriptionController.text,
-                  address,
-                  selectedStartDate,
-                  selectedEndDate,
-                  visibility);
-            },
-            child: const Text('Submit')),
-      ],
-    ),
-  );
-}
-
-
-
-void _saveEventToFirestore(LatLng position, String title, String description,
-    String address, DateTime? startDateTime, DateTime? endDateTime, EventVisibility visibility) async {
-  final user = FirebaseAuth.instance.currentUser;
-  if (user != null) {
-
-    Map<String, dynamic> userDetails = userCache[user.uid] ?? {};
-
-    if (userDetails.isEmpty) {
-      var userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
-      if (userDoc.exists) {
-        userDetails = userDoc.data()!;
-        userCache[user.uid] = userDetails;
-      }
-    }
-
-    String username = userDetails['username'] ?? 'Unknown'; 
-    String firstName = userDetails['firstName'] ?? 'Unknown';
-    String lastName = userDetails['lastName'] ?? 'Unknown';
-
-    FirebaseFirestore.instance.collection('events').add({
-      'userId': user.uid,
-      'userEmail': user.email,
-      'username': username,
-      'firstName': firstName,
-      'lastName': lastName,
-      'title': title,
-      'description': description,
-      'latitude': position.latitude,
-      'longitude': position.longitude,
-      'address': address,
-      'startDateTime': startDateTime?.toIso8601String(),
-      'endDateTime': endDateTime?.toIso8601String(),
-      'createdAt': FieldValue.serverTimestamp(),
-      'visibility': visibility.toString().split('.').last,
-    });
+    );
   }
-}
 
- @override
+  void _saveEventToFirestore(
+      LatLng position,
+      String title,
+      String description,
+      String address,
+      DateTime? startDateTime,
+      DateTime? endDateTime,
+      EventVisibility visibility) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      Map<String, dynamic> userDetails = userCache[user.uid] ?? {};
+      if (userDetails.isEmpty) {
+        var userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+        if (userDoc.exists) {
+          userDetails = userDoc.data()!;
+          userCache[user.uid] = userDetails;
+        }
+      }
+
+      String username = userDetails['username'] ?? 'Unknown';
+      String firstName = userDetails['firstName'] ?? 'Unknown';
+      String lastName = userDetails['lastName'] ?? 'Unknown';
+
+      DocumentReference eventRef =
+          FirebaseFirestore.instance.collection('events').doc();
+
+      await eventRef.set({
+        'id': eventRef.id,
+        'userId': user.uid,
+        'userEmail': user.email,
+        'username': username,
+        'firstName': firstName,
+        'lastName': lastName,
+        'title': title,
+        'description': description,
+        'latitude': position.latitude,
+        'longitude': position.longitude,
+        'address': address,
+        'startDateTime': startDateTime?.toIso8601String(),
+        'endDateTime': endDateTime?.toIso8601String(),
+        'createdAt': FieldValue.serverTimestamp(),
+        'visibility': visibility.toString().split('.').last,
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
@@ -443,25 +532,27 @@ void _saveEventToFirestore(LatLng position, String title, String description,
       body: Stack(
         children: [
           currentPosition == null
-            ? const Center(child: CircularProgressIndicator())
-            : GoogleMap(
-                mapType: MapType.normal,
-                initialCameraPosition: CameraPosition(target: currentPosition!, zoom: 17),
-                myLocationEnabled: true,
-                myLocationButtonEnabled: true,
-                onMapCreated: (GoogleMapController controller) {
-                  _controller = controller;
-                  _customInfoWindowController.googleMapController = controller;
-                },
-                markers: _markers.toSet(),
-                onTap: (LatLng latLng) {
-                  _customInfoWindowController.hideInfoWindow!();
-                },
-                onCameraMove: (CameraPosition position) {
-                  _customInfoWindowController.onCameraMove!();
-                },
-                onLongPress: _onMapLongPress,
-              ),
+              ? const Center(child: CircularProgressIndicator())
+              : GoogleMap(
+                  mapType: MapType.normal,
+                  initialCameraPosition:
+                      CameraPosition(target: currentPosition!, zoom: 17),
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: true,
+                  onMapCreated: (GoogleMapController controller) {
+                    _controller = controller;
+                    _customInfoWindowController.googleMapController =
+                        controller;
+                  },
+                  markers: _markers.toSet(),
+                  onTap: (LatLng latLng) {
+                    _customInfoWindowController.hideInfoWindow!();
+                  },
+                  onCameraMove: (CameraPosition position) {
+                    _customInfoWindowController.onCameraMove!();
+                  },
+                  onLongPress: _onMapLongPress,
+                ),
           CustomInfoWindow(
             controller: _customInfoWindowController,
             height: 360,

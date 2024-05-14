@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddPostScreen extends StatefulWidget {
-  const AddPostScreen({super.key});
+  final String eventId;
+  const AddPostScreen({super.key, required this.eventId});
 
   @override
   State<AddPostScreen> createState() => _AddPostScreenState();
@@ -65,6 +66,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
         firstName,
         lastName,
         event,
+        widget.eventId,
       );
 
       if (res == "success") {
