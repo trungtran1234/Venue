@@ -7,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:app/global.dart';
 import 'package:local_auth/local_auth.dart';
 
-const kBackgroundColor = Color(0xFF121212);
-const kBoxDecorationColor = Color(0xFF1E1E1E);
-const kPrimaryColor = Color(0xFF007AFF);
+const kBackgroundColor = Color(0xFF133068);
+const kBackgroundColor2 = Color(0xFF0B1425);
+const kBoxDecorationColor = Color(0xFF020C1B);
+const kPrimaryColor = Color.fromARGB(255, 7, 24, 60);
+const kTextColor = Color(0xFFE0E0E0);
 const kErrorColor = Colors.red;
 
 class LoginForm extends StatelessWidget {
@@ -49,7 +51,7 @@ class LoginPage extends StatelessWidget {
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [kBackgroundColor, Color.fromARGB(255, 16, 19, 24)],
+            colors: [kBackgroundColor, kBackgroundColor2],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -243,7 +245,7 @@ class LoginPage extends StatelessWidget {
           child: const Text(
             'Forgot Password?',
             style: TextStyle(
-              color: kPrimaryColor,
+              color: kTextColor,
               fontSize: 14.0,
             ),
           ),
@@ -285,7 +287,7 @@ class LoginPage extends StatelessWidget {
             child: const Text(
               'Sign Up',
               style: TextStyle(
-                color: kPrimaryColor,
+                color: kTextColor,
                 fontSize: 16.0,
               ),
             ),

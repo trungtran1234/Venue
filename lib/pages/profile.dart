@@ -1,4 +1,5 @@
 import 'dart:io';
+import '../main.dart';
 import 'package:app/global.dart';
 import 'package:app/pages/friends.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -71,20 +72,7 @@ class ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text('Profile', style: TextStyle(color: Colors.white)),
-        actions: [
-          IconButton(
-            onPressed: () {
-              newRoute(context, SettingsPage());
-            },
-            icon: const Icon(Icons.settings),
-            color: Colors.white,
-          ),
-        ],
-      ),
+    return GradientScaffold(
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Center(

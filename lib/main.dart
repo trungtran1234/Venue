@@ -25,7 +25,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Fredoka',
-        scaffoldBackgroundColor: const Color.fromARGB(255, 0, 0, 0),
         colorScheme: const ColorScheme.highContrastDark(),
         useMaterial3: true,
       ),
@@ -43,16 +42,51 @@ class AuthStateChecker extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return GradientScaffold(
+            body: const Center(child: CircularProgressIndicator()),
+          );
         }
 
         final User? user = snapshot.data;
         if (user != null) {
-          return const MapPage();
+          return const MapPage();  // Make sure MapPage uses GradientScaffold if needed
         } else {
           return LoginPage();
         }
       },
+    );
+  }
+}
+
+class GradientScaffold extends StatelessWidget {
+  final Widget body;
+  final AppBar? appBar;
+  final Widget? bottomNavigationBar;
+
+  const GradientScaffold({
+    Key? key, 
+    required this.body, 
+    this.appBar, 
+    this.bottomNavigationBar
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: appBar,
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF133068), Color(0xFF0B1425)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SafeArea(child: body),
+      ),
+      bottomNavigationBar: bottomNavigationBar,
     );
   }
 }

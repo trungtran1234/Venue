@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../services/connectivity_checker.dart';
 import '../services/reconnection_popup.dart';
+import '../main.dart';
 
 class NewsFeedPage extends StatefulWidget {
   const NewsFeedPage({super.key});
@@ -40,7 +41,7 @@ class _NewsFeedState extends State<NewsFeedPage> {
     }
   }
 
-  Future<void> _selectImage() async {
+Future<void> _selectImage() async {
     final ImageSource? source = await showDialog(
       context: context,
       builder: (context) => SimpleDialog(
@@ -100,10 +101,11 @@ class _NewsFeedState extends State<NewsFeedPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text('Venue'),
+        backgroundColor: Colors.transparent, // Ensuring AppBar blends with the gradient
+        title: const Text('News Feed', style: TextStyle(color: Colors.white)),
+        elevation: 0, // Remove shadow from AppBar
         actions: [
           if (_file == null)
             IconButton(
@@ -120,8 +122,7 @@ class _NewsFeedState extends State<NewsFeedPage> {
   Widget _buildPostList() {
     return StreamBuilder(
       stream: FirebaseFirestore.instance.collection('posts').snapshots(),
-      builder: (context,
-          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+      builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -144,7 +145,7 @@ class _NewsFeedState extends State<NewsFeedPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const CircleAvatar(
-              backgroundImage: AssetImage('lib/assets/Default_pfp.svg.png'),
+              backgroundImage: AssetImage('lib/assets/Default_pfp.svg.png'), // Update your default image path as necessary
             ),
             Expanded(
               child: TextField(

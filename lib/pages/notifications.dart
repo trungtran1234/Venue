@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/connectivity_checker.dart';
 import '../services/reconnection_popup.dart';
 import 'package:app/global.dart';
+import '../main.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -44,11 +45,11 @@ class NotificationsPageState extends State<NotificationsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title:
-            const Text('Notifications', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.transparent, // Ensuring AppBar blends with the gradient
+        title: const Text('Notifications', style: TextStyle(color: Colors.white)),
+        elevation: 0, // Remove shadow from AppBar
       ),
       body: notificationsList(context),
       bottomNavigationBar: buildBottomNavigationBar(context, _selectedIndex),
@@ -58,7 +59,7 @@ class NotificationsPageState extends State<NotificationsPage> {
   Widget notificationsList(BuildContext context) {
     var currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
-      return Text("You need to be logged in to view notifications.");
+      return const Text("You need to be logged in to view notifications.");
     }
 
     return StreamBuilder<QuerySnapshot>(
@@ -76,17 +77,12 @@ class NotificationsPageState extends State<NotificationsPage> {
         return ListView.builder(
           itemCount: snapshot.data!.docs.length,
           itemBuilder: (context, index) {
-            var notification =
-                snapshot.data!.docs[index].data() as Map<String, dynamic>;
+            var notification = snapshot.data!.docs[index].data() as Map<String, dynamic>;
             return ListTile(
-              leading:
-                  const Icon(Icons.notification_important, color: Colors.blue),
-              title: Text(notification['title'],
-                  style: const TextStyle(fontSize: 16)),
-              subtitle: Text(notification['message'],
-                  style: TextStyle(color: Colors.grey[600])),
-              onTap: () => handleNotificationTap(
-                  notification, snapshot.data!.docs[index].id),
+              leading: const Icon(Icons.notification_important, color: Colors.blue),
+              title: Text(notification['title'], style: const TextStyle(fontSize: 16)),
+              subtitle: Text(notification['message'], style: TextStyle(color: Colors.grey[600])),
+              onTap: () => handleNotificationTap(notification, snapshot.data!.docs[index].id),
             );
           },
         );
