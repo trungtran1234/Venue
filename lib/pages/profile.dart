@@ -45,12 +45,10 @@ class ProfilePageState extends State<ProfilePage> {
         if (userDoc.exists) {
           setState(() {
             userData = userDoc.data() as Map<String, dynamic>;
-            _isLoading =
-                false; // Set isLoading to false when data is successfully fetched
+            _isLoading = false;
           });
         }
       } catch (e) {
-        // Handle exceptions by setting isLoading to false and logging error or showing a message
         setState(() {
           _isLoading = false;
         });
@@ -89,9 +87,8 @@ class ProfilePageState extends State<ProfilePage> {
         padding: const EdgeInsets.all(20.0),
         child: Center(
           child: _isLoading
-              ? CircularProgressIndicator() // Display spinner when isLoading is true
+              ? const CircularProgressIndicator()
               : Column(
-                  // Display user data when isLoading is false
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     const SizedBox(height: 20),
@@ -155,10 +152,10 @@ class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
 
   @override
-  _EditProfilePageState createState() => _EditProfilePageState();
+  EditProfilePageState createState() => EditProfilePageState();
 }
 
-class _EditProfilePageState extends State<EditProfilePage> {
+class EditProfilePageState extends State<EditProfilePage> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
@@ -200,7 +197,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Future<void> uploadImageAndUpdateProfile() async {
     if (user != null) {
       String imageUrl = '';
-      // Check if an image is selected
       if (_image != null) {
         String fileName = 'profile_${user!.uid}.jpg';
         Reference storageRef = FirebaseStorage.instance
@@ -218,7 +214,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         'bio': _bioController.text,
       };
 
-      // Only update the profile picture URL if a new image was uploaded
       if (imageUrl.isNotEmpty) {
         updatedData['profilePictureUrl'] = imageUrl;
       }

@@ -182,7 +182,7 @@ class LoginPage extends StatelessWidget {
           showTopSnackBar(
               context, 'Please verify your email address to log in.');
         }
-      } on FirebaseAuthException catch (e) {
+      } on FirebaseAuthException {
         errorMessage = 'Incorrect password. Please try again.';
       } catch (e) {
         errorMessage = 'An unexpected error occurred. Please try again later.';
@@ -222,7 +222,7 @@ class LoginPage extends StatelessWidget {
           errorMessage = e.toString();
         }
       }
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException {
       errorMessage = 'Incorrect password. Please try again.';
     } catch (e) {
       errorMessage = 'An unexpected error occurred. Please try again later.';
