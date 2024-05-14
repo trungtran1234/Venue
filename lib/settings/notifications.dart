@@ -24,7 +24,7 @@ class Notifications extends StatefulWidget {
 
 class NotificationsState extends State<Notifications> {
   bool _notificationEnabled = true;
-  bool _isLoading = true; // Add a loading state indicator
+  bool _isLoading = true;
 
   List<NotificationOption> postNotifications = [
     NotificationOption(
@@ -73,7 +73,7 @@ class NotificationsState extends State<Notifications> {
     await _loadNotificationOptions(friendNotifications);
     if (mounted) {
       setState(() {
-        _isLoading = false; // Set loading to false after settings are loaded
+        _isLoading = false;
       });
     }
   }

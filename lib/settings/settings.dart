@@ -5,7 +5,6 @@ import 'package:app/settings/account.dart';
 import 'package:app/settings/notifications.dart';
 import 'package:app/settings/privacy.dart';
 import 'package:app/settings/activity.dart';
-import 'package:app/settings/security.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:local_auth/local_auth.dart';
@@ -46,10 +45,10 @@ class SettingsList extends StatelessWidget {
       'description': 'Manage your account settings and personal information.'
     },
     {
-      'title': 'Privacy',
-      'icon': Icons.shield,
+      'title': 'Activity',
+      'icon': Icons.timeline,
       'textColor': Colors.white,
-      'description': 'Control your privacy settings and access permissions.'
+      'description': 'Review your recent activity and history.'
     },
     {
       'title': 'Notifications',
@@ -58,17 +57,10 @@ class SettingsList extends StatelessWidget {
       'description': 'Customize your notification preferences.'
     },
     {
-      'title': 'Activity',
-      'icon': Icons.timeline,
+      'title': 'Privacy',
+      'icon': Icons.shield,
       'textColor': Colors.white,
-      'description': 'Review your recent activity and history.'
-    },
-    {
-      'title': 'Security',
-      'icon': Icons.security,
-      'textColor': Colors.white,
-      'description':
-          'Manage your security settings like passwords and authentication.'
+      'description': 'Control your privacy settings and access permissions.'
     },
   ];
 
@@ -169,9 +161,6 @@ class SettingsList extends StatelessWidget {
         break;
       case 'Activity':
         newRoute(context, const ActivityPage());
-        break;
-      case 'Security':
-        newRoute(context, const SecurityPage());
         break;
       case 'Log out':
         FirebaseAuth.instance.signOut();
