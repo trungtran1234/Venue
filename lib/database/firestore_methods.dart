@@ -14,6 +14,7 @@ class FirestoreMethods {
     Uint8List file,
     String uid,
     String username,
+    [String? eventId]
   ) async {
     String res = "some error occurred";
     try {
@@ -25,10 +26,11 @@ class FirestoreMethods {
         description: description,
         uid: uid,
         username: username,
+        likes: [],
         postId: postId,
         datePublished: DateTime.now(),
         postUrl: photoUrl,
-        likes: [],
+        eventId: eventId ?? 'general'
       );
 
       _firestore.collection('posts').doc(postId).set(
