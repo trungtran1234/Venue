@@ -139,8 +139,7 @@ class SignUpPage extends StatelessWidget {
           'friends': [],
           'posts': 0,
           'bio': '',
-          'profilePicturePath':
-              'lib/assets/Default_pfp.svg.png', // Default profile picture path
+          'profilePicturePath': 'lib/assets/Default_pfp.svg.png',
         });
 
         await user.sendEmailVerification();
@@ -207,9 +206,8 @@ class SignUpPage extends StatelessWidget {
           TextButton(
             onPressed: () {
               Navigator.of(ctx).pop(); // Close the dialog
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (_) =>
-                      LoginPage())); // Navigate to login page after closing the dialog
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) => LoginPage()));
             },
             child: const Text('OK'),
           ),
