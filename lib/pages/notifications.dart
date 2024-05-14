@@ -98,9 +98,12 @@ class NotificationsPageState extends State<NotificationsPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        // Correct key is 'senderUsername', not 'sender'
+        String senderUsername = data['senderUsername'] ??
+            'Unknown User'; // Fallback to 'Unknown User' if null
         return AlertDialog(
           title: const Text("Friend Request"),
-          content: Text("${data['sender']} wants to add you as a friend."),
+          content: Text("$senderUsername wants to add you as a friend."),
           actions: <Widget>[
             TextButton(
               onPressed: () {
