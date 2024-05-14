@@ -14,6 +14,9 @@ class FirestoreMethods {
     Uint8List file,
     String uid,
     String username,
+    String firstName,
+    String lastName,
+    String event,
   ) async {
     String res = "some error occurred";
     try {
@@ -24,11 +27,14 @@ class FirestoreMethods {
       Post post = Post(
         description: description,
         uid: uid,
+        firstName: firstName,
+        lastName: lastName,
         username: username,
         postId: postId,
         datePublished: DateTime.now(),
         postUrl: photoUrl,
         likes: [],
+        event: event,
       );
 
       _firestore.collection('posts').doc(postId).set(
@@ -40,5 +46,23 @@ class FirestoreMethods {
       res = err.toString();
     }
     return res;
+  }
+
+  Future<void> likePost(String postId, String uid, List likes) async {
+    try {
+      if (likes.contains(uid)) {
+        await _firestore.collection('posts').doc(postId).update({
+          'likes': FieldValue.arrayRemove([uid]),
+        });
+      } else {
+        await _firestore.collection('posts').doc(postId).update({
+          'likes': FieldValue.arrayUnion([uid]),
+        });
+      }
+    } catch (e) {
+      print(
+        e.toString(),
+      );
+    }
   }
 }
