@@ -36,7 +36,7 @@ class FirestoreMethods {
         postUrl: photoUrl,
         likes: [],
         event: event,
-        eventId: eventId ?? 'general'
+        eventId: eventId ?? 'general',
       );
 
       _firestore.collection('posts').doc(postId).set(

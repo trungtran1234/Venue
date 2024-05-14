@@ -335,7 +335,7 @@ class MapPageState extends State<MapPage>
                         )),
                   ),
                   ListTile(
-                    title: Text('Select Start Date and Time'),
+                    title: Text('Select Start Date and Time'),  
                     subtitle: Text(selectedStartDate == null
                         ? 'No date and time chosen'
                         : DateFormat('hh:mm a MM/dd/yyyy')

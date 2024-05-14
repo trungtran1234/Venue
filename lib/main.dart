@@ -31,6 +31,9 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const AuthStateChecker(),
+      routes: {
+        '/map': (context) => const MapPage(),
+      }
     );
   }
 }
