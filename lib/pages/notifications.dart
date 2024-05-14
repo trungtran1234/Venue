@@ -59,7 +59,13 @@ class NotificationsPageState extends State<NotificationsPage> {
   Widget notificationsList(BuildContext context) {
     var currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
-      return const Text("You need to be logged in to view notifications.");
+      return const Center(
+        child: Text(
+          "You need to be logged in to view notifications.",
+          style: TextStyle(fontSize: 18, color: Colors.white),
+          textAlign: TextAlign.center,
+        ),
+      );
     }
 
     return StreamBuilder<QuerySnapshot>(
@@ -68,54 +74,50 @@ class NotificationsPageState extends State<NotificationsPage> {
           .where('receiverUID', isEqualTo: currentUser.uid)
           .snapshots(),
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         }
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Text('No notifications.');
+          return const Center(
+            child: Text(
+              'No notifications.',
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+          );
         }
-        return ListView.builder(
+        return ListView.separated(
           itemCount: snapshot.data!.docs.length,
+          separatorBuilder: (context, index) =>
+              const Divider(color: Colors.grey),
           itemBuilder: (context, index) {
             var notification = snapshot.data!.docs[index].data() as Map<String, dynamic>;
             return ListTile(
-              leading: const Icon(Icons.notification_important, color: Colors.blue),
-              title: Text(notification['title'], style: const TextStyle(fontSize: 16)),
-              subtitle: Text(notification['message'], style: TextStyle(color: Colors.grey[600])),
-              onTap: () => handleNotificationTap(notification, snapshot.data!.docs[index].id),
+              leading:
+                  const Icon(Icons.notification_important, color: Colors.blue),
+              title: Text(notification['title'],
+                  style: const TextStyle(fontSize: 16)),
+              subtitle: Text(notification['message'],
+                  style: TextStyle(color: Colors.grey[600])),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.check, color: Colors.green),
+                    onPressed: () => updateFriendRequestStatus(
+                        snapshot.data!.docs[index].id, true),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close, color: Colors.red),
+                    onPressed: () => updateFriendRequestStatus(
+                        snapshot.data!.docs[index].id, false),
+                  ),
+                ],
+              ),
             );
           },
-        );
-      },
-    );
-  }
-
-  void handleNotificationTap(Map<String, dynamic> data, String docId) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // Correct key is 'senderUsername', not 'sender'
-        String senderUsername = data['senderUsername'] ??
-            'Unknown User'; // Fallback to 'Unknown User' if null
-        return AlertDialog(
-          title: const Text("Friend Request"),
-          content: Text("$senderUsername wants to add you as a friend."),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                updateFriendRequestStatus(docId, true);
-                Navigator.of(context).pop();
-              },
-              child: const Text("Accept"),
-            ),
-            TextButton(
-              onPressed: () {
-                updateFriendRequestStatus(docId, false);
-                Navigator.of(context).pop();
-              },
-              child: const Text("Decline"),
-            ),
-          ],
         );
       },
     );
@@ -130,11 +132,9 @@ class NotificationsPageState extends State<NotificationsPage> {
           .then((doc) {
         if (doc.exists) {
           Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-          String senderUID =
-              data['senderUID']; // Correctly retrieve sender's UID
+          String senderUID = data['senderUID'];
           String receiverUID = FirebaseAuth.instance.currentUser!.uid;
 
-          // Add each user's UID to the other's friends list
           FirebaseFirestore.instance
               .collection('users')
               .doc(receiverUID)
@@ -165,7 +165,6 @@ class NotificationsPageState extends State<NotificationsPage> {
         });
       });
     } else {
-      // Just delete the notification if declined
       FirebaseFirestore.instance
           .collection('notifications')
           .doc(docId)

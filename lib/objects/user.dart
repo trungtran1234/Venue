@@ -6,7 +6,7 @@ class User {
   String username;
   String firstName;
   String lastName;
-  List<String> friends; // Changed from int to List<String>
+  List<String> friends;
   int posts;
   String bio;
   File? profilePicture;
@@ -17,7 +17,7 @@ class User {
     this.username = '',
     this.firstName = '',
     this.lastName = '',
-    this.friends = const [], // Default to empty list
+    this.friends = const [],
     this.posts = 0,
     this.bio = "No Bio",
     this.profilePicture,
@@ -30,8 +30,7 @@ class User {
       username: firestoreData['username'] ?? '',
       firstName: firestoreData['firstName'] ?? '',
       lastName: firestoreData['lastName'] ?? '',
-      friends: List<String>.from(firestoreData['friends'] ??
-          []), // Convert dynamic list to List<String>
+      friends: List<String>.from(firestoreData['friends'] ?? []),
       posts: firestoreData['posts'] ?? 0,
       bio: firestoreData['bio'] ?? "No Bio",
       profilePicture: firestoreData['profilePicturePath'] != null
@@ -46,7 +45,7 @@ class User {
         "username": username,
         "firstName": firstName,
         "lastName": lastName,
-        "friends": friends, // Serialize list of friend UIDs
+        "friends": friends,
         "posts": posts,
         "bio": bio,
         "profilePicturePath": profilePicture?.path,

@@ -3,6 +3,7 @@ import 'package:app/database/firestore_methods.dart';
 import 'package:app/global.dart';
 import 'package:app/pages/post_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../services/connectivity_checker.dart';
@@ -21,14 +22,41 @@ class _NewsFeedState extends State<NewsFeedPage> {
   Uint8List? _file;
   final TextEditingController _descriptionController = TextEditingController();
   bool _isLoading = false;
+  firebase_auth.User? user = firebase_auth.FirebaseAuth.instance.currentUser;
+  Map<String, dynamic> userData = {};
 
   final ConnectivityChecker _connectivityChecker = ConnectivityChecker();
   final PopupManager _popupManager = PopupManager();
+
+  void fetchUserData() async {
+    if (user != null) {
+      try {
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user!.uid)
+            .get();
+        if (userDoc.exists) {
+          setState(() {
+            userData = userDoc.data() as Map<String, dynamic>;
+            _isLoading =
+                false; // Set isLoading to false when data is successfully fetched
+          });
+        }
+      } catch (e) {
+        // Handle exceptions by setting isLoading to false and logging error or showing a message
+        setState(() {
+          _isLoading = false;
+        });
+        print('Error fetching user data: $e');
+      }
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _connectivityChecker.onStatusChanged = _handleConnectivityChange;
+    fetchUserData();
   }
 
   void _handleConnectivityChange(bool isConnected) {
@@ -69,7 +97,8 @@ Future<void> _selectImage() async {
     }
   }
 
-  void _postImage(String uid, String username) async {
+  void _postImage(
+      String uid, String firstName, String lastName, String username) async {
     setState(() => _isLoading = true);
     try {
       String res = await FirestoreMethods().uploadPost(
@@ -77,6 +106,9 @@ Future<void> _selectImage() async {
         _file!,
         uid,
         username,
+        firstName,
+        lastName,
+        "event",
       );
       setState(() => _isLoading = false);
       showTopSnackBar(
@@ -175,7 +207,8 @@ Future<void> _selectImage() async {
           ],
         ),
         TextButton(
-          onPressed: () => _postImage("test_id", "test_user"),
+          onPressed: () => _postImage(userData['uid'], userData['firstName'],
+              userData['lastName'], userData['username']),
           child: const Text('Post',
               style: TextStyle(
                   color: Colors.blueAccent,
