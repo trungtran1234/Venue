@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:app/database/storage_methods.dart';
 import 'package:app/global.dart';
 import 'package:app/pages/friends.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -24,6 +26,7 @@ class ProfilePageState extends State<ProfilePage> {
   firebase_auth.User? user = firebase_auth.FirebaseAuth.instance.currentUser;
   Map<String, dynamic> userData = {};
   bool _isLoading = true;
+  String? _image;
 
   @override
   void initState() {
@@ -55,6 +58,26 @@ class ProfilePageState extends State<ProfilePage> {
         print('Error fetching user data: $e');
       }
     }
+  }
+
+  void selectImage() async {
+    Uint8List image = await pickImage(ImageSource.gallery);
+    String pfpUrl =
+        await StorageMethods().uploadImageToStorage('pfps', image, true);
+
+    Map<String, dynamic> updatedData = {
+      'profilePicturePath': pfpUrl,
+    };
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .update(updatedData);
+
+    setState(
+      () {
+        _image = pfpUrl;
+      },
+    );
   }
 
   void onConnectivityChanged(bool isConnected) {
@@ -91,6 +114,24 @@ class ProfilePageState extends State<ProfilePage> {
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
+                    _image != null
+                        ? CircleAvatar(
+                            radius: 64,
+                            backgroundImage: NetworkImage(_image!),
+                          )
+                        : CircleAvatar(
+                            radius: 64,
+                            backgroundImage:
+                                NetworkImage(userData['profilePicturePath']),
+                          ),
+                    Positioned(
+                      bottom: -10,
+                      left: 80,
+                      child: IconButton(
+                        onPressed: selectImage,
+                        icon: const Icon(Icons.swap_horiz_rounded),
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     Text(
                       '${userData['firstName']} ${userData['lastName']}',

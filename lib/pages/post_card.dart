@@ -55,9 +55,9 @@ class _PostCardState extends State<PostCard> {
 
   Future<void> navigateToEventDetail() async {
     var eventDoc = await FirebaseFirestore.instance
-                    .collection('events')
-                    .doc(widget.snap['eventId'])
-                    .get();
+        .collection('events')
+        .doc(widget.snap['eventId'])
+        .get();
     Navigator.push(
       context,
       MaterialPageRoute(
