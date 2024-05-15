@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import '../pages/post_card.dart';
 import 'post_editor.dart';
 import 'package:intl/intl.dart';
+import 'package:geolocator/geolocator.dart';
 
 class EventDetailPage extends StatefulWidget {
   final Map<String, dynamic> eventDoc;
@@ -114,44 +115,81 @@ class _EventDetailPageState extends State<EventDetailPage> {
   }
 
   Future<void> _selectImage() async {
-    final ImageSource? source = await showDialog(
-      context: context,
-      builder: (context) => SimpleDialog(
-        title: const Text('Select Image'),
-        children: <Widget>[
-          SimpleDialogOption(
-            onPressed: () => Navigator.pop(context, ImageSource.camera),
-            child: const Text('Take a photo'),
-          ),
-          SimpleDialogOption(
-            onPressed: () => Navigator.pop(context, ImageSource.gallery),
-            child: const Text('Choose from gallery'),
-          ),
-          SimpleDialogOption(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-        ],
-      ),
+    Position currentPosition;
+    try {
+      currentPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to get location: ${e.toString()}'))
+      );
+      return;
+    }
+    
+    // Event location
+    double eventLat = widget.eventDoc['latitude'];
+    double eventLng = widget.eventDoc['longitude'];
+
+    // Calculate the distance
+    double distanceInMeters = Geolocator.distanceBetween(
+      currentPosition.latitude,
+      currentPosition.longitude,
+      eventLat,
+      eventLng
     );
 
-    if (source != null) {
-      final ImagePicker picker = ImagePicker();
-      final XFile? image = await picker.pickImage(source: source);
-      if (image != null) {
-        final Uint8List file = await image.readAsBytes();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PostEditorPage(
-                eventId: widget.eventId,
-                eventDoc: widget.eventDoc,
-                initialFile: file),
-          ),
-        );
+    if (distanceInMeters > 1609) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Too Far Away"),
+          content: Text("You must be within 1 mile of the event to create a post."),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      final ImageSource? source = await showDialog<ImageSource>(
+        context: context,
+        builder: (context) => SimpleDialog(
+          title: Text('Select Image'),
+          children: <Widget>[
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context, ImageSource.camera),
+              child: Text('Take a photo'),
+            ),
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context, ImageSource.gallery),
+              child: Text('Choose from gallery'),
+            ),
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Cancel'),
+            ),
+          ],
+        ),
+      );
+
+      if (source != null) {
+        final ImagePicker picker = ImagePicker();
+        final XFile? image = await picker.pickImage(source: source);
+        if (image != null) {
+          final Uint8List file = await image.readAsBytes();
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PostEditorPage(eventId: widget.eventId, eventDoc: widget.eventDoc, initialFile: file),
+            ),
+          );
+        }
       }
     }
-  }
+}
 
   void _deleteEvent() {
     showDialog(
@@ -170,11 +208,10 @@ class _EventDetailPageState extends State<EventDetailPage> {
               onPressed: () {
                 Navigator.of(context).pop();
                 FirebaseFirestore.instance.collection('events').doc(widget.eventId).delete().then((_) {
-                  Navigator.of(context).pop(); // Go back to the previous screen after deletion
+                Navigator.pushNamed(context, '/map');
                 }).catchError((error) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error deleting event: $error')));
                 });
-                Navigator.pushNamed(context, '/map');
               },
             ),
           ],
