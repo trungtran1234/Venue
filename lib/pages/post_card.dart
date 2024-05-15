@@ -127,9 +127,9 @@ Widget build(BuildContext context) {
                                       child: Row(
                                       children: [
                                         Image.asset(
-                                        'lib/assets/grayLogo.png',
-                                        width: 32,
-                                        height: 32,
+                                          'lib/assets/grayLogo.png',
+                                          width: 33,
+                                          height: 33,
                                         ),
                                         Text(
                                         '${widget.snap['event']}',

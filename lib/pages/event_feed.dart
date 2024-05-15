@@ -59,6 +59,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
       child: Column(
         children: [
           ListTile(
+            tileColor: const Color.fromARGB(255, 29, 38, 60),
             title: Text(widget.eventDoc['title']),
             subtitle: Text(widget.eventDoc['description']),
           ),
@@ -71,7 +72,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
             title: Text(
                 'Starts: ${DateFormat('hh:mm a MM/dd/yyyy').format(DateTime.parse(widget.eventDoc['startDateTime']))}'),
             subtitle: Text(
-                'Ends: ${DateFormat('hh:mm a MM/dd/yyyy').format(DateTime.parse(widget.eventDoc['endDateTime']))}'),
+                'Ends: ${DateFormat('yyyy-MM-dd HH:mm').format(DateTime.parse(widget.eventDoc['endDateTime']))}'),
           ),
         ],
       ),
