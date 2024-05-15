@@ -320,6 +320,7 @@ class MapPageState extends State<MapPage>
     });
   }
 
+  
   void _onMapLongPress(LatLng position) async {
     String address =
         await getPlaceAddress(position.latitude, position.longitude);
@@ -336,6 +337,31 @@ class MapPageState extends State<MapPage>
       DropdownMenuItem(
           value: EventVisibility.friendsOnly, child: Text('Friends Only')),
     ];
+     final user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    // Check if the user already has an active event
+    var existingEvent = await FirebaseFirestore.instance
+        .collection('events')
+        .where('userId', isEqualTo: user.uid)
+        .limit(1)
+        .get();
+    if (existingEvent.docs.isNotEmpty) {
+      // User already has an event
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("You already have an active event"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text("OK"),
+            ),
+          ],
+        ),
+      );
+      return;  // Exit the function if the user already has an event
+    }
+  }
 
     showDialog(
       context: context,
@@ -505,6 +531,8 @@ class MapPageState extends State<MapPage>
       ),
     );
   }
+
+  
 
   void _saveEventToFirestore(
       LatLng position,

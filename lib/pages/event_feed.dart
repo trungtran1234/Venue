@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import '../pages/post_card.dart';
 import 'post_editor.dart';
@@ -19,8 +20,10 @@ class EventDetailPage extends StatefulWidget {
 }
 
 class _EventDetailPageState extends State<EventDetailPage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
+    bool isUserEventOwner = _auth.currentUser?.uid == widget.eventDoc['userId'];
     return Scaffold(
       appBar: AppBar(
         title: Text('Event Details'),
@@ -32,6 +35,11 @@ class _EventDetailPageState extends State<EventDetailPage> {
           },
         ),
         actions: [
+          if (isUserEventOwner)
+            IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: _deleteEvent,
+            ),
           IconButton(
             icon: Icon(Icons.add_a_photo),
             onPressed:
@@ -143,5 +151,35 @@ class _EventDetailPageState extends State<EventDetailPage> {
         );
       }
     }
+  }
+
+  void _deleteEvent() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirm Deletion"),
+          content: const Text("Are you sure you want to delete this event?"),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("Cancel"),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            TextButton(
+              child: const Text("Delete"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                FirebaseFirestore.instance.collection('events').doc(widget.eventId).delete().then((_) {
+                  Navigator.of(context).pop(); // Go back to the previous screen after deletion
+                }).catchError((error) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error deleting event: $error')));
+                });
+                Navigator.pushNamed(context, '/map');
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
