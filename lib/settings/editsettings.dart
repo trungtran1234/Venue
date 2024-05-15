@@ -46,12 +46,12 @@ class ChangePasswordPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () => changePassword(
                   context, _currentPasswordController, _newPasswordController),
-              child: const Text('Update Password'),
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.0),
                 ),
               ),
+              child: const Text('Update Password'),
             ),
           ],
         ),
@@ -156,12 +156,9 @@ void _verifyPasswordAndDelete(
 
 Future<void> _deleteUserAndData(User user, BuildContext context) async {
   try {
-    // Fetch and delete all posts linked by username
     await FirebaseFirestore.instance
         .collection('posts')
-        .where('username',
-            isEqualTo:
-                user.displayName) // Assuming username is stored in displayName
+        .where('username', isEqualTo: user.displayName)
         .get()
         .then((snapshot) {
       for (DocumentSnapshot ds in snapshot.docs) {
@@ -169,10 +166,9 @@ Future<void> _deleteUserAndData(User user, BuildContext context) async {
       }
     });
 
-    // Fetch and delete all events linked by email
     await FirebaseFirestore.instance
         .collection('events')
-        .where('email', isEqualTo: user.email)
+        .where('userEmail', isEqualTo: user.email)
         .get()
         .then((snapshot) {
       for (DocumentSnapshot ds in snapshot.docs) {
@@ -180,13 +176,10 @@ Future<void> _deleteUserAndData(User user, BuildContext context) async {
       }
     });
 
-    // Delete user's data in their document
     await FirebaseFirestore.instance.collection('users').doc(user.uid).delete();
 
-    // Finally, delete the user account
     await user.delete();
 
-    // Navigate to the login page and remove all previous routes
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (_) => LoginPage()),
       (Route<dynamic> route) => false,

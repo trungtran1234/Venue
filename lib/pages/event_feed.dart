@@ -23,19 +23,17 @@ class _EventDetailPageState extends State<EventDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Event Details'),
+        title: const Text('Event Details'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // Navigate back to map page or perform some other action
             Navigator.pushNamed(context, '/map');
           },
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.add_a_photo),
-            onPressed:
-                _selectImage, // Changed to directly invoke the image picker
+            icon: const Icon(Icons.add_a_photo),
+            onPressed: _selectImage,
           ),
         ],
       ),
@@ -65,12 +63,12 @@ class _EventDetailPageState extends State<EventDetailPage> {
           ),
           ListTile(
             tileColor: const Color.fromARGB(255, 22, 26, 37),
-            leading: Icon(Icons.location_on),
+            leading: const Icon(Icons.location_on),
             title: Text(widget.eventDoc['address']),
           ),
           ListTile(
             tileColor: const Color.fromARGB(255, 22, 26, 37),
-            leading: Icon(Icons.calendar_today),
+            leading: const Icon(Icons.calendar_today),
             title: Text(
                 'Starts: ${DateFormat('hh:mm a MM/dd/yyyy').format(DateTime.parse(widget.eventDoc['startDateTime']))}'),
             subtitle: Text(
@@ -94,7 +92,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
           return const Center(child: CircularProgressIndicator());
         }
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return Text("No posts available for this event.");
+          return const Text("No posts available for this event.");
         }
         return ListView.builder(
           itemCount: snapshot.data!.docs.length,

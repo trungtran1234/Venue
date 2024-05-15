@@ -73,20 +73,21 @@ class MapPageState extends State<MapPage>
   }
 
   Future<void> loadCustomMarker() async {
-  try {
-    final byteData = await rootBundle.load('lib/assets/logo.png');
-    final buffer = byteData.buffer;
-    List<int> imgList = buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
-    Uint8List imgBytes = Uint8List.fromList(imgList);
-    img.Image? image = img.decodeImage(imgBytes);
-    img.Image resized = img.copyResize(image!, width: 100, height: 170); 
+    try {
+      final byteData = await rootBundle.load('lib/assets/logo.png');
+      final buffer = byteData.buffer;
+      List<int> imgList =
+          buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
+      Uint8List imgBytes = Uint8List.fromList(imgList);
+      img.Image? image = img.decodeImage(imgBytes);
+      img.Image resized = img.copyResize(image!, width: 100, height: 170);
 
-    Uint8List resizedBytes = Uint8List.fromList(img.encodePng(resized));
-    _customMarker = BitmapDescriptor.fromBytes(resizedBytes);
-  } catch (e) {
-    print("Failed to load custom marker: $e");
+      Uint8List resizedBytes = Uint8List.fromList(img.encodePng(resized));
+      _customMarker = BitmapDescriptor.fromBytes(resizedBytes);
+    } catch (e) {
+      print("Failed to load custom marker: $e");
+    }
   }
-}
 
   Future<String> getPlaceAddress(double latitude, double longitude) async {
     const apiKey = 'AIzaSyBuznTrerLg81eCkcf5AcPAGXpdStMuIh8';
@@ -175,7 +176,7 @@ class MapPageState extends State<MapPage>
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.account_circle,
                                 color: Colors.white,
                                 size: 30,
@@ -193,7 +194,7 @@ class MapPageState extends State<MapPage>
                                       color: Colors.white,
                                     ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 13.0,
                               ),
                               Text(
@@ -250,7 +251,7 @@ class MapPageState extends State<MapPage>
                                       fontSize: 14,
                                     ),
                               ),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               TextButton(
                                 onPressed: () {
                                   _customInfoWindowController.hideInfoWindow!();
@@ -264,18 +265,17 @@ class MapPageState extends State<MapPage>
                                 },
                                 style: TextButton.styleFrom(
                                   foregroundColor:
-                                      Color.fromARGB(255, 13, 16, 33),
-                                  backgroundColor: Color.fromARGB(
-                                      255, 208, 157, 38), // Text color
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 8), // Adjust the padding
+                                      const Color.fromARGB(255, 13, 16, 33),
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 208, 157, 38),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 8),
                                   shape: RoundedRectangleBorder(
                                     // Optional: if you want rounded corners
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                 ),
-                                child: Text('View Details'),
+                                child: const Text('View Details'),
                               )
                             ],
                           ),
@@ -295,7 +295,7 @@ class MapPageState extends State<MapPage>
                 LatLng(lat, lng),
               );
             },
-            icon: _customMarker?? BitmapDescriptor.defaultMarker,
+            icon: _customMarker ?? BitmapDescriptor.defaultMarker,
           );
           newMarkers.add(marker);
         }
@@ -332,15 +332,16 @@ class MapPageState extends State<MapPage>
     final TextEditingController errorController = TextEditingController();
 
     final List<DropdownMenuItem<EventVisibility>> dropdownItems = [
-      DropdownMenuItem(value: EventVisibility.public, child: Text('Public')),
-      DropdownMenuItem(
+      const DropdownMenuItem(
+          value: EventVisibility.public, child: Text('Public')),
+      const DropdownMenuItem(
           value: EventVisibility.friendsOnly, child: Text('Friends Only')),
     ];
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Create Event'),
+        title: const Text('Create Event'),
         content: StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return SingleChildScrollView(
@@ -349,13 +350,13 @@ class MapPageState extends State<MapPage>
                 children: <Widget>[
                   TextField(
                     controller: titleController,
-                    decoration: InputDecoration(labelText: 'Title'),
+                    decoration: const InputDecoration(labelText: 'Title'),
                     maxLines: null,
                     minLines: 1,
                   ),
                   TextField(
                     controller: descriptionController,
-                    decoration: InputDecoration(labelText: 'Description'),
+                    decoration: const InputDecoration(labelText: 'Description'),
                     maxLines: null,
                     minLines: 1,
                   ),
@@ -364,18 +365,18 @@ class MapPageState extends State<MapPage>
                         initialValue: address,
                         readOnly: true,
                         maxLines: null,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Location',
                         )),
                   ),
                   ListTile(
-                    title: Text('Select Start Date and Time'),
+                    title: const Text('Select Start Date and Time'),
                     subtitle: Text(selectedStartDate == null
                         ? 'No date and time chosen'
                         : DateFormat('hh:mm a MM/dd/yyyy')
                             .format(selectedStartDate!)),
                     onTap: () async {
-                      FocusScope.of(context).requestFocus(new FocusNode());
+                      FocusScope.of(context).requestFocus(FocusNode());
                       final DateTime? date = await showDatePicker(
                         context: context,
                         initialDate: DateTime.now(),
@@ -403,13 +404,13 @@ class MapPageState extends State<MapPage>
                     },
                   ),
                   ListTile(
-                    title: Text('Select End Date and Time'),
+                    title: const Text('Select End Date and Time'),
                     subtitle: Text(selectedEndDate == null
                         ? 'No date and time chosen'
                         : DateFormat('hh:mm a MM/dd/yyyy')
                             .format(selectedEndDate!)),
                     onTap: () async {
-                      FocusScope.of(context).requestFocus(new FocusNode());
+                      FocusScope.of(context).requestFocus(FocusNode());
                       if (selectedStartDate == null) {
                         errorController.clear();
                         errorController.text =
@@ -462,7 +463,7 @@ class MapPageState extends State<MapPage>
                   TextField(
                     controller: errorController,
                     readOnly: true,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                     ),
                     style: TextStyle(
@@ -482,11 +483,11 @@ class MapPageState extends State<MapPage>
                     descriptionController.text.isEmpty ||
                     selectedStartDate == null ||
                     selectedEndDate == null) {
-                  FocusScope.of(context).requestFocus(new FocusNode());
+                  FocusScope.of(context).requestFocus(FocusNode());
                   errorController.clear();
                   errorController.text = "Please fill in all fields.";
                 } else {
-                  FocusScope.of(context).requestFocus(new FocusNode());
+                  FocusScope.of(context).requestFocus(FocusNode());
                   Navigator.of(context).pop();
                   _addMarker(
                       position, address, selectedStartDate, selectedEndDate);

@@ -93,13 +93,13 @@ class SettingsPageState extends State<SettingsPage> {
               ),
             ),
             ListTile(
-              title: const Text('Change Password',
-                  style: TextStyle(color: Colors.white)),
-              trailing:
-                  const Icon(Icons.arrow_forward_ios, color: Colors.white),
-              onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => ChangePasswordPage())),
-            ),
+                title: const Text('Change Password',
+                    style: TextStyle(color: Colors.white)),
+                trailing:
+                    const Icon(Icons.arrow_forward_ios, color: Colors.white),
+                onTap: () {
+                  newRoute(context, ChangePasswordPage());
+                }),
             const SizedBox(height: 20),
             const Text('Notifications',
                 style: TextStyle(
