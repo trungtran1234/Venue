@@ -81,6 +81,7 @@ flutter:
     - lib/assets/Default_pfp.svg.png
     - lib/assets/square_whirl.png
     - lib/assets/logo.png
+    - lib/assets/grayLogo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
