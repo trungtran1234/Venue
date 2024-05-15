@@ -1,5 +1,3 @@
-import 'dart:io';
-
 class User {
   final String uid;
   final String email;
@@ -9,7 +7,7 @@ class User {
   List<String> friends;
   int posts;
   String bio;
-  File? profilePicture;
+  String? profilePicture;
 
   User({
     required this.uid,
@@ -33,9 +31,7 @@ class User {
       friends: List<String>.from(firestoreData['friends'] ?? []),
       posts: firestoreData['posts'] ?? 0,
       bio: firestoreData['bio'] ?? "No Bio",
-      profilePicture: firestoreData['profilePicturePath'] != null
-          ? File(firestoreData['profilePicturePath'])
-          : null,
+      profilePicture: firestoreData['profilePicturePath'],
     );
   }
 
@@ -48,6 +44,6 @@ class User {
         "friends": friends,
         "posts": posts,
         "bio": bio,
-        "profilePicturePath": profilePicture?.path,
+        "profilePicturePath": profilePicture,
       };
 }

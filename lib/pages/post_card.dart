@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
 import './event_feed.dart';
+
 class PostCard extends StatefulWidget {
   final snap;
   const PostCard({
@@ -53,9 +54,9 @@ class _PostCardState extends State<PostCard> {
 
   Future<void> navigateToEventDetail() async {
     var eventDoc = await FirebaseFirestore.instance
-                    .collection('events')
-                    .doc(widget.snap['eventId'])
-                    .get();
+        .collection('events')
+        .doc(widget.snap['eventId'])
+        .get();
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -90,13 +91,15 @@ class _PostCardState extends State<PostCard> {
                           radius: 14,
                           child: CircleAvatar(
                             radius: 12,
-                            backgroundImage: AssetImage('lib/assets/Default_pfp.svg.png'),
+                            backgroundImage:
+                                AssetImage('lib/assets/Default_pfp.svg.png'),
                           ),
                         ),
                       ),
                       InkWell(
                         onTap: navigateToEventDetail,
-                        child: Text('${widget.snap['firstName']} ${widget.snap['lastName']} @ ${widget.snap['event']}'),
+                        child: Text(
+                            '${widget.snap['firstName']} ${widget.snap['lastName']} @ ${widget.snap['event']}'),
                       ),
                       const Spacer(),
                       IconButton(

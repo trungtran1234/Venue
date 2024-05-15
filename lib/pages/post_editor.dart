@@ -9,7 +9,12 @@ class PostEditorPage extends StatefulWidget {
   final String eventId;
   final Uint8List initialFile;
 
-  const PostEditorPage({Key? key, required this.eventDoc, required this.eventId, required this.initialFile}) : super(key: key);
+  const PostEditorPage(
+      {Key? key,
+      required this.eventDoc,
+      required this.eventId,
+      required this.initialFile})
+      : super(key: key);
 
   @override
   _PostEditorPageState createState() => _PostEditorPageState();
@@ -44,13 +49,20 @@ class _PostEditorPageState extends State<PostEditorPage> {
               if (_isLoading) const CircularProgressIndicator(),
               TextField(
                 controller: _descriptionController,
-                decoration: const InputDecoration(hintText: "Write a caption..."),
+                decoration:
+                    const InputDecoration(hintText: "Write a caption..."),
               ),
               const SizedBox(height: 10),
-              _file != null ? Image.memory(_file!) : Container(height: 200, child: Center(child: Text("No image selected"))),
+              _file != null
+                  ? Image.memory(_file!)
+                  : Container(
+                      height: 200,
+                      child: Center(child: Text("No image selected"))),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _file != null ? postImageWithCurrentUserDetails : null, // Disable button if no image is selected
+                onPressed: _file != null
+                    ? postImageWithCurrentUserDetails
+                    : null, // Disable button if no image is selected
                 child: const Text("Post"),
               ),
             ],
@@ -66,7 +78,10 @@ class _PostEditorPageState extends State<PostEditorPage> {
     });
     var user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      var userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      var userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
       var userData = userDoc.data();
       if (userData != null) {
         String uid = user.uid;
@@ -74,8 +89,10 @@ class _PostEditorPageState extends State<PostEditorPage> {
         String firstName = userData['firstName'] ?? 'First';
         String lastName = userData['lastName'] ?? 'Last';
         String event = widget.eventDoc['title'] ?? 'Default Event';
+        String pfpUrl = userData['profilePicturePath'] ??
+            'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg';
 
-        _postImage(uid, username, firstName, lastName, event);
+        _postImage(uid, username, firstName, lastName, event, pfpUrl);
       } else {
         print("User data not found");
         setState(() {
@@ -90,33 +107,38 @@ class _PostEditorPageState extends State<PostEditorPage> {
     }
   }
 
-  void _postImage(String uid, String username, String firstName, String lastName, String event) async {
-  try {
-    String res = await FirestoreMethods().uploadPost(
-      _descriptionController.text,
-      _file!,
-      uid,
-      username,
-      firstName,
-      lastName,
-      event,
-      widget.eventId,
-    );
-    if (res == "success") {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Posted successfully!')));
-      Navigator.pop(context); // Navigate back to the event detail page after successful posting
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(res)));
+  void _postImage(String uid, String username, String firstName,
+      String lastName, String event, String pfpUrl) async {
+    try {
+      String res = await FirestoreMethods().uploadPost(
+        _descriptionController.text,
+        _file!,
+        uid,
+        username,
+        firstName,
+        lastName,
+        event,
+        widget.eventId,
+        pfpUrl,
+      );
+      if (res == "success") {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Posted successfully!')));
+        Navigator.pop(
+            context); // Navigate back to the event detail page after successful posting
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(res)));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    } finally {
+      setState(() {
+        _isLoading = false;
+        _file = null; // Clear the selected file
+        _descriptionController.clear(); // Clear the text field
+      });
     }
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
-  } finally {
-    setState(() {
-      _isLoading = false;
-      _file = null; // Clear the selected file
-      _descriptionController.clear(); // Clear the text field
-    });
   }
-}
-
 }

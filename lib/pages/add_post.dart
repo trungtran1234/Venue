@@ -53,7 +53,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   void postImage(String uid, String firstName, String lastName, String username,
-      String event) async {
+      String event, String pfpUrl) async {
     setState(() {
       _isLoading = true;
     });
@@ -67,6 +67,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
         lastName,
         event,
         widget.eventId,
+        pfpUrl,
       );
 
       if (res == "success") {
@@ -194,6 +195,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     userData['lastName'],
                     userData['username'],
                     "event",
+                    userData['profilePicturePath'],
                   ),
                   child: const Text(
                     'Post',

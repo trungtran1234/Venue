@@ -12,6 +12,7 @@ class Post {
   final String postUrl;
   final String eventId;
   final String event;
+  final String pfpUrl;
 
   const Post({
     required this.description,
@@ -25,26 +26,27 @@ class Post {
     required this.postUrl,
     required this.eventId,
     required this.event,
+    required this.pfpUrl,
   });
 
   static Post fromSnap(DocumentSnapshot snap, DocumentSnapshot user) {
     var snapshot = snap.data() as Map<String, dynamic>;
     var usersnapshot = user.data() as Map<String, dynamic>;
     return Post(
-        description: snapshot["description"],
-        uid: snapshot["uid"],
-        likes: snapshot["likes"],
-        postId: snapshot["postId"],
-        datePublished: snapshot["datePublished"],
-        firstName: usersnapshot["firstName"],
-        lastName: usersnapshot["lastName"],
-        username: usersnapshot["username"],
-        postUrl: snapshot['postUrl'],
-        event: snapshot['event'],
-        eventId: snapshot["eventId"]);
+      description: snapshot["description"],
+      uid: snapshot["uid"],
+      likes: snapshot["likes"],
+      postId: snapshot["postId"],
+      datePublished: snapshot["datePublished"],
+      firstName: usersnapshot["firstName"],
+      lastName: usersnapshot["lastName"],
+      username: usersnapshot["username"],
+      postUrl: snapshot['postUrl'],
+      event: snapshot['event'],
+      eventId: snapshot["eventId"],
+      pfpUrl: usersnapshot["profilePicturePath"],
+    );
   }
-
-
 
   Map<String, dynamic> toJson() => {
         "description": description,
@@ -58,5 +60,6 @@ class Post {
         "postUrl": postUrl,
         "event": event,
         "eventId": eventId,
+        "profilePicturePath": pfpUrl,
       };
 }
