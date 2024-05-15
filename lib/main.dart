@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'database/firebase_options.dart';
 import 'pages/login.dart';
 import 'package:app/services/preferences.dart';
+import 'services/notification.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,6 +13,8 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
+  NotificationManager notificationManager = NotificationManager();
+  
   
   runApp(const MyApp());
 }
