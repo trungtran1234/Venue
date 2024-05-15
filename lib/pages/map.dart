@@ -10,6 +10,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:clippy_flutter/triangle.dart';
 import './event_feed.dart';
+import 'dart:ui' as ui;
+import 'package:image/image.dart' as img;
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:typed_data';
 
 enum EventVisibility { public, friendsOnly }
 
@@ -29,6 +33,7 @@ class MapPageState extends State<MapPage>
   Map<String, Map<String, dynamic>> userCache = {};
   CustomInfoWindowController _customInfoWindowController =
       CustomInfoWindowController();
+  BitmapDescriptor? _customMarker;
 
   @override
   bool get wantKeepAlive => true;
@@ -37,7 +42,9 @@ class MapPageState extends State<MapPage>
   void initState() {
     super.initState();
     preloadUserDetails().then((_) {
-      _loadEvents();
+      loadCustomMarker().then((_) {
+        _loadEvents();
+      });
     });
     WidgetsBinding.instance
         .addPostFrameCallback((_) async => await fetchLocationUpdates());
@@ -63,7 +70,23 @@ class MapPageState extends State<MapPage>
             LatLng(currentLocation.latitude!, currentLocation.longitude!));
       }
     });
-  }   
+  }
+
+  Future<void> loadCustomMarker() async {
+  try {
+    final byteData = await rootBundle.load('lib/assets/logo.png');
+    final buffer = byteData.buffer;
+    List<int> imgList = buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
+    Uint8List imgBytes = Uint8List.fromList(imgList);
+    img.Image? image = img.decodeImage(imgBytes);
+    img.Image resized = img.copyResize(image!, width: 100, height: 170); 
+
+    Uint8List resizedBytes = Uint8List.fromList(img.encodePng(resized));
+    _customMarker = BitmapDescriptor.fromBytes(resizedBytes);
+  } catch (e) {
+    print("Failed to load custom marker: $e");
+  }
+}
 
   Future<String> getPlaceAddress(double latitude, double longitude) async {
     const apiKey = 'AIzaSyBuznTrerLg81eCkcf5AcPAGXpdStMuIh8';
@@ -229,25 +252,31 @@ class MapPageState extends State<MapPage>
                               ),
                               SizedBox(height: 10),
                               TextButton(
-  onPressed: () {
-    _customInfoWindowController.hideInfoWindow!();
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => EventDetailPage(
-            eventDoc: doc.data(),
-            eventId: doc.id),
-      ),
-    );
-  },
-  style: TextButton.styleFrom(
-    foregroundColor: Color.fromARGB(255, 13, 16, 33), backgroundColor: Color.fromARGB(255, 208, 157, 38), // Text color
-    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Adjust the padding
-    shape: RoundedRectangleBorder( // Optional: if you want rounded corners
-      borderRadius: BorderRadius.circular(4),
-    ),
-  ),
-  child: Text('View Details'),
-)
+                                onPressed: () {
+                                  _customInfoWindowController.hideInfoWindow!();
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => EventDetailPage(
+                                          eventDoc: doc.data(),
+                                          eventId: doc.id),
+                                    ),
+                                  );
+                                },
+                                style: TextButton.styleFrom(
+                                  foregroundColor:
+                                      Color.fromARGB(255, 13, 16, 33),
+                                  backgroundColor: Color.fromARGB(
+                                      255, 208, 157, 38), // Text color
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 8), // Adjust the padding
+                                  shape: RoundedRectangleBorder(
+                                    // Optional: if you want rounded corners
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                                child: Text('View Details'),
+                              )
                             ],
                           ),
                         ),
@@ -266,7 +295,7 @@ class MapPageState extends State<MapPage>
                 LatLng(lat, lng),
               );
             },
-            icon: BitmapDescriptor.defaultMarker,
+            icon: _customMarker?? BitmapDescriptor.defaultMarker,
           );
           newMarkers.add(marker);
         }
@@ -340,7 +369,7 @@ class MapPageState extends State<MapPage>
                         )),
                   ),
                   ListTile(
-                    title: Text('Select Start Date and Time'),  
+                    title: Text('Select Start Date and Time'),
                     subtitle: Text(selectedStartDate == null
                         ? 'No date and time chosen'
                         : DateFormat('hh:mm a MM/dd/yyyy')
