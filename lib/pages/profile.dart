@@ -99,7 +99,7 @@ class ProfilePageState extends State<ProfilePage> {
         actions: [
           IconButton(
             onPressed: () {
-              newRoute(context, SettingsPage());
+              newRoute(context, const SettingsPage());
             },
             icon: const Icon(Icons.settings),
             color: Colors.white,
