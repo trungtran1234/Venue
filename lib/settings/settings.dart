@@ -1,171 +1,162 @@
-import 'package:app/pages/login.dart';
 import 'package:app/global.dart';
+import 'package:app/pages/login.dart';
 import 'package:app/pages/profile.dart';
-import 'package:app/settings/account.dart';
-import 'package:app/settings/notifications.dart';
-import 'package:app/settings/privacy.dart';
-import 'package:app/settings/activity.dart';
-import 'package:flutter/material.dart';
+import 'package:app/services/preferences.dart';
+import 'package:app/settings/editsettings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:local_auth/local_auth.dart';
+import 'package:flutter/material.dart';
 
-class SettingsPage extends StatelessWidget {
-  SettingsPage({super.key});
-  final LocalAuthentication auth = LocalAuthentication();
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Theme(
-      data: ThemeData(),
-      child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () {
-              newRoute(context, const ProfilePage());
-            },
-          ),
-        ),
-        body: SettingsList(),
-      ),
-    );
-  }
+  SettingsPageState createState() => SettingsPageState();
 }
 
-class SettingsList extends StatelessWidget {
-  SettingsList({super.key});
+class SettingsPageState extends State<SettingsPage> {
+  late bool _eventUpdates;
+  late bool _eventReminders;
 
-  final List<Map<String, dynamic>> settingsOptions = [
-    {
-      'title': 'Account',
-      'icon': Icons.account_circle,
-      'textColor': Colors.white,
-      'description': 'Manage your account settings and personal information.'
-    },
-    {
-      'title': 'Activity',
-      'icon': Icons.timeline,
-      'textColor': Colors.white,
-      'description': 'Review your recent activity and history.'
-    },
-    {
-      'title': 'Notifications',
-      'icon': Icons.notifications,
-      'textColor': Colors.white,
-      'description': 'Customize your notification preferences.'
-    },
-    {
-      'title': 'Privacy',
-      'icon': Icons.shield,
-      'textColor': Colors.white,
-      'description': 'Control your privacy settings and access permissions.'
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _loadSettings();
+    _reloadUser();
+  }
 
-  Future<void> authenticateAndNavigate(BuildContext context) async {
-    final LocalAuthentication auth = LocalAuthentication();
-    try {
-      final bool didAuthenticate = await auth.authenticate(
-        localizedReason: 'Please authenticate to access account settings',
-        options: const AuthenticationOptions(biometricOnly: true),
-      );
-
-      if (didAuthenticate) {
-        newRoute(context, const Account());
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Authentication failed. Please try again.')),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error during authentication.')),
-      );
+  void _reloadUser() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      user.reload().then((_) {
+        setState(() {});
+      }).catchError((error) {});
     }
+  }
+
+  void _loadSettings() async {
+    _eventUpdates =
+        PreferencesService().getBool('eventUpdates', defaultValue: true);
+    _eventReminders =
+        PreferencesService().getBool('eventReminders', defaultValue: true);
+    setState(() {});
+  }
+
+  void _updateSetting(String key, bool value) async {
+    await PreferencesService().setBool(key, value);
+    setState(() {
+      if (key == 'eventUpdates') {
+        _eventUpdates = value;
+      } else if (key == 'eventReminders') {
+        _eventReminders = value;
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-        ...settingsOptions.map((option) => ListTile(
-              leading: Icon(
-                option['icon'],
-                color: Colors.white,
-              ),
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    option['title'],
-                    style: TextStyle(
-                      color: option['textColor'],
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    option['description'],
-                    style: TextStyle(
-                      color: Colors.grey[400],
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-              trailing: const Icon(Icons.arrow_forward_ios,
-                  size: 16, color: Colors.white),
-              contentPadding: const EdgeInsets.all(20),
-              onTap: () => handleSettingsOptionTap(context, option['title']),
-            )),
-        const Divider(color: Colors.white, height: 40),
-        ListTile(
-          leading: const Icon(
-            Icons.exit_to_app,
-            color: Colors.red,
-          ),
-          title: const Text(
-            'Log out',
-            style: TextStyle(
-              color: Colors.red,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          trailing: const Icon(Icons.arrow_forward_ios,
-              size: 16, color: Colors.white),
-          contentPadding: const EdgeInsets.all(20),
-          onTap: () {
-            FirebaseAuth.instance.signOut();
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => LoginPage()),
-            );
+    final user = FirebaseAuth.instance.currentUser;
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            newRoute(context, const ProfilePage());
           },
         ),
-      ],
+        title: const Text('Settings', style: TextStyle(color: Colors.white)),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(bottom: 16.0),
+              child: Text(
+                'Account Management',
+                style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            ListTile(
+              title: const Text(
+                'Change Email',
+                style: TextStyle(color: Colors.white),
+              ),
+              subtitle: Text(
+                user?.email ?? 'No email set',
+                style: TextStyle(color: Colors.grey[400]),
+              ),
+              trailing:
+                  const Icon(Icons.arrow_forward_ios, color: Colors.white),
+              onTap: () {
+                if (user != null) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => ChangeEmailPage()),
+                  );
+                }
+              },
+            ),
+            ListTile(
+              title: const Text('Change Password',
+                  style: TextStyle(color: Colors.white)),
+              trailing:
+                  const Icon(Icons.arrow_forward_ios, color: Colors.white),
+              onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => ChangePasswordPage())),
+            ),
+            const SizedBox(height: 20),
+            const Text('Notifications',
+                style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold)),
+            SwitchListTile(
+              title: const Text('Event Updates',
+                  style: TextStyle(color: Colors.white)),
+              value: _eventUpdates,
+              onChanged: (newValue) => _updateSetting('eventUpdates', newValue),
+              activeColor: Colors.white,
+              activeTrackColor: Colors.green,
+            ),
+            SwitchListTile(
+              title: const Text('Event Reminders',
+                  style: TextStyle(color: Colors.white)),
+              value: _eventReminders,
+              onChanged: (newValue) =>
+                  _updateSetting('eventReminders', newValue),
+              activeColor: Colors.white,
+              activeTrackColor: Colors.green,
+            ),
+            const SizedBox(height: 20),
+            ListTile(
+              leading: const Icon(Icons.delete_forever, color: Colors.red),
+              title: const Text('Delete Account',
+                  style: TextStyle(
+                      color: Colors.red, fontWeight: FontWeight.bold)),
+              onTap: () => confirmDeleteAccount(context, user),
+            ),
+            const SizedBox(height: 20),
+            ListTile(
+              leading: const Icon(Icons.exit_to_app, color: Colors.red),
+              title: const Text('Log Out',
+                  style: TextStyle(
+                      color: Colors.red, fontWeight: FontWeight.bold)),
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => LoginPage()),
+                  (Route<dynamic> route) => false,
+                );
+              },
+            ),
+          ],
+        ),
+      ),
     );
-  }
-
-  void handleSettingsOptionTap(BuildContext context, String title) {
-    switch (title) {
-      case 'Account':
-        newRoute(context, const Account());
-        break;
-      case 'Privacy':
-        newRoute(context, const Privacy());
-        break;
-      case 'Notifications':
-        newRoute(context, const Notifications());
-        break;
-      case 'Activity':
-        newRoute(context, const ActivityPage());
-        break;
-      case 'Log out':
-        FirebaseAuth.instance.signOut();
-        newRoute(context, LoginPage());
-        break;
-    }
   }
 }
