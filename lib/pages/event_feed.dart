@@ -42,7 +42,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
       body: Column(
         children: [
           Expanded(
-            flex: 2,
+            flex: 1,
             child: _buildEventDetails(),
           ),
           Expanded(
@@ -59,15 +59,17 @@ class _EventDetailPageState extends State<EventDetailPage> {
       child: Column(
         children: [
           ListTile(
-            tileColor: const Color.fromARGB(255, 29, 38, 60),
+            tileColor: const Color.fromARGB(255, 22, 26, 37),
             title: Text(widget.eventDoc['title']),
             subtitle: Text(widget.eventDoc['description']),
           ),
           ListTile(
+            tileColor: const Color.fromARGB(255, 22, 26, 37),
             leading: Icon(Icons.location_on),
             title: Text(widget.eventDoc['address']),
           ),
           ListTile(
+            tileColor: const Color.fromARGB(255, 22, 26, 37),
             leading: Icon(Icons.calendar_today),
             title: Text(
                 'Starts: ${DateFormat('hh:mm a MM/dd/yyyy').format(DateTime.parse(widget.eventDoc['startDateTime']))}'),
