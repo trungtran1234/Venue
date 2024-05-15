@@ -9,7 +9,9 @@ import 'package:app/services/preferences.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PreferencesService.init();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform
+  );
   
   runApp(const MyApp());
 }
