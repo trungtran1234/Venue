@@ -144,8 +144,8 @@ class MapPageState extends State<MapPage>
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(4),
+                          color: const Color.fromARGB(255, 29, 38, 60),
+                          borderRadius: BorderRadius.circular(40),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(10),
@@ -171,7 +171,7 @@ class MapPageState extends State<MapPage>
                                     ),
                               ),
                               SizedBox(
-                                height: 8.0,
+                                height: 13.0,
                               ),
                               Text(
                                 doc.data()['title'],
@@ -229,20 +229,25 @@ class MapPageState extends State<MapPage>
                               ),
                               SizedBox(height: 10),
                               TextButton(
-                                onPressed: () {
-                                  _customInfoWindowController.hideInfoWindow!();
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => EventDetailPage(
-                                          eventDoc: doc.data(),
-                                          eventId: doc.id),
-                                    ),
-                                  );
-                                },
-                                child: Text('View Details',
-                                    style:
-                                        TextStyle(color: Colors.yellowAccent)),
-                              )
+  onPressed: () {
+    _customInfoWindowController.hideInfoWindow!();
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => EventDetailPage(
+            eventDoc: doc.data(),
+            eventId: doc.id),
+      ),
+    );
+  },
+  style: TextButton.styleFrom(
+    foregroundColor: Color.fromARGB(255, 13, 16, 33), backgroundColor: Color.fromARGB(255, 208, 157, 38), // Text color
+    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Adjust the padding
+    shape: RoundedRectangleBorder( // Optional: if you want rounded corners
+      borderRadius: BorderRadius.circular(4),
+    ),
+  ),
+  child: Text('View Details'),
+)
                             ],
                           ),
                         ),
@@ -251,7 +256,7 @@ class MapPageState extends State<MapPage>
                     Triangle.isosceles(
                       edge: Edge.BOTTOM,
                       child: Container(
-                        color: Colors.blue,
+                        color: const Color.fromARGB(255, 29, 38, 60),
                         width: 20.0,
                         height: 10.0,
                       ),
@@ -557,7 +562,7 @@ class MapPageState extends State<MapPage>
             controller: _customInfoWindowController,
             height: 360,
             width: 420,
-            offset: 60,
+            offset: 50,
           ),
         ],
       ),
