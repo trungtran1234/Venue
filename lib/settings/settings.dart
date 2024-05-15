@@ -84,22 +84,13 @@ class SettingsPageState extends State<SettingsPage> {
             ),
             ListTile(
               title: const Text(
-                'Change Email',
+                'Email',
                 style: TextStyle(color: Colors.white),
               ),
               subtitle: Text(
                 user?.email ?? 'No email set',
                 style: TextStyle(color: Colors.grey[400]),
               ),
-              trailing:
-                  const Icon(Icons.arrow_forward_ios, color: Colors.white),
-              onTap: () {
-                if (user != null) {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => ChangeEmailPage()),
-                  );
-                }
-              },
             ),
             ListTile(
               title: const Text('Change Password',
