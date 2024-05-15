@@ -3,7 +3,7 @@ import 'package:app/services/like_animation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
-
+import './event_feed.dart';
 class PostCard extends StatefulWidget {
   final snap;
   const PostCard({
@@ -51,17 +51,31 @@ class _PostCardState extends State<PostCard> {
     fetchUserData();
   }
 
+  Future<void> navigateToEventDetail() async {
+    var eventDoc = await FirebaseFirestore.instance
+                    .collection('events')
+                    .doc(widget.snap['eventId'])
+                    .get();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EventDetailPage(
+          eventDoc: eventDoc.data()!,
+          eventId: widget.snap['eventId'],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    //final User user = Provider.of<UserProvider>(context).getUser;
-
     return Card(
       child: FractionallySizedBox(
         widthFactor: 1.0,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            //Post Header
+            // Post Header
             Container(
               decoration: const BoxDecoration(
                 color: Colors.black,
@@ -76,14 +90,14 @@ class _PostCardState extends State<PostCard> {
                           radius: 14,
                           child: CircleAvatar(
                             radius: 12,
-                            backgroundImage:
-                                //change to network image later
-                                AssetImage('lib/assets/Default_pfp.svg.png'),
+                            backgroundImage: AssetImage('lib/assets/Default_pfp.svg.png'),
                           ),
                         ),
                       ),
-                      Text(
-                          '${widget.snap['firstName']} ${widget.snap['lastName']} @ ${widget.snap['event']}'),
+                      InkWell(
+                        onTap: navigateToEventDetail,
+                        child: Text('${widget.snap['firstName']} ${widget.snap['lastName']} @ ${widget.snap['event']}'),
+                      ),
                       const Spacer(),
                       IconButton(
                         icon: const Icon(Icons.more_vert),
