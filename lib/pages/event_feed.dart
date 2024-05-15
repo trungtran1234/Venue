@@ -30,10 +30,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
         title: Text('Event Details'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            // Navigate back to map page or perform some other action
-            Navigator.pushNamed(context, '/map');
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         actions: [
           if (isUserEventOwner)
@@ -43,50 +40,45 @@ class _EventDetailPageState extends State<EventDetailPage> {
             ),
           IconButton(
             icon: Icon(Icons.add_a_photo),
-            onPressed:
-                _selectImage, // Changed to directly invoke the image picker
+            onPressed: _selectImage,
           ),
         ],
       ),
-      body: Column(
+      body: _buildEventDetailContent(),
+    );
+  }
+
+  Widget _buildEventDetailContent() {
+    return SingleChildScrollView(
+      child: Column(
         children: [
-          Expanded(
-            flex: 1,
-            child: _buildEventDetails(),
-          ),
-          Expanded(
-            flex: 3,
-            child: _buildPostList(),
-          ),
+          _buildEventDetails(),
+          _buildPostList(),
         ],
       ),
     );
   }
 
   Widget _buildEventDetails() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          ListTile(
-            tileColor: const Color.fromARGB(255, 22, 26, 37),
-            title: Text(widget.eventDoc['title']),
-            subtitle: Text(widget.eventDoc['description']),
-          ),
-          ListTile(
-            tileColor: const Color.fromARGB(255, 22, 26, 37),
-            leading: Icon(Icons.location_on),
-            title: Text(widget.eventDoc['address']),
-          ),
-          ListTile(
-            tileColor: const Color.fromARGB(255, 22, 26, 37),
-            leading: Icon(Icons.calendar_today),
-            title: Text(
-                'Starts: ${DateFormat('hh:mm a MM/dd/yyyy').format(DateTime.parse(widget.eventDoc['startDateTime']))}'),
-            subtitle: Text(
-                'Ends: ${DateFormat('yyyy-MM-dd HH:mm').format(DateTime.parse(widget.eventDoc['endDateTime']))}'),
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        ListTile(
+          tileColor: const Color.fromARGB(255, 22, 26, 37),
+          title: Text(widget.eventDoc['title']),
+          subtitle: Text(widget.eventDoc['description']),
+        ),
+        ListTile(
+          tileColor: const Color.fromARGB(255, 22, 26, 37),
+          leading: Icon(Icons.location_on),
+          title: Text(widget.eventDoc['address']),
+        ),
+        ListTile(
+          tileColor: const Color.fromARGB(255, 22, 26, 37),
+          leading: Icon(Icons.calendar_today),
+          title: Text('Starts: ${DateFormat('hh:mm a MM/dd/yyyy').format(DateTime.parse(widget.eventDoc['startDateTime']))}'),
+          subtitle: Text('Ends: ${DateFormat('yyyy-MM-dd HH:mm').format(DateTime.parse(widget.eventDoc['endDateTime']))}'),
+        ),
+      ],
     );
   }
 
@@ -97,8 +89,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
           .where('eventId', isEqualTo: widget.eventId)
           .orderBy('datePublished', descending: true)
           .snapshots(),
-      builder: (context,
-          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+      builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -106,9 +97,10 @@ class _EventDetailPageState extends State<EventDetailPage> {
           return Text("No posts available for this event.");
         }
         return ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(), // Prevents the ListView itself from scrolling
           itemCount: snapshot.data!.docs.length,
-          itemBuilder: (context, index) =>
-              PostCard(snap: snapshot.data!.docs[index].data()),
+          itemBuilder: (context, index) => PostCard(snap: snapshot.data!.docs[index].data()),
         );
       },
     );
