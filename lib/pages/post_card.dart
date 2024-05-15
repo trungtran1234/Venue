@@ -55,9 +55,9 @@ class _PostCardState extends State<PostCard> {
 
   Future<void> navigateToEventDetail() async {
     var eventDoc = await FirebaseFirestore.instance
-                    .collection('events')
-                    .doc(widget.snap['eventId'])
-                    .get();
+        .collection('events')
+        .doc(widget.snap['eventId'])
+        .get();
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -69,161 +69,164 @@ class _PostCardState extends State<PostCard> {
     );
   }
 
-@override
-Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     String formattedDate = widget.snap['datePublished'] != null
-        ? DateFormat('hh:mm a MM/dd/yyyy').format(widget.snap['datePublished'].toDate())
+        ? DateFormat('hh:mm a MM/dd/yyyy')
+            .format(widget.snap['datePublished'].toDate())
         : 'No date available';
 
     return Card(
-        child: FractionallySizedBox(
-            widthFactor: 1.0,
-            child: Column(
+      child: FractionallySizedBox(
+        widthFactor: 1.0,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Post Header
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: const BoxDecoration(
+                color: Colors.black,
+              ),
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 18,
+                    child: CircleAvatar(
+                      radius: 16,
+                      backgroundImage:
+                          AssetImage('lib/assets/Default_pfp.svg.png'),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${widget.snap['firstName']} ${widget.snap['lastName']}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                            Text(
+                              ' @${widget.snap['username']}',
+                              style: const TextStyle(
+                                  color: Color.fromARGB(255, 203, 203, 203),
+                                  fontSize: 12),
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        InkWell(
+                          onTap: navigateToEventDetail,
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                'lib/assets/grayLogo.png',
+                                width: 33,
+                                height: 33,
+                              ),
+                              Text(
+                                '${widget.snap['event']}',
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Image Display
+            GestureDetector(
+              onDoubleTap: () async {
+                await FirestoreMethods().likePost(widget.snap['postId'],
+                    userData['username'], widget.snap['likes']);
+                setState(() {
+                  isLikeAnimating = true;
+                });
+              },
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .35,
+                    width: double.infinity,
+                    child: Image.network(
+                      widget.snap['postUrl'],
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  AnimatedOpacity(
+                    duration: const Duration(milliseconds: 200),
+                    opacity: isLikeAnimating ? 1 : 0,
+                    child: LikeAnimation(
+                      isAnimating: isLikeAnimating,
+                      duration: const Duration(milliseconds: 400),
+                      onEnd: () {
+                        setState(() {
+                          isLikeAnimating = false;
+                        });
+                      },
+                      child: const Icon(Icons.favorite,
+                          color: Colors.white, size: 120),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Post Footer
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: const BoxDecoration(
+                color: Colors.black,
+              ),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                    // Post Header
-                    Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: const BoxDecoration(
-                            color: Colors.black,
+                  Row(
+                    children: [
+                      LikeAnimation(
+                        isAnimating:
+                            widget.snap['likes'].contains(userData['username']),
+                        smallLike: true,
+                        child: IconButton(
+                          icon: widget.snap['likes']
+                                  .contains(userData['username'])
+                              ? const Icon(Icons.favorite, color: Colors.red)
+                              : const Icon(Icons.favorite_border),
+                          onPressed: () => FirestoreMethods().likePost(
+                            widget.snap['postId'].toString(),
+                            userData['username'],
+                            widget.snap['likes'],
+                          ),
                         ),
-                        child: Row(
-                            children: [
-                                const CircleAvatar(
-                                    radius: 18,
-                                    child: CircleAvatar(
-                                        radius: 16,
-                                        backgroundImage: AssetImage('lib/assets/Default_pfp.svg.png'),
-                                    ),
-                                ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                      Text(
-                                        '${widget.snap['firstName']} ${widget.snap['lastName']}',
-                                        style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                        ),
-                                      ),
-                                      Text(
-                                        ' @${widget.snap['username']}',
-                                        style: const TextStyle(
-                                        color: Color.fromARGB(255, 203, 203, 203),
-                                        ),
-                                      ),
-                                      ],
-                                    ),
-
-                                    const Spacer(),  // Space between last name and icon
-                                    InkWell(
-                                      onTap: navigateToEventDetail,
-                                      child: Row(
-                                      children: [
-                                        Image.asset(
-                                          'lib/assets/grayLogo.png',
-                                          width: 33,
-                                          height: 33,
-                                        ),
-                                        Text(
-                                        '${widget.snap['event']}',
-                                        style: const TextStyle(color: Colors.white, fontSize: 20),
-                                        ),
-                                      ],
-                                      ),
-                                    ),
-                                    ],
-                                  ),
-                                ),
-                            ],
-                        ),
-                    ),
-                    // Image Display
-                    GestureDetector(
-                        onDoubleTap: () async {
-                            await FirestoreMethods().likePost(widget.snap['postId'],
-                                userData['username'], widget.snap['likes']);
-                            setState(() {
-                                isLikeAnimating = true;
-                            });
-                        },
-                        child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                                SizedBox(
-                                    height: MediaQuery.of(context).size.height * .35,
-                                    width: double.infinity,
-                                    child: Image.network(
-                                        widget.snap['postUrl'],
-                                        fit: BoxFit.cover,
-                                    ),
-                                ),
-                                AnimatedOpacity(
-                                    duration: const Duration(milliseconds: 200),
-                                    opacity: isLikeAnimating ? 1 : 0,
-                                    child: LikeAnimation(
-                                        isAnimating: isLikeAnimating,
-                                        duration: const Duration(milliseconds: 400),
-                                        onEnd: () {
-                                            setState(() {
-                                                isLikeAnimating = false;
-                                            });
-                                        },
-                                        child: const Icon(Icons.favorite, color: Colors.white, size: 120),
-                                    ),
-                                ),
-                            ],
-                        ),
-                    ),
-                    // Post Footer
-                    Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: const BoxDecoration(
-                            color: Colors.black,
-                        ),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                                Row(
-                                    children: [
-                                        LikeAnimation(
-                                            isAnimating: widget.snap['likes'].contains(userData['username']),
-                                            smallLike: true,
-                                            child: IconButton(
-                                                icon: widget.snap['likes'].contains(userData['username'])
-                                                    ? const Icon(Icons.favorite, color: Colors.red)
-                                                    : const Icon(Icons.favorite_border),
-                                                onPressed: () => FirestoreMethods().likePost(
-                                                    widget.snap['postId'].toString(),
-                                                    userData['username'],
-                                                    widget.snap['likes'],
-                                                ),
-                                            ),
-                                        ),
-                                        Text('${widget.snap['likes'].length} likes'),
-                                        const Spacer(),
-                                        Text(
-                                              formattedDate,
-                                              style: const TextStyle(color: Colors.grey, fontSize: 12),
-                                            ),
-                                    ],
-                                    
-                                ),
-                                Text(widget.snap['description']),
-                            ],
-                        ),
-                    ),
+                      ),
+                      Text('${widget.snap['likes'].length} likes'),
+                      const Spacer(),
+                      Text(
+                        formattedDate,
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  Text(widget.snap['description']),
                 ],
+              ),
             ),
+          ],
         ),
+      ),
     );
-}
-
-
+  }
 }
