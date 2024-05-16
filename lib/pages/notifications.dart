@@ -5,6 +5,7 @@ import '../services/connectivity_checker.dart';
 import '../services/reconnection_popup.dart';
 import 'package:app/global.dart';
 import '../main.dart';
+import './event_feed.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -59,72 +60,107 @@ class NotificationsPageState extends State<NotificationsPage> {
     );
   }
 
-  Widget notificationsList(BuildContext context) {
-    var currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) {
-      return const Center(
-        child: Text(
-          "You need to be logged in to view notifications.",
-          style: TextStyle(fontSize: 18, color: Colors.white),
-          textAlign: TextAlign.center,
-        ),
-      );
-    }
-
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('notifications')
-          .where('receiverUID', isEqualTo: currentUser.uid)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        }
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(
-            child: Text(
-              'No notifications.',
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-          );
-        }
-        return ListView.separated(
-          itemCount: snapshot.data!.docs.length,
-          separatorBuilder: (context, index) =>
-              const Divider(color: Colors.grey),
-          itemBuilder: (context, index) {
-            var notification = snapshot.data!.docs[index].data() as Map<String, dynamic>;
-            return ListTile(
-              leading:
-                  const Icon(Icons.notification_important, color: Colors.blue),
-              title: Text(notification['title'],
-                  style: const TextStyle(fontSize: 16)),
-              subtitle: Text(notification['message'],
-                  style: TextStyle(color: Colors.grey[600])),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.check, color: Colors.green),
-                    onPressed: () => updateFriendRequestStatus(
-                        snapshot.data!.docs[index].id, true),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close, color: Colors.red),
-                    onPressed: () => updateFriendRequestStatus(
-                        snapshot.data!.docs[index].id, false),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
+Widget notificationsList(BuildContext context) {
+  var currentUser = FirebaseAuth.instance.currentUser;
+  if (currentUser == null) {
+    return const Center(
+      child: Text(
+        "You need to be logged in to view notifications.",
+        style: TextStyle(fontSize: 18, color: Colors.white),
+        textAlign: TextAlign.center,
+      ),
     );
   }
+
+  return StreamBuilder<QuerySnapshot>(
+    stream: FirebaseFirestore.instance
+        .collection('notifications')
+        .where('receiverUID', isEqualTo: currentUser.uid)
+        .snapshots(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      }
+      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+        return const Center(
+          child: Text(
+            'No notifications.',
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+        );
+      }
+      return ListView.separated(
+        itemCount: snapshot.data!.docs.length,
+        separatorBuilder: (context, index) => const Divider(color: Colors.grey),
+        itemBuilder: (context, index) {
+          var notification = snapshot.data!.docs[index].data() as Map<String, dynamic>;
+          bool isEventInvitation = notification['type'] == 'event_invitation';
+          
+          return ListTile(
+            leading: const Icon(Icons.event_available, color: Colors.blue),
+            title: Text(notification['title'], style: const TextStyle(fontSize: 16)),
+            subtitle: Text(notification['message'], style: TextStyle(color: Colors.grey[600])),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isEventInvitation) IconButton(
+                  icon: Icon(Icons.arrow_forward),
+                  onPressed: () => navigateToEvent(notification['eventId'], context),
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete_outline, color: Colors.red),
+                  onPressed: () => dismissNotification(snapshot.data!.docs[index].id),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
+
+void navigateToEvent(String eventId, BuildContext context) async {
+  try {
+    // Fetch the event document from Firestore
+    DocumentSnapshot eventSnapshot = await FirebaseFirestore.instance.collection('events').doc(eventId).get();
+    
+    if (eventSnapshot.exists) {
+      // Navigate to the EventDetailPage with eventDoc and eventId
+      Navigator.push(context, MaterialPageRoute(
+        builder: (context) => EventDetailPage(eventId: eventId, eventDoc: eventSnapshot.data() as Map<String, dynamic>),
+      ));
+    } else {
+      // Handle the case where the event document does not exist
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Event details not found."))
+      );
+    }
+  } catch (e) {
+    // Handle any errors that might occur during fetch or navigation
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Failed to load event details: $e"))
+    );
+  }
+}
+
+void dismissNotification(String docId) async {
+  try {
+    await FirebaseFirestore.instance.collection('notifications').doc(docId).delete();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Notification dismissed"))
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Failed to dismiss notification: $e"))
+    );
+  }
+}
+
 
   void updateFriendRequestStatus(String docId, bool accepted) {
     if (accepted) {

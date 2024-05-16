@@ -7,6 +7,7 @@ import '../pages/post_card.dart';
 import 'post_editor.dart';
 import 'package:intl/intl.dart';
 import 'package:geolocator/geolocator.dart';
+import './user_selection.dart';
 
 class EventDetailPage extends StatefulWidget {
   final Map<String, dynamic> eventDoc;
@@ -25,6 +26,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
   @override
   Widget build(BuildContext context) {
     bool isUserEventOwner = _auth.currentUser?.uid == widget.eventDoc['userId'];
+    bool isPublicEvent = widget.eventDoc['visibility'] == 'public';  // Checking the visibility
     return Scaffold(
       appBar: AppBar(
         title: const Text('Event Details'),
@@ -38,6 +40,11 @@ class _EventDetailPageState extends State<EventDetailPage> {
               icon: Icon(Icons.delete),
               onPressed: _deleteEvent,
             ),
+            if (isPublicEvent || isUserEventOwner)
+             IconButton(
+            icon: Icon(Icons.person_add),
+               onPressed: _inviteUsers,
+               ),
           IconButton(
             icon: Icon(Icons.add_a_photo),
             onPressed: _selectImage,
@@ -197,6 +204,35 @@ class _EventDetailPageState extends State<EventDetailPage> {
       'poster_list': FieldValue.arrayUnion([userId])
     });
   }
+
+  void _inviteUsers() async {
+  final List<String> selectedUserIds = await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => UserSelectionPage(eventId: widget.eventId),
+    ),
+  );
+
+  if (selectedUserIds.isNotEmpty) {
+    final String eventTitle = widget.eventDoc['title'];
+    final notificationData = {
+      'title': 'Event Invitation',
+      'message': 'You are invited to $eventTitle',
+      'eventId': widget.eventId,
+      'timestamp': FieldValue.serverTimestamp(),
+    };
+
+    for (String userId in selectedUserIds) {
+      FirebaseFirestore.instance
+          .collection('notifications')
+          .add({
+            ...notificationData,
+            'receiverUID': userId,
+          });
+    }
+  }
+}
+
 
   void _deleteEvent() {
     showDialog(
