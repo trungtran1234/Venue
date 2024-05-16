@@ -229,16 +229,6 @@ class FriendsPageState extends State<FriendsPage> {
       icon: const Icon(Icons.more_vert),
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
         PopupMenuItem<String>(
-          value: 'invite',
-          child: ListTile(
-            leading: const Icon(Icons.mail_outline, color: Colors.blue),
-            title: const Text('Invite'),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-        ),
-        PopupMenuItem<String>(
           value: 'unfriend',
           child: ListTile(
             leading: const Icon(Icons.remove_circle_outline, color: Colors.red),

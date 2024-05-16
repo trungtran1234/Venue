@@ -46,16 +46,21 @@ class _PostCardState extends State<PostCard> {
     }
   }
 
-    void fetchPosterData() async {
+  void fetchPosterData() async {
     try {
       // Assuming eventDoc is available in your post snapshot
-      List<String> posterIds = List<String>.from(widget.snap['event']['poster_list']);
+      List<String> posterIds =
+          List<String>.from(widget.snap['event']['poster_list']);
       for (var userId in posterIds) {
-        var userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+        var userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .get();
         if (userDoc.exists && userDoc.data()!['profilePicturePath'] != null) {
           setState(() {
             // To prevent duplicates and ensure unique entries
-            if (!posterImageUrls.contains(userDoc.data()!['profilePicturePath'])) {
+            if (!posterImageUrls
+                .contains(userDoc.data()!['profilePicturePath'])) {
               posterImageUrls.add(userDoc.data()!['profilePicturePath']);
             }
           });
@@ -96,9 +101,10 @@ class _PostCardState extends State<PostCard> {
             .format(widget.snap['datePublished'].toDate())
         : 'No date available';
 
-
-String profileImageUrl = widget.snap['profilePicturePath'] ?? 'lib/assets/Default_pfp.svg.png';
+    String profileImageUrl =
+        widget.snap['profilePicturePath'] ?? 'lib/assets/Default_pfp.svg.png';
     return Card(
+      color: Colors.transparent,
       child: FractionallySizedBox(
         widthFactor: 1.0,
         child: Column(
@@ -108,6 +114,9 @@ String profileImageUrl = widget.snap['profilePicturePath'] ?? 'lib/assets/Defaul
             Container(
               padding: const EdgeInsets.all(10),
               decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10)),
                 color: Colors.black,
               ),
               child: Row(
@@ -206,6 +215,9 @@ String profileImageUrl = widget.snap['profilePicturePath'] ?? 'lib/assets/Defaul
             Container(
               padding: const EdgeInsets.all(10),
               decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10)),
                 color: Colors.black,
               ),
               child: Column(
@@ -243,7 +255,8 @@ String profileImageUrl = widget.snap['profilePicturePath'] ?? 'lib/assets/Defaul
                         top: 10, bottom: 40, left: 15, right: 15),
                     child: Column(
                       children: [
-                        Text(widget.snap['description'], style: const TextStyle(fontSize: 18)),
+                        Text(widget.snap['description'],
+                            style: const TextStyle(fontSize: 18)),
                       ],
                     ),
                   )
