@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:app/database/storage_methods.dart';
 import 'package:app/global.dart';
 import 'package:app/pages/friends.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -24,6 +26,7 @@ class ProfilePageState extends State<ProfilePage> {
   firebase_auth.User? user = firebase_auth.FirebaseAuth.instance.currentUser;
   Map<String, dynamic> userData = {};
   bool _isLoading = true;
+  String? _image;
 
   @override
   void initState() {
@@ -57,6 +60,26 @@ class ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  void selectImage() async {
+    Uint8List image = await pickImage(ImageSource.gallery);
+    String pfpUrl =
+        await StorageMethods().uploadImageToStorage('pfps', image, true);
+
+    Map<String, dynamic> updatedData = {
+      'profilePicturePath': pfpUrl,
+    };
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .update(updatedData);
+
+    setState(
+      () {
+        _image = pfpUrl;
+      },
+    );
+  }
+
   void onConnectivityChanged(bool isConnected) {
     if (isConnected) {
       popupManager.dismissConnectivityPopup();
@@ -72,47 +95,85 @@ class ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text('Profile', style: TextStyle(color: Colors.white)),
+        title: const Text('Profile',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 25,
+                fontWeight: FontWeight.bold)),
         actions: [
           IconButton(
             onPressed: () {
-              newRoute(context, SettingsPage());
+              newRoute(context, const SettingsPage());
             },
-            icon: const Icon(Icons.settings),
-            color: Colors.white,
+            icon: const Icon(Icons.settings, color: Colors.white),
           ),
         ],
+        elevation: 4,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
         child: Center(
           child: _isLoading
-              ? const CircularProgressIndicator()
+              ? CircularProgressIndicator(color: Theme.of(context).primaryColor)
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    const SizedBox(height: 20),
+                    Container(
+                      width: 130,
+                      height: 130,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 10,
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                          ),
+                        ],
+                      ),
+                      child: CircleAvatar(
+                        radius: 64,
+                        backgroundImage: NetworkImage(
+                            _image ?? userData['profilePicturePath']),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: -10,
+                      left: 80,
+                      child: IconButton(
+                        onPressed: selectImage,
+                        icon: const Icon(Icons.camera_alt, size: 28),
+                        color: Colors.white,
+                        tooltip: 'Change Profile Picture',
+                      ),
+                    ),
+                    const SizedBox(height: 24),
                     Text(
                       '${userData['firstName']} ${userData['lastName']}',
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      '${userData['username']}',
-                      style: const TextStyle(fontSize: 16, color: Colors.grey),
+                      '@${userData['username']}',
+                      style: TextStyle(fontSize: 20, color: Colors.grey[700]),
                     ),
                     const SizedBox(height: 10),
                     Text(
                       '${userData['bio']}',
-                      style: const TextStyle(fontSize: 16, color: Colors.grey),
+                      style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+                      textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Friends: ${userData['friends']?.length ?? 0}'),
-                        const Text(' | '),
-                        Text('Posts: ${userData['posts'] ?? 0}'),
+                        Icon(Icons.group, color: Colors.grey[700]),
+                        const SizedBox(width: 8),
+                        Text('Friends: ${userData['friends']?.length ?? 0}',
+                            style: TextStyle(
+                                color: Colors.grey[700], fontSize: 20)),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -120,8 +181,16 @@ class ProfilePageState extends State<ProfilePage> {
                       onPressed: () {
                         newRoute(context, const EditProfilePage());
                       },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 15),
+                        textStyle: const TextStyle(fontSize: 16),
+                      ),
                       child: const Text('Edit Profile'),
                     ),
+                    const SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
@@ -131,6 +200,13 @@ class ProfilePageState extends State<ProfilePage> {
                           ),
                         );
                       },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 15),
+                        textStyle: const TextStyle(fontSize: 16),
+                      ),
                       child: const Text('Friends'),
                     ),
                   ],

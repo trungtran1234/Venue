@@ -1,4 +1,3 @@
-import 'package:app/database/firestore_methods.dart';
 import 'package:app/global.dart';
 import 'package:app/pages/post_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,36 +26,35 @@ class _NewsFeedState extends State<NewsFeedPage> {
   final PopupManager _popupManager = PopupManager();
 
   @override
-void initState() {
-  super.initState();
-  _connectivityChecker.onStatusChanged = _handleConnectivityChange;
-  fetchUserData().then((_) {
-    fetchUserFriends().then((_) {
-      preloadEventDetails(); // Ensure this is called after user data and friends are loaded
+  void initState() {
+    super.initState();
+    _connectivityChecker.onStatusChanged = _handleConnectivityChange;
+    fetchUserData().then((_) {
+      fetchUserFriends().then((_) {
+        preloadEventDetails();
+      });
     });
-  });
-  initFetch();
-}
-
-Future<void> initFetch() async {
-  if (user != null) {
-    await fetchUserData();
-    await fetchUserFriends();
-    await preloadEventDetails();
-    setState(() {
-      _isLoading = false;  // Set this false only after all data is fetched
-    });
+    initFetch();
   }
-}
+
+  Future<void> initFetch() async {
+    if (user != null) {
+      await fetchUserData();
+      await fetchUserFriends();
+      await preloadEventDetails();
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   Future<void> preloadEventDetails() async {
-  var eventCollection = FirebaseFirestore.instance.collection('events');
-  var snapshot = await eventCollection.get();
-  for (var doc in snapshot.docs) {
-    eventDetailsCache[doc.id] = doc.data();
+    var eventCollection = FirebaseFirestore.instance.collection('events');
+    var snapshot = await eventCollection.get();
+    for (var doc in snapshot.docs) {
+      eventDetailsCache[doc.id] = doc.data();
+    }
   }
-}
-
 
   Future<void> fetchUserData() async {
     if (user != null) {
@@ -87,17 +85,14 @@ Future<void> initFetch() async {
         .doc(user!.uid)
         .get();
     if (userDoc.exists) {
-      var data = userDoc.data() as Map<String, dynamic>?; // Cast to Map<String, dynamic>?
+      var data = userDoc.data() as Map<String, dynamic>?; 
       if (data != null && data.containsKey('friends')) {
         setState(() {
           userFriends = List<String>.from(data['friends']);
-          print("User friends: $userFriends");  // Debug: Log out the friends list
         });
       }
     }
   }
-}
-
 
   void _handleConnectivityChange(bool isConnected) {
     if (!isConnected) {
@@ -121,9 +116,15 @@ Future<void> initFetch() async {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text('Venue'),
+        title: const Text('Feed',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 25,
+                fontWeight: FontWeight.bold)),
       ),
-      body: _isLoading ? Center(child: CircularProgressIndicator()) : _buildPostList(),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : _buildPostList(),
       bottomNavigationBar: buildBottomNavigationBar(context, _selectedIndex),
     );
   }
@@ -148,28 +149,43 @@ Future<void> initFetch() async {
         var eventId = postData['eventId'];
         var event = eventDetailsCache[eventId];
         if (event == null) {
-          return false; // Skip if no event details are found (safety check)
+          return false;
         }
 
         var visibility = event['visibility'] ?? 'public';
         var creatorId = postData['uid'];
 
-        // Determine if the post should be visible based on event visibility and user's friends
         bool filterCondition = visibility == 'public' || (visibility == 'friendsOnly' && userFriends.contains(creatorId));
-
-        // Debug: Log the filtering process
-        print("Post: ${postData['description']}, EventID: $eventId, Visibility: $visibility, CreatorId: $creatorId, FilterCondition: $filterCondition");
 
         return filterCondition;
       }).toList();
+        var filteredDocs = snapshot.data!.docs.where((doc) {
+          var postData = doc.data();
+          var eventId = postData['eventId'];
+          var event = eventDetailsCache[eventId];
+          if (event == null) {
+            return false;
+          }
 
-      return ListView.builder(
-        itemCount: filteredDocs.length,
-        itemBuilder: (context, index) {
-          return PostCard(snap: filteredDocs[index].data());
-        },
-      );
-    },
-  );
-}
+          var visibility = event['visibility'] ?? 'public';
+          var creatorId = postData['uid'];
+
+          bool filterCondition = visibility == 'public' ||
+              (visibility == 'friendsOnly' && userFriends.contains(creatorId));
+
+          print(
+              "Post: ${postData['description']}, EventID: $eventId, Visibility: $visibility, CreatorId: $creatorId, FilterCondition: $filterCondition");
+
+          return filterCondition;
+        }).toList();
+
+        return ListView.builder(
+          itemCount: filteredDocs.length,
+          itemBuilder: (context, index) {
+            return PostCard(snap: filteredDocs[index].data());
+          },
+        );
+      },
+    );
+  }
 }
