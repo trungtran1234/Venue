@@ -1,4 +1,3 @@
-import 'package:app/database/firestore_methods.dart';
 import 'package:app/global.dart';
 import 'package:app/pages/post_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -45,7 +44,7 @@ class _NewsFeedState extends State<NewsFeedPage> {
       await fetchUserFriends();
       await preloadEventDetails();
       setState(() {
-        _isLoading = false; // Set this false only after all data is fetched
+        _isLoading = false; 
       });
     }
   }

@@ -160,23 +160,23 @@ class ProfilePageState extends State<ProfilePage> {
                     ),
                     Text(
                       '@${userData['username']}',
-                      style: TextStyle(fontSize: 20, color: Colors.grey[700]),
+                      style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 144, 144, 144)),
                     ),
                     const SizedBox(height: 10),
                     Text(
                       '${userData['bio']}',
-                      style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+                      style: TextStyle(fontSize: 15, color: const Color.fromARGB(255, 125, 125, 125)),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.group, color: Colors.grey[700]),
+                        Icon(Icons.group, color: const Color.fromARGB(255, 144, 144, 144)),
                         const SizedBox(width: 8),
                         Text('Friends: ${userData['friends']?.length ?? 0}',
                             style: TextStyle(
-                                color: Colors.grey[700], fontSize: 20)),
+                                color: const Color.fromARGB(255, 146, 146, 146), fontSize: 20)),
                       ],
                     ),
                     const SizedBox(height: 20),
