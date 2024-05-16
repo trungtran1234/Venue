@@ -230,7 +230,6 @@ class _EventDetailPageState extends State<EventDetailPage> {
             TextButton(
               child: const Text("Delete"),
               onPressed: () {
-                Navigator.of(context).pop();
                 FirebaseFirestore.instance
                     .collection('events')
                     .doc(widget.eventId)

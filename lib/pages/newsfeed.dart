@@ -1,4 +1,3 @@
-import 'package:app/database/firestore_methods.dart';
 import 'package:app/global.dart';
 import 'package:app/pages/post_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

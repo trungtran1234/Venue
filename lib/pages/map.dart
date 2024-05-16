@@ -10,10 +10,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:clippy_flutter/triangle.dart';
 import './event_feed.dart';
-import 'dart:ui' as ui;
 import 'package:image/image.dart' as img;
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:typed_data';
+
 
 enum EventVisibility { public, friendsOnly }
 
@@ -34,6 +34,7 @@ class MapPageState extends State<MapPage>
   CustomInfoWindowController _customInfoWindowController =
       CustomInfoWindowController();
   BitmapDescriptor? _customMarker;
+  late String _mapStyle;
 
   @override
   bool get wantKeepAlive => true;
@@ -48,6 +49,9 @@ class MapPageState extends State<MapPage>
     });
     WidgetsBinding.instance
         .addPostFrameCallback((_) async => await fetchLocationUpdates());
+      rootBundle.loadString('lib/assets/map_style.json').then((string) {
+      _mapStyle = string;
+  });
   }
 
   Future<void> fetchLocationUpdates() async {
@@ -527,6 +531,7 @@ class MapPageState extends State<MapPage>
                       selectedStartDate,
                       selectedEndDate,
                       visibility);
+                  FocusScope.of(context).requestFocus(FocusNode());
                 }
               },
               child: const Text('Submit')),
@@ -610,6 +615,8 @@ class MapPageState extends State<MapPage>
                     _controller = controller;
                     _customInfoWindowController.googleMapController =
                         controller;
+                          controller.setMapStyle(_mapStyle);
+
                   },
                   markers: _markers.toSet(),
                   onTap: (LatLng latLng) {
