@@ -145,6 +145,7 @@ class MapPageState extends State<MapPage>
         double lng = doc.data()['longitude'];
         String eventVisibility = doc.data()['visibility'];
         String eventCreatorId = doc.data()['userId'];
+        Map<String, dynamic>? hostData = userCache[eventCreatorId];
 
         bool shouldDisplay = false;
 
@@ -172,15 +173,18 @@ class MapPageState extends State<MapPage>
                           borderRadius: BorderRadius.circular(40),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(1),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
-                                Icons.account_circle,
-                                color: Colors.white,
-                                size: 30,
-                              ),
+                              hostData != null ? CircleAvatar(
+                              backgroundImage: NetworkImage(hostData['profilePicturePath']),
+                              radius: 20,
+                            ) : Icon(
+                              Icons.account_circle,
+                              color: Colors.white,
+                              size: 30,
+                            ),
                               Text(
                                 doc.data()['firstName'] +
                                     ' ' +
@@ -206,13 +210,7 @@ class MapPageState extends State<MapPage>
                                       color: Colors.white,
                                     ),
                               ),
-                              Text(doc.data()['description'],
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline6
-                                      ?.copyWith(
-                                        color: Colors.white,
-                                      )),
+                              
                               SizedBox(height: 10),
                               Text(
                                 doc.data()['address'],
@@ -620,7 +618,7 @@ class MapPageState extends State<MapPage>
                 ),
           CustomInfoWindow(
             controller: _customInfoWindowController,
-            height: 360,
+            height: 320,
             width: 420,
             offset: 50,
           ),
