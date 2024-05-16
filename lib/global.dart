@@ -79,7 +79,7 @@ Widget buildBottomNavigationBar(BuildContext context, int selectedIndex) {
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.search, size: 20),
+            icon: Icon(Icons.pin_drop, size: 20),
           label: 'Discover',
         ),
         BottomNavigationBarItem(
