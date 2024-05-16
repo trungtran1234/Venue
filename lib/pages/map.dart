@@ -590,7 +590,11 @@ class MapPageState extends State<MapPage>
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text('Discover', style: TextStyle(color: Colors.white)),
+        title: const Text('Venue',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 25,
+                fontWeight: FontWeight.bold)),
       ),
       body: Stack(
         children: [

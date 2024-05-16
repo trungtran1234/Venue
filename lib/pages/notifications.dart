@@ -47,8 +47,11 @@ class NotificationsPageState extends State<NotificationsPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title:
-            const Text('Notifications', style: TextStyle(color: Colors.white)),
+        title: const Text('Notifications',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 25,
+                fontWeight: FontWeight.bold)),
       ),
       body: notificationsList(context),
       bottomNavigationBar: buildBottomNavigationBar(context, _selectedIndex),

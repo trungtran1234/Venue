@@ -104,10 +104,12 @@ class FriendsPageState extends State<FriendsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Friends', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.transparent,
-        elevation: 2,
-        shadowColor: Colors.grey.withOpacity(0.5),
+        backgroundColor: Colors.black,
+        title: const Text('Friends',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 25,
+                fontWeight: FontWeight.bold)),
       ),
       body: Column(
         children: [
