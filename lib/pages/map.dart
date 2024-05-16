@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:app/global.dart';
+import 'package:app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -177,14 +178,17 @@ class MapPageState extends State<MapPage>
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              hostData != null ? CircleAvatar(
-                              backgroundImage: NetworkImage(hostData['profilePicturePath']),
-                              radius: 20,
-                            ) : Icon(
-                              Icons.account_circle,
-                              color: Colors.white,
-                              size: 30,
-                            ),
+                              hostData != null
+                                  ? CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                          hostData['profilePicturePath']),
+                                      radius: 20,
+                                    )
+                                  : Icon(
+                                      Icons.account_circle,
+                                      color: Colors.white,
+                                      size: 30,
+                                    ),
                               Text(
                                 doc.data()['firstName'] +
                                     ' ' +
@@ -210,7 +214,6 @@ class MapPageState extends State<MapPage>
                                       color: Colors.white,
                                     ),
                               ),
-                              
                               SizedBox(height: 10),
                               Text(
                                 doc.data()['address'],
@@ -587,7 +590,7 @@ class MapPageState extends State<MapPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
+    return GradientScaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: const Text('Venue',
