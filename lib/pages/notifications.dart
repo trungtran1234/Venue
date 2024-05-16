@@ -47,9 +47,12 @@ class NotificationsPageState extends State<NotificationsPage> {
   Widget build(BuildContext context) {
     return GradientScaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent, // Ensuring AppBar blends with the gradient
-        title: const Text('Notifications', style: TextStyle(color: Colors.white)),
-        elevation: 0, // Remove shadow from AppBar
+        backgroundColor: Colors.black,
+        title: const Text('Notifications',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 25,
+                fontWeight: FontWeight.bold)),
       ),
       body: notificationsList(context),
       bottomNavigationBar: buildBottomNavigationBar(context, _selectedIndex),

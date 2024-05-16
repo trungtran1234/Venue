@@ -34,8 +34,7 @@ class _PostCardState extends State<PostCard> {
         if (userDoc.exists) {
           setState(() {
             userData = userDoc.data() as Map<String, dynamic>;
-            _isLoading =
-                false; 
+            _isLoading = false;
           });
         }
       } catch (e) {
@@ -105,6 +104,7 @@ String profileImageUrl = widget.snap['profilePicturePath'] ?? 'lib/assets/Defaul
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Post Header
             Container(
               padding: const EdgeInsets.all(10),
               decoration: const BoxDecoration(
@@ -129,19 +129,18 @@ String profileImageUrl = widget.snap['profilePicturePath'] ?? 'lib/assets/Defaul
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                                fontSize: 14,
                               ),
                             ),
                             Text(
                               ' @${widget.snap['username']}',
                               style: const TextStyle(
-                                color: Color.fromARGB(255, 203, 203, 203),
-                              ),
+                                  color: Color.fromARGB(255, 203, 203, 203),
+                                  fontSize: 12),
                             ),
                           ],
                         ),
-
-                        const Spacer(), // Space between last name and icon
+                        const Spacer(),
                         InkWell(
                           onTap: navigateToEventDetail,
                           child: Row(

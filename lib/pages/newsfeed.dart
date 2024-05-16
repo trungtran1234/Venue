@@ -28,36 +28,35 @@ class _NewsFeedState extends State<NewsFeedPage> {
   final PopupManager _popupManager = PopupManager();
 
   @override
-void initState() {
-  super.initState();
-  _connectivityChecker.onStatusChanged = _handleConnectivityChange;
-  fetchUserData().then((_) {
-    fetchUserFriends().then((_) {
-      preloadEventDetails(); // Ensure this is called after user data and friends are loaded
+  void initState() {
+    super.initState();
+    _connectivityChecker.onStatusChanged = _handleConnectivityChange;
+    fetchUserData().then((_) {
+      fetchUserFriends().then((_) {
+        preloadEventDetails(); // Ensure this is called after user data and friends are loaded
+      });
     });
-  });
-  initFetch();
-}
-
-Future<void> initFetch() async {
-  if (user != null) {
-    await fetchUserData();
-    await fetchUserFriends();
-    await preloadEventDetails();
-    setState(() {
-      _isLoading = false;  // Set this false only after all data is fetched
-    });
+    initFetch();
   }
-}
+
+  Future<void> initFetch() async {
+    if (user != null) {
+      await fetchUserData();
+      await fetchUserFriends();
+      await preloadEventDetails();
+      setState(() {
+        _isLoading = false; // Set this false only after all data is fetched
+      });
+    }
+  }
 
   Future<void> preloadEventDetails() async {
-  var eventCollection = FirebaseFirestore.instance.collection('events');
-  var snapshot = await eventCollection.get();
-  for (var doc in snapshot.docs) {
-    eventDetailsCache[doc.id] = doc.data();
+    var eventCollection = FirebaseFirestore.instance.collection('events');
+    var snapshot = await eventCollection.get();
+    for (var doc in snapshot.docs) {
+      eventDetailsCache[doc.id] = doc.data();
+    }
   }
-}
-
 
   Future<void> fetchUserData() async {
     if (user != null) {
@@ -82,22 +81,21 @@ Future<void> initFetch() async {
   }
 
   Future<void> fetchUserFriends() async {
-  if (user != null) {
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user!.uid)
-        .get();
-    if (userDoc.exists) {
-      var data = userDoc.data() as Map<String, dynamic>?; 
-      if (data != null && data.containsKey('friends')) {
-        setState(() {
-          userFriends = List<String>.from(data['friends']);
-        });
+    if (user != null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get();
+      if (userDoc.exists) {
+        var data = userDoc.data() as Map<String, dynamic>?;
+        if (data != null && data.containsKey('friends')) {
+          setState(() {
+            userFriends = List<String>.from(data['friends']);
+          });
+        }
       }
     }
   }
-}
-
 
   void _handleConnectivityChange(bool isConnected) {
     if (!isConnected) {
@@ -123,49 +121,52 @@ Future<void> initFetch() async {
         backgroundColor: Colors.black,
         title: const Text('Venue'),
       ),
-      body: _isLoading ? Center(child: CircularProgressIndicator()) : _buildPostList(),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : _buildPostList(),
       bottomNavigationBar: buildBottomNavigationBar(context, _selectedIndex),
     );
   }
 
   Widget _buildPostList() {
-  return StreamBuilder(
-    stream: FirebaseFirestore.instance
-        .collection('posts')
-        .orderBy('datePublished', descending: true)
-        .snapshots(),
-    builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(child: CircularProgressIndicator());
-      }
-
-      if (!snapshot.hasData) {
-        return const Text("No data available");
-      }
-
-      var filteredDocs = snapshot.data!.docs.where((doc) {
-        var postData = doc.data();
-        var eventId = postData['eventId'];
-        var event = eventDetailsCache[eventId];
-        if (event == null) {
-          return false;
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection('posts')
+          .orderBy('datePublished', descending: true)
+          .snapshots(),
+      builder: (context,
+          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
         }
 
-        var visibility = event['visibility'] ?? 'public';
-        var creatorId = postData['uid'];
+        if (!snapshot.hasData) {
+          return const Text("No data available");
+        }
+        var filteredDocs = snapshot.data!.docs.where((doc) {
+          var postData = doc.data();
+          var eventId = postData['eventId'];
+          var event = eventDetailsCache[eventId];
+          if (event == null) {
+            return false;
+          }
 
-        bool filterCondition = visibility == 'public' || (visibility == 'friendsOnly' && userFriends.contains(creatorId));
+          var visibility = event['visibility'] ?? 'public';
+          var creatorId = postData['uid'];
 
-        return filterCondition;
-      }).toList();
+          bool filterCondition = visibility == 'public' ||
+              (visibility == 'friendsOnly' && userFriends.contains(creatorId));
 
-      return ListView.builder(
-        itemCount: filteredDocs.length,
-        itemBuilder: (context, index) {
-          return PostCard(snap: filteredDocs[index].data());
-        },
-      );
-    },
-  );
-}
+          return filterCondition;
+        }).toList();
+
+        return ListView.builder(
+          itemCount: filteredDocs.length,
+          itemBuilder: (context, index) {
+            return PostCard(snap: filteredDocs[index].data());
+          },
+        );
+      },
+    );
+  }
 }
