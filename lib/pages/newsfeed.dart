@@ -1,3 +1,4 @@
+import 'package:app/database/firestore_methods.dart';
 import 'package:app/global.dart';
 import 'package:app/pages/post_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,7 +32,7 @@ class _NewsFeedState extends State<NewsFeedPage> {
     _connectivityChecker.onStatusChanged = _handleConnectivityChange;
     fetchUserData().then((_) {
       fetchUserFriends().then((_) {
-        preloadEventDetails();
+        preloadEventDetails(); // Ensure this is called after user data and friends are loaded
       });
     });
     initFetch();
@@ -43,7 +44,7 @@ class _NewsFeedState extends State<NewsFeedPage> {
       await fetchUserFriends();
       await preloadEventDetails();
       setState(() {
-        _isLoading = false;
+        _isLoading = false; // Set this false only after all data is fetched
       });
     }
   }
@@ -79,17 +80,18 @@ class _NewsFeedState extends State<NewsFeedPage> {
   }
 
   Future<void> fetchUserFriends() async {
-  if (user != null) {
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user!.uid)
-        .get();
-    if (userDoc.exists) {
-      var data = userDoc.data() as Map<String, dynamic>?; 
-      if (data != null && data.containsKey('friends')) {
-        setState(() {
-          userFriends = List<String>.from(data['friends']);
-        });
+    if (user != null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get();
+      if (userDoc.exists) {
+        var data = userDoc.data() as Map<String, dynamic>?;
+        if (data != null && data.containsKey('friends')) {
+          setState(() {
+            userFriends = List<String>.from(data['friends']);
+          });
+        }
       }
     }
   }
@@ -116,11 +118,7 @@ class _NewsFeedState extends State<NewsFeedPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text('Feed',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 25,
-                fontWeight: FontWeight.bold)),
+        title: const Text('Venue'),
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
@@ -130,35 +128,21 @@ class _NewsFeedState extends State<NewsFeedPage> {
   }
 
   Widget _buildPostList() {
-  return StreamBuilder(
-    stream: FirebaseFirestore.instance
-        .collection('posts')
-        .orderBy('datePublished', descending: true)
-        .snapshots(),
-    builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(child: CircularProgressIndicator());
-      }
-
-      if (!snapshot.hasData) {
-        return const Text("No data available");
-      }
-
-      var filteredDocs = snapshot.data!.docs.where((doc) {
-        var postData = doc.data();
-        var eventId = postData['eventId'];
-        var event = eventDetailsCache[eventId];
-        if (event == null) {
-          return false;
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection('posts')
+          .orderBy('datePublished', descending: true)
+          .snapshots(),
+      builder: (context,
+          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
         }
 
-        var visibility = event['visibility'] ?? 'public';
-        var creatorId = postData['uid'];
+        if (!snapshot.hasData) {
+          return const Text("No data available");
+        }
 
-        bool filterCondition = visibility == 'public' || (visibility == 'friendsOnly' && userFriends.contains(creatorId));
-
-        return filterCondition;
-      }).toList();
         var filteredDocs = snapshot.data!.docs.where((doc) {
           var postData = doc.data();
           var eventId = postData['eventId'];
@@ -172,9 +156,6 @@ class _NewsFeedState extends State<NewsFeedPage> {
 
           bool filterCondition = visibility == 'public' ||
               (visibility == 'friendsOnly' && userFriends.contains(creatorId));
-
-          print(
-              "Post: ${postData['description']}, EventID: $eventId, Visibility: $visibility, CreatorId: $creatorId, FilterCondition: $filterCondition");
 
           return filterCondition;
         }).toList();
