@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 
 class UserSelectionPage extends StatefulWidget {
-  final String eventId;  // This assumes that you are passing an eventId when navigating to this page
+  final String eventId; 
 
   const UserSelectionPage({Key? key, required this.eventId}) : super(key: key);
 
@@ -14,8 +14,9 @@ class UserSelectionPage extends StatefulWidget {
 }
 class _UserSelectionPageState extends State<UserSelectionPage> {
   List<String> selectedUsers = [];
+    bool _isSending = false;
 
-  @override
+ @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Select Users to Invite")),
@@ -31,11 +32,14 @@ class _UserSelectionPageState extends State<UserSelectionPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: _isSending ? null : () async {
+          setState(() {
+            _isSending = true;
+          });
           sendInvitations();
           Navigator.pop(context, selectedUsers);
         },
-        child: Icon(Icons.check),
+        child: _isSending ? CircularProgressIndicator(color: Colors.white) : Icon(Icons.check),
       ),
     );
   }
@@ -43,12 +47,10 @@ class _UserSelectionPageState extends State<UserSelectionPage> {
   void sendInvitations() async {
   var currentUser = FirebaseAuth.instance.currentUser;
   if (currentUser == null || selectedUsers.isEmpty) return;
-
   try {
     DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(currentUser.uid).get();
-    // Explicitly cast the data to Map<String, dynamic>
     Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic> ?? {};
-    String username = userData['username'] ?? 'A User';  // Default to 'A User' if username is not found
+    String username = userData['username'] ?? 'A User';
 
     for (var userId in selectedUsers) {
       await FirebaseFirestore.instance.collection('notifications').add({
@@ -62,7 +64,6 @@ class _UserSelectionPageState extends State<UserSelectionPage> {
       });
     }
   } catch (e) {
-    // Optionally, handle the error e.g., by showing a Snackbar
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text("Failed to send invitations: $e"))
     );

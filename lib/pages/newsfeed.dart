@@ -45,7 +45,7 @@ class _NewsFeedState extends State<NewsFeedPage> {
       await fetchUserFriends();
       await preloadEventDetails();
       setState(() {
-        _isLoading = false; // Set this false only after all data is fetched
+        _isLoading = false; 
       });
     }
   }

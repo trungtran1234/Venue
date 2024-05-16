@@ -212,25 +212,6 @@ class _EventDetailPageState extends State<EventDetailPage> {
       builder: (context) => UserSelectionPage(eventId: widget.eventId),
     ),
   );
-
-  if (selectedUserIds.isNotEmpty) {
-    final String eventTitle = widget.eventDoc['title'];
-    final notificationData = {
-      'title': 'Event Invitation',
-      'message': 'You are invited to $eventTitle',
-      'eventId': widget.eventId,
-      'timestamp': FieldValue.serverTimestamp(),
-    };
-
-    for (String userId in selectedUserIds) {
-      FirebaseFirestore.instance
-          .collection('notifications')
-          .add({
-            ...notificationData,
-            'receiverUID': userId,
-          });
-    }
-  }
 }
 
 

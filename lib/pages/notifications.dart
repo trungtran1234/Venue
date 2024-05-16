@@ -60,7 +60,7 @@ class NotificationsPageState extends State<NotificationsPage> {
     );
   }
 
-Widget notificationsList(BuildContext context) {
+  Widget notificationsList(BuildContext context) {
   var currentUser = FirebaseAuth.instance.currentUser;
   if (currentUser == null) {
     return const Center(
@@ -97,10 +97,11 @@ Widget notificationsList(BuildContext context) {
         separatorBuilder: (context, index) => const Divider(color: Colors.grey),
         itemBuilder: (context, index) {
           var notification = snapshot.data!.docs[index].data() as Map<String, dynamic>;
-          bool isEventInvitation = notification['type'] == 'event_invitation';
-          
+          bool isEventInvitation = notification.containsKey('type') && notification['type'] == 'event_invitation';
+          bool isFriendRequest = notification['title'] == "Friend Request" && notification.containsKey('status') && notification['status'] == "pending";
+
           return ListTile(
-            leading: const Icon(Icons.event_available, color: Colors.blue),
+            leading: Icon(isEventInvitation ? Icons.event_available : Icons.notification_important, color: Colors.blue),
             title: Text(notification['title'], style: const TextStyle(fontSize: 16)),
             subtitle: Text(notification['message'], style: TextStyle(color: Colors.grey[600])),
             trailing: Row(
@@ -109,7 +110,17 @@ Widget notificationsList(BuildContext context) {
                 if (isEventInvitation) IconButton(
                   icon: Icon(Icons.arrow_forward),
                   onPressed: () => navigateToEvent(notification['eventId'], context),
+                  
                 ),
+                if (isFriendRequest) IconButton(
+                  icon: const Icon(Icons.check, color: Colors.green),
+                  onPressed: () => updateFriendRequestStatus(snapshot.data!.docs[index].id, true),
+                ),
+                if (isFriendRequest) IconButton(
+                  icon: const Icon(Icons.close, color: Colors.red),
+                  onPressed: () => updateFriendRequestStatus(snapshot.data!.docs[index].id, false),
+                ),
+                if (isEventInvitation)
                 IconButton(
                   icon: Icon(Icons.delete_outline, color: Colors.red),
                   onPressed: () => dismissNotification(snapshot.data!.docs[index].id),
@@ -124,43 +135,38 @@ Widget notificationsList(BuildContext context) {
 }
 
 
-void navigateToEvent(String eventId, BuildContext context) async {
-  try {
-    // Fetch the event document from Firestore
-    DocumentSnapshot eventSnapshot = await FirebaseFirestore.instance.collection('events').doc(eventId).get();
-    
-    if (eventSnapshot.exists) {
-      // Navigate to the EventDetailPage with eventDoc and eventId
-      Navigator.push(context, MaterialPageRoute(
-        builder: (context) => EventDetailPage(eventId: eventId, eventDoc: eventSnapshot.data() as Map<String, dynamic>),
-      ));
-    } else {
-      // Handle the case where the event document does not exist
+  void navigateToEvent(String eventId, BuildContext context) async {
+    try {
+      DocumentSnapshot eventSnapshot = await FirebaseFirestore.instance.collection('events').doc(eventId).get();
+      
+      if (eventSnapshot.exists) {
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context) => EventDetailPage(eventId: eventId, eventDoc: eventSnapshot.data() as Map<String, dynamic>),
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Event details not found."))
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Event details not found."))
+        SnackBar(content: Text("Failed to load event details: $e"))
       );
     }
-  } catch (e) {
-    // Handle any errors that might occur during fetch or navigation
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Failed to load event details: $e"))
-    );
   }
-}
 
-void dismissNotification(String docId) async {
-  try {
-    await FirebaseFirestore.instance.collection('notifications').doc(docId).delete();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Notification dismissed"))
-    );
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Failed to dismiss notification: $e"))
-    );
+  void dismissNotification(String docId) async {
+    try {
+      await FirebaseFirestore.instance.collection('notifications').doc(docId).delete();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Notification dismissed"))
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to dismiss notification: $e"))
+      );
+    }
   }
-}
-
 
   void updateFriendRequestStatus(String docId, bool accepted) {
     if (accepted) {
