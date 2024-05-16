@@ -73,20 +73,21 @@ class MapPageState extends State<MapPage>
   }
 
   Future<void> loadCustomMarker() async {
-  try {
-    final byteData = await rootBundle.load('lib/assets/logo.png');
-    final buffer = byteData.buffer;
-    List<int> imgList = buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
-    Uint8List imgBytes = Uint8List.fromList(imgList);
-    img.Image? image = img.decodeImage(imgBytes);
-    img.Image resized = img.copyResize(image!, width: 100, height: 170); 
+    try {
+      final byteData = await rootBundle.load('lib/assets/logo.png');
+      final buffer = byteData.buffer;
+      List<int> imgList =
+          buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
+      Uint8List imgBytes = Uint8List.fromList(imgList);
+      img.Image? image = img.decodeImage(imgBytes);
+      img.Image resized = img.copyResize(image!, width: 100, height: 170);
 
-    Uint8List resizedBytes = Uint8List.fromList(img.encodePng(resized));
-    _customMarker = BitmapDescriptor.fromBytes(resizedBytes);
-  } catch (e) {
-    print("Failed to load custom marker: $e");
+      Uint8List resizedBytes = Uint8List.fromList(img.encodePng(resized));
+      _customMarker = BitmapDescriptor.fromBytes(resizedBytes);
+    } catch (e) {
+      print("Failed to load custom marker: $e");
+    }
   }
-}
 
   Future<String> getPlaceAddress(double latitude, double longitude) async {
     const apiKey = 'AIzaSyBuznTrerLg81eCkcf5AcPAGXpdStMuIh8';
@@ -295,7 +296,7 @@ class MapPageState extends State<MapPage>
                 LatLng(lat, lng),
               );
             },
-            icon: _customMarker?? BitmapDescriptor.defaultMarker,
+            icon: _customMarker ?? BitmapDescriptor.defaultMarker,
           );
           newMarkers.add(marker);
         }
@@ -561,7 +562,11 @@ class MapPageState extends State<MapPage>
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text('Discover', style: TextStyle(color: Colors.white)),
+        title: const Text('Venue',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 25,
+                fontWeight: FontWeight.bold)),
       ),
       body: Stack(
         children: [
