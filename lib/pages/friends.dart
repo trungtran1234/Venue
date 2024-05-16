@@ -18,6 +18,7 @@ class FriendsPageState extends State<FriendsPage> {
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, String>> _searchResults = [];
   List<Map<String, String>> _friendsList = [];
+  Set<String> _pendingRequests = Set<String>();
   String? _currentUserUsername;
 
   @override
@@ -103,7 +104,12 @@ class FriendsPageState extends State<FriendsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
+        title: const Text('Friends',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 25,
+                fontWeight: FontWeight.bold)),
       ),
       body: Column(
         children: [
@@ -125,12 +131,16 @@ class FriendsPageState extends State<FriendsPage> {
         controller: _searchController,
         decoration: InputDecoration(
           hintText: 'Find Friends',
+          filled: true,
+          fillColor: Colors.grey[800],
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
+            borderSide: BorderSide.none,
+          ),
           suffixIcon: IconButton(
             onPressed: () {
               _searchController.clear();
-              setState(() {
-                _searchResults.clear();
-              });
+              _performSearch("");
             },
             icon: const Icon(Icons.clear),
           ),
@@ -143,42 +153,25 @@ class FriendsPageState extends State<FriendsPage> {
   }
 
   void _performSearch(String query) {
-    if (query.isNotEmpty) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .where('username', isGreaterThanOrEqualTo: query)
-          .where('username', isLessThanOrEqualTo: '$query\uf8ff')
-          .get()
-          .then((querySnapshot) {
-        var allResults = querySnapshot.docs
-            .map((doc) =>
-                {'username': doc.data()['username'] as String, 'uid': doc.id})
-            .toList();
-        _sortSearchResults(allResults);
-      });
-    } else {
+    if (query.isEmpty) {
       setState(() {
         _searchResults.clear();
       });
+      return;
     }
-  }
-
-  void _sortSearchResults(List<Map<String, String>> results) {
-    var friendsResults = [];
-    var nonFriendsResults = [];
-
-    for (var result in results) {
-      var isFriend =
-          _friendsList.any((friend) => friend['uid'] == result['uid']);
-      if (isFriend) {
-        friendsResults.add(result);
-      } else {
-        nonFriendsResults.add(result);
-      }
-    }
-
-    setState(() {
-      _searchResults = [...friendsResults, ...nonFriendsResults];
+    FirebaseFirestore.instance
+        .collection('users')
+        .where('username', isGreaterThanOrEqualTo: query)
+        .where('username', isLessThanOrEqualTo: '$query\uf8ff')
+        .get()
+        .then((querySnapshot) {
+      var allResults = querySnapshot.docs
+          .map((doc) =>
+              {'username': doc.data()['username'] as String, 'uid': doc.id})
+          .toList();
+      setState(() {
+        _searchResults = allResults;
+      });
     });
   }
 
@@ -192,23 +185,41 @@ class FriendsPageState extends State<FriendsPage> {
         bool isFriend = _friendsList.any((friend) => friend['uid'] == uid);
         bool isCurrentUser = username == _currentUserUsername;
 
-        return ListTile(
-          title: Text(username ?? 'Unknown'),
-          trailing: isCurrentUser
-              ? null
-              : (isFriend
-                  ? _buildFriendOptions(username!)
-                  : _buildAddFriendButton(username!)),
+        return Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          elevation: 4,
+          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: ListTile(
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            title: Text(username ?? 'Unknown',
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            subtitle: isCurrentUser
+                ? Text('This is you', style: TextStyle(color: Colors.grey[600]))
+                : null,
+            trailing: isCurrentUser
+                ? null
+                : (isFriend
+                    ? _buildFriendOptions(username!)
+                    : _buildAddFriendButton(username!, uid!)),
+          ),
         );
       },
     );
   }
 
-  IconButton _buildAddFriendButton(String username) {
+  IconButton _buildAddFriendButton(String username, String uid) {
+    bool isPending = _pendingRequests.contains(uid);
     return IconButton(
-      icon: const Icon(Icons.add),
+      icon: Icon(isPending ? Icons.hourglass_top : Icons.person_add),
+      color: isPending ? Colors.amber : Colors.green,
       onPressed: () {
-        sendFriendRequest(username);
+        if (!isPending) {
+          sendFriendRequest(username, uid);
+        }
       },
     );
   }
@@ -220,6 +231,7 @@ class FriendsPageState extends State<FriendsPage> {
         PopupMenuItem<String>(
           value: 'invite',
           child: ListTile(
+            leading: const Icon(Icons.mail_outline, color: Colors.blue),
             title: const Text('Invite'),
             onTap: () {
               Navigator.pop(context);
@@ -229,6 +241,7 @@ class FriendsPageState extends State<FriendsPage> {
         PopupMenuItem<String>(
           value: 'unfriend',
           child: ListTile(
+            leading: const Icon(Icons.remove_circle_outline, color: Colors.red),
             title: const Text('Unfriend'),
             onTap: () {
               String? friendUID = _friendsList.firstWhere(
@@ -247,38 +260,64 @@ class FriendsPageState extends State<FriendsPage> {
       itemCount: _friendsList.length,
       itemBuilder: (context, index) {
         var friend = _friendsList[index];
-        return ListTile(
-          title: Text(friend['username'] ?? 'Unknown'),
-          trailing: PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert),
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem<String>(
-                value: 'invite',
-                child: ListTile(
-                  title: const Text('Invite'),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
+        return Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          elevation: 4,
+          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: ListTile(
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            title: Text(
+              friend['username'] ?? 'Unknown',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
-              PopupMenuItem<String>(
-                value: 'unfriend',
-                child: ListTile(
-                  title: const Text('Unfriend'),
-                  onTap: () {
+            ),
+            trailing: PopupMenuButton<String>(
+              icon: const Icon(Icons.more_vert, color: Colors.deepPurple),
+              onSelected: (value) {
+                switch (value) {
+                  case 'invite':
+                    // Add invite functionality
+                    break;
+                  case 'unfriend':
                     _unfriend(friend['uid']);
-                    Navigator.pop(context);
-                  },
+                    break;
+                }
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                const PopupMenuItem<String>(
+                  value: 'invite',
+                  child: Row(
+                    children: [
+                      Icon(Icons.mail_outline, color: Colors.blue),
+                      SizedBox(width: 8),
+                      Text('Invite'),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                const PopupMenuItem<String>(
+                  value: 'unfriend',
+                  child: Row(
+                    children: [
+                      Icon(Icons.remove_circle_outline, color: Colors.red),
+                      SizedBox(width: 8),
+                      Text('Unfriend'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
     );
   }
 
-  void sendFriendRequest(String receiverUsername) {
+  void sendFriendRequest(String username, String uid) {
     var currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
       showTopSnackBar(context, "You must be logged in to send friend requests.",
@@ -286,46 +325,30 @@ class FriendsPageState extends State<FriendsPage> {
       return;
     }
 
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUser.uid)
-        .get()
-        .then((userDoc) {
-      String senderUsername =
-          userDoc.data()?['username'] ?? currentUser.email ?? 'Unknown User';
+    // Optimistically update the UI
+    setState(() {
+      _pendingRequests.add(uid);
+    });
 
-      FirebaseFirestore.instance
-          .collection('users')
-          .where('username', isEqualTo: receiverUsername)
-          .get()
-          .then((querySnapshot) {
-        if (querySnapshot.docs.isNotEmpty) {
-          var receiverData = querySnapshot.docs.first;
-          FirebaseFirestore.instance.collection('notifications').add({
-            'senderUID': currentUser.uid,
-            'senderUsername': senderUsername,
-            'receiverUID': receiverData.id,
-            'title': 'Friend Request',
-            'message': '$senderUsername wants to add you as a friend',
-            'status': 'pending',
-            'timestamp': FieldValue.serverTimestamp(),
-          }).then((_) {
-            showTopSnackBar(context,
-                "Friend request sent successfully to $receiverUsername",
-                backgroundColor: Colors.green);
-          }).catchError((error) {
-            showTopSnackBar(context, "Failed to send friend request",
-                backgroundColor: Colors.red);
-          });
-        } else {
-          showTopSnackBar(
-              context, "No user found with the username $receiverUsername",
-              backgroundColor: Colors.red);
-        }
-      });
+    FirebaseFirestore.instance.collection('notifications').add({
+      'senderUID': currentUser.uid,
+      'senderUsername': currentUser.email ?? 'Unknown User',
+      'receiverUID': uid,
+      'title': 'Friend Request',
+      'message':
+          '${currentUser.email ?? 'A user'} wants to add you as a friend',
+      'status': 'pending',
+      'timestamp': FieldValue.serverTimestamp(),
+    }).then((_) {
+      showTopSnackBar(context, "Friend request sent successfully to $username",
+          backgroundColor: Colors.green);
     }).catchError((error) {
-      showTopSnackBar(context, "Failed to retrieve user information",
+      showTopSnackBar(context, "Failed to send friend request",
           backgroundColor: Colors.red);
+      // Roll back on error
+      setState(() {
+        _pendingRequests.remove(uid);
+      });
     });
   }
 

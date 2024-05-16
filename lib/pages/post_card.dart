@@ -22,6 +22,7 @@ class _PostCardState extends State<PostCard> {
   bool _isLoading = false;
   firebase_auth.User? user = firebase_auth.FirebaseAuth.instance.currentUser;
   Map<String, dynamic> userData = {};
+  List<String> posterImageUrls = [];
 
   void fetchUserData() async {
     if (user != null) {
@@ -45,10 +46,31 @@ class _PostCardState extends State<PostCard> {
     }
   }
 
+    void fetchPosterData() async {
+    try {
+      // Assuming eventDoc is available in your post snapshot
+      List<String> posterIds = List<String>.from(widget.snap['event']['poster_list']);
+      for (var userId in posterIds) {
+        var userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+        if (userDoc.exists && userDoc.data()!['profilePicturePath'] != null) {
+          setState(() {
+            // To prevent duplicates and ensure unique entries
+            if (!posterImageUrls.contains(userDoc.data()!['profilePicturePath'])) {
+              posterImageUrls.add(userDoc.data()!['profilePicturePath']);
+            }
+          });
+        }
+      }
+    } catch (e) {
+      print('Error fetching poster data: $e');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     fetchUserData();
+    fetchPosterData();
   }
 
   Future<void> navigateToEventDetail() async {
@@ -74,6 +96,8 @@ class _PostCardState extends State<PostCard> {
             .format(widget.snap['datePublished'].toDate())
         : 'No date available';
 
+
+String profileImageUrl = widget.snap['profilePicturePath'] ?? 'lib/assets/Default_pfp.svg.png';
     return Card(
       child: FractionallySizedBox(
         widthFactor: 1.0,
@@ -88,13 +112,9 @@ class _PostCardState extends State<PostCard> {
               ),
               child: Row(
                 children: [
-                  const CircleAvatar(
+                  CircleAvatar(
                     radius: 18,
-                    child: CircleAvatar(
-                      radius: 16,
-                      backgroundImage:
-                          AssetImage('lib/assets/Default_pfp.svg.png'),
-                    ),
+                    backgroundImage: NetworkImage(profileImageUrl),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
@@ -144,6 +164,7 @@ class _PostCardState extends State<PostCard> {
                 ],
               ),
             ),
+            // Image Display
             GestureDetector(
               onDoubleTap: () async {
                 await FirestoreMethods().likePost(widget.snap['postId'],
@@ -181,6 +202,7 @@ class _PostCardState extends State<PostCard> {
                 ],
               ),
             ),
+            // Post Footer
             Container(
               padding: const EdgeInsets.all(10),
               decoration: const BoxDecoration(
@@ -216,7 +238,15 @@ class _PostCardState extends State<PostCard> {
                       ),
                     ],
                   ),
-                  Text(widget.snap['description']),
+                  Container(
+                    padding: const EdgeInsets.only(
+                        top: 10, bottom: 40, left: 15, right: 15),
+                    child: Column(
+                      children: [
+                        Text(widget.snap['description'], style: const TextStyle(fontSize: 18)),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),

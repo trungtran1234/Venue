@@ -145,6 +145,7 @@ class MapPageState extends State<MapPage>
         double lng = doc.data()['longitude'];
         String eventVisibility = doc.data()['visibility'];
         String eventCreatorId = doc.data()['userId'];
+        Map<String, dynamic>? hostData = userCache[eventCreatorId];
 
         bool shouldDisplay = false;
 
@@ -172,15 +173,18 @@ class MapPageState extends State<MapPage>
                           borderRadius: BorderRadius.circular(40),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(1),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(
-                                Icons.account_circle,
-                                color: Colors.white,
-                                size: 30,
-                              ),
+                              hostData != null ? CircleAvatar(
+                              backgroundImage: NetworkImage(hostData['profilePicturePath']),
+                              radius: 20,
+                            ) : Icon(
+                              Icons.account_circle,
+                              color: Colors.white,
+                              size: 30,
+                            ),
                               Text(
                                 doc.data()['firstName'] +
                                     ' ' +
@@ -206,15 +210,12 @@ class MapPageState extends State<MapPage>
                                       color: Colors.white,
                                     ),
                               ),
-                              Text(doc.data()['description'],
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline6
-                                      ?.copyWith(
-                                        color: Colors.white,
-                                      )),
+                              
+                              SizedBox(height: 10),
                               Text(
                                 doc.data()['address'],
+                                textAlign:
+                                    TextAlign.center, // Center align the text
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline6
@@ -223,6 +224,7 @@ class MapPageState extends State<MapPage>
                                       fontSize: 16,
                                     ),
                               ),
+                              SizedBox(height: 8),
                               Text(
                                 'From: ${DateFormat('hh:mm a MM/dd/yyyy').format(DateTime.parse(doc.data()['startDateTime']).toLocal())}',
                                 style: Theme.of(context)
@@ -241,8 +243,9 @@ class MapPageState extends State<MapPage>
                                     ?.copyWith(
                                         color: Colors.white, fontSize: 14),
                               ),
+                              SizedBox(height: 8),
                               Text(
-                                'Visibility: ${doc.data()['visibility'] == 'friendsOnly' ? 'Friends Only' : 'Public'}',
+                                '${doc.data()['visibility'] == 'friendsOnly' ? 'Friends Only' : 'Public'}',
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline6
@@ -337,6 +340,31 @@ class MapPageState extends State<MapPage>
       const DropdownMenuItem(
           value: EventVisibility.friendsOnly, child: Text('Friends Only')),
     ];
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Check if the user already has an active event
+      var existingEvent = await FirebaseFirestore.instance
+          .collection('events')
+          .where('userId', isEqualTo: user.uid)
+          .limit(1)
+          .get();
+      if (existingEvent.docs.isNotEmpty) {
+        // User already has an event
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("You already have an active event"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text("OK"),
+              ),
+            ],
+          ),
+        );
+        return; // Exit the function if the user already has an event
+      }
+    }
 
     showDialog(
       context: context,
@@ -562,7 +590,11 @@ class MapPageState extends State<MapPage>
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text('Discover', style: TextStyle(color: Colors.white)),
+        title: const Text('Venue',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 25,
+                fontWeight: FontWeight.bold)),
       ),
       body: Stack(
         children: [
@@ -590,7 +622,7 @@ class MapPageState extends State<MapPage>
                 ),
           CustomInfoWindow(
             controller: _customInfoWindowController,
-            height: 360,
+            height: 320,
             width: 420,
             offset: 50,
           ),
