@@ -27,7 +27,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
     bool isUserEventOwner = _auth.currentUser?.uid == widget.eventDoc['userId'];
     return Scaffold(
       appBar: AppBar(
-        title: Text('Event Details'),
+        title: const Text('Event Details'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -99,7 +99,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
           return const Center(child: CircularProgressIndicator());
         }
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return Text("No posts available for this event.");
+          return const Text("No posts available for this event.");
         }
         return ListView.builder(
           shrinkWrap: true,

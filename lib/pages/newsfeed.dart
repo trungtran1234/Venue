@@ -31,7 +31,7 @@ class _NewsFeedState extends State<NewsFeedPage> {
     _connectivityChecker.onStatusChanged = _handleConnectivityChange;
     fetchUserData().then((_) {
       fetchUserFriends().then((_) {
-        preloadEventDetails(); // Ensure this is called after user data and friends are loaded
+        preloadEventDetails();
       });
     });
     initFetch();
@@ -43,7 +43,7 @@ class _NewsFeedState extends State<NewsFeedPage> {
       await fetchUserFriends();
       await preloadEventDetails();
       setState(() {
-        _isLoading = false; // Set this false only after all data is fetched
+        _isLoading = false;
       });
     }
   }
@@ -164,17 +164,15 @@ class _NewsFeedState extends State<NewsFeedPage> {
           var eventId = postData['eventId'];
           var event = eventDetailsCache[eventId];
           if (event == null) {
-            return false; // Skip if no event details are found (safety check)
+            return false;
           }
 
           var visibility = event['visibility'] ?? 'public';
           var creatorId = postData['uid'];
 
-          // Determine if the post should be visible based on event visibility and user's friends
           bool filterCondition = visibility == 'public' ||
               (visibility == 'friendsOnly' && userFriends.contains(creatorId));
 
-          // Debug: Log the filtering process
           print(
               "Post: ${postData['description']}, EventID: $eventId, Visibility: $visibility, CreatorId: $creatorId, FilterCondition: $filterCondition");
 
