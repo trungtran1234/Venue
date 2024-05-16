@@ -13,7 +13,7 @@ class PopupManager {
               filter: ui.ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
               child: Container(
                 constraints: const BoxConstraints.expand(),
-                color: const Color(0xFF437AE5).withOpacity(0.5),
+                color: const Color(0xFF0B1425).withOpacity(0.5),
               ),
             ),
             Center(
