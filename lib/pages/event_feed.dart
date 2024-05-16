@@ -64,8 +64,10 @@ class _EventDetailPageState extends State<EventDetailPage> {
       children: [
         ListTile(
           tileColor: const Color.fromARGB(255, 22, 26, 37),
-          title: Text(widget.eventDoc['title']),
-          subtitle: Text(widget.eventDoc['description']),
+          title: Text(widget.eventDoc['title'],
+              style: const TextStyle(fontSize: 26)),
+          subtitle: Text(widget.eventDoc['description'],
+              style: const TextStyle(fontSize: 18)),
         ),
         ListTile(
           tileColor: const Color.fromARGB(255, 22, 26, 37),
@@ -75,8 +77,10 @@ class _EventDetailPageState extends State<EventDetailPage> {
         ListTile(
           tileColor: const Color.fromARGB(255, 22, 26, 37),
           leading: Icon(Icons.calendar_today),
-          title: Text('Starts: ${DateFormat('hh:mm a MM/dd/yyyy').format(DateTime.parse(widget.eventDoc['startDateTime']))}'),
-          subtitle: Text('Ends: ${DateFormat('yyyy-MM-dd HH:mm').format(DateTime.parse(widget.eventDoc['endDateTime']))}'),
+          title: Text(
+              'Starts: ${DateFormat('hh:mm a MM/dd/yyyy').format(DateTime.parse(widget.eventDoc['startDateTime']))}'),
+          subtitle: Text(
+              'Ends: ${DateFormat('yyyy-MM-dd HH:mm').format(DateTime.parse(widget.eventDoc['endDateTime']))}'),
         ),
       ],
     );
@@ -89,7 +93,8 @@ class _EventDetailPageState extends State<EventDetailPage> {
           .where('eventId', isEqualTo: widget.eventId)
           .orderBy('datePublished', descending: true)
           .snapshots(),
-      builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+      builder: (context,
+          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -98,9 +103,11 @@ class _EventDetailPageState extends State<EventDetailPage> {
         }
         return ListView.builder(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(), // Prevents the ListView itself from scrolling
+          physics:
+              NeverScrollableScrollPhysics(), // Prevents the ListView itself from scrolling
           itemCount: snapshot.data!.docs.length,
-          itemBuilder: (context, index) => PostCard(snap: snapshot.data!.docs[index].data()),
+          itemBuilder: (context, index) =>
+              PostCard(snap: snapshot.data!.docs[index].data()),
         );
       },
     );
@@ -109,36 +116,34 @@ class _EventDetailPageState extends State<EventDetailPage> {
   Future<void> _selectImage() async {
     Position currentPosition;
     try {
-      currentPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      currentPosition = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to get location: ${e.toString()}'))
-      );
+          SnackBar(content: Text('Failed to get location: ${e.toString()}')));
       return;
     }
-    
-    // Event location
+
     double eventLat = widget.eventDoc['latitude'];
     double eventLng = widget.eventDoc['longitude'];
 
-    // Calculate the distance
     double distanceInMeters = Geolocator.distanceBetween(
-      currentPosition.latitude,
-      currentPosition.longitude,
-      eventLat,
-      eventLng
-    );
+        currentPosition.latitude,
+        currentPosition.longitude,
+        eventLat,
+        eventLng);
 
     if (distanceInMeters > 1609) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: Text("Too Far Away"),
-          content: Text("You must be within 1 mile of the event to create a post."),
+          content:
+              Text("You must be within 1 mile of the event to create a post."),
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: Text('OK'),
             ),
@@ -175,13 +180,23 @@ class _EventDetailPageState extends State<EventDetailPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => PostEditorPage(eventId: widget.eventId, eventDoc: widget.eventDoc, initialFile: file),
+              builder: (context) => PostEditorPage(
+                  eventId: widget.eventId,
+                  eventDoc: widget.eventDoc,
+                  initialFile: file),
             ),
           );
+          _appendToPosterList(widget.eventId, _auth.currentUser!.uid);
         }
       }
     }
-}
+  }
+
+  Future<void> _appendToPosterList(String eventId, String userId) async {
+    await FirebaseFirestore.instance.collection('events').doc(eventId).update({
+      'poster_list': FieldValue.arrayUnion([userId])
+    });
+  }
 
   void _deleteEvent() {
     showDialog(
@@ -199,10 +214,15 @@ class _EventDetailPageState extends State<EventDetailPage> {
               child: const Text("Delete"),
               onPressed: () {
                 Navigator.of(context).pop();
-                FirebaseFirestore.instance.collection('events').doc(widget.eventId).delete().then((_) {
-                Navigator.pushNamed(context, '/map');
+                FirebaseFirestore.instance
+                    .collection('events')
+                    .doc(widget.eventId)
+                    .delete()
+                    .then((_) {
+                  Navigator.pushNamed(context, '/map');
                 }).catchError((error) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error deleting event: $error')));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error deleting event: $error')));
                 });
               },
             ),

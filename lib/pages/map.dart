@@ -73,20 +73,21 @@ class MapPageState extends State<MapPage>
   }
 
   Future<void> loadCustomMarker() async {
-  try {
-    final byteData = await rootBundle.load('lib/assets/logo.png');
-    final buffer = byteData.buffer;
-    List<int> imgList = buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
-    Uint8List imgBytes = Uint8List.fromList(imgList);
-    img.Image? image = img.decodeImage(imgBytes);
-    img.Image resized = img.copyResize(image!, width: 100, height: 170); 
+    try {
+      final byteData = await rootBundle.load('lib/assets/logo.png');
+      final buffer = byteData.buffer;
+      List<int> imgList =
+          buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
+      Uint8List imgBytes = Uint8List.fromList(imgList);
+      img.Image? image = img.decodeImage(imgBytes);
+      img.Image resized = img.copyResize(image!, width: 100, height: 170);
 
-    Uint8List resizedBytes = Uint8List.fromList(img.encodePng(resized));
-    _customMarker = BitmapDescriptor.fromBytes(resizedBytes);
-  } catch (e) {
-    print("Failed to load custom marker: $e");
+      Uint8List resizedBytes = Uint8List.fromList(img.encodePng(resized));
+      _customMarker = BitmapDescriptor.fromBytes(resizedBytes);
+    } catch (e) {
+      print("Failed to load custom marker: $e");
+    }
   }
-}
 
   Future<String> getPlaceAddress(double latitude, double longitude) async {
     const apiKey = 'AIzaSyBuznTrerLg81eCkcf5AcPAGXpdStMuIh8';
@@ -212,8 +213,11 @@ class MapPageState extends State<MapPage>
                                       ?.copyWith(
                                         color: Colors.white,
                                       )),
+                              SizedBox(height: 10),
                               Text(
                                 doc.data()['address'],
+                                textAlign:
+                                    TextAlign.center, // Center align the text
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline6
@@ -222,6 +226,7 @@ class MapPageState extends State<MapPage>
                                       fontSize: 16,
                                     ),
                               ),
+                              SizedBox(height: 8),
                               Text(
                                 'From: ${DateFormat('hh:mm a MM/dd/yyyy').format(DateTime.parse(doc.data()['startDateTime']).toLocal())}',
                                 style: Theme.of(context)
@@ -240,8 +245,9 @@ class MapPageState extends State<MapPage>
                                     ?.copyWith(
                                         color: Colors.white, fontSize: 14),
                               ),
+                              SizedBox(height: 8),
                               Text(
-                                'Visibility: ${doc.data()['visibility'] == 'friendsOnly' ? 'Friends Only' : 'Public'}',
+                                '${doc.data()['visibility'] == 'friendsOnly' ? 'Friends Only' : 'Public'}',
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline6
@@ -295,7 +301,7 @@ class MapPageState extends State<MapPage>
                 LatLng(lat, lng),
               );
             },
-            icon: _customMarker?? BitmapDescriptor.defaultMarker,
+            icon: _customMarker ?? BitmapDescriptor.defaultMarker,
           );
           newMarkers.add(marker);
         }
@@ -320,7 +326,6 @@ class MapPageState extends State<MapPage>
     });
   }
 
-  
   void _onMapLongPress(LatLng position) async {
     String address =
         await getPlaceAddress(position.latitude, position.longitude);
@@ -337,31 +342,31 @@ class MapPageState extends State<MapPage>
       DropdownMenuItem(
           value: EventVisibility.friendsOnly, child: Text('Friends Only')),
     ];
-     final user = FirebaseAuth.instance.currentUser;
-  if (user != null) {
-    // Check if the user already has an active event
-    var existingEvent = await FirebaseFirestore.instance
-        .collection('events')
-        .where('userId', isEqualTo: user.uid)
-        .limit(1)
-        .get();
-    if (existingEvent.docs.isNotEmpty) {
-      // User already has an event
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("You already have an active event"),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text("OK"),
-            ),
-          ],
-        ),
-      );
-      return;  // Exit the function if the user already has an event
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Check if the user already has an active event
+      var existingEvent = await FirebaseFirestore.instance
+          .collection('events')
+          .where('userId', isEqualTo: user.uid)
+          .limit(1)
+          .get();
+      if (existingEvent.docs.isNotEmpty) {
+        // User already has an event
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("You already have an active event"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text("OK"),
+              ),
+            ],
+          ),
+        );
+        return; // Exit the function if the user already has an event
+      }
     }
-  }
 
     showDialog(
       context: context,
@@ -531,8 +536,6 @@ class MapPageState extends State<MapPage>
       ),
     );
   }
-
-  
 
   void _saveEventToFirestore(
       LatLng position,

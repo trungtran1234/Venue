@@ -26,7 +26,7 @@ class Post {
     required this.postUrl,
     required this.eventId,
     required this.event,
-    required this.pfpUrl,
+    required this.pfpUrl, 
   });
 
   static Post fromSnap(DocumentSnapshot snap, DocumentSnapshot user) {
