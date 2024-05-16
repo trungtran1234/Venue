@@ -101,29 +101,6 @@ class SettingsPageState extends State<SettingsPage> {
                   newRoute(context, ChangePasswordPage());
                 }),
             const SizedBox(height: 20),
-            const Text('Notifications',
-                style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold)),
-            SwitchListTile(
-              title: const Text('Event Updates',
-                  style: TextStyle(color: Colors.white)),
-              value: _eventUpdates,
-              onChanged: (newValue) => _updateSetting('eventUpdates', newValue),
-              activeColor: Colors.white,
-              activeTrackColor: Colors.green,
-            ),
-            SwitchListTile(
-              title: const Text('Event Reminders',
-                  style: TextStyle(color: Colors.white)),
-              value: _eventReminders,
-              onChanged: (newValue) =>
-                  _updateSetting('eventReminders', newValue),
-              activeColor: Colors.white,
-              activeTrackColor: Colors.green,
-            ),
-            const SizedBox(height: 20),
             ListTile(
               leading: const Icon(Icons.delete_forever, color: Colors.red),
               title: const Text('Delete Account',
