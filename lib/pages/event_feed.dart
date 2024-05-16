@@ -32,7 +32,9 @@ class _EventDetailPageState extends State<EventDetailPage> {
         title: const Text('Event Details'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            Navigator.pushNamed(context, '/map');
+          },
         ),
         actions: [
           if (isUserEventOwner)
