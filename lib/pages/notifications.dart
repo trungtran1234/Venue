@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/connectivity_checker.dart';
 import '../services/reconnection_popup.dart';
 import 'package:app/global.dart';
+import '../main.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -44,7 +45,7 @@ class NotificationsPageState extends State<NotificationsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: const Text('Notifications',
@@ -95,8 +96,7 @@ class NotificationsPageState extends State<NotificationsPage> {
           separatorBuilder: (context, index) =>
               const Divider(color: Colors.grey),
           itemBuilder: (context, index) {
-            var notification =
-                snapshot.data!.docs[index].data() as Map<String, dynamic>;
+            var notification = snapshot.data!.docs[index].data() as Map<String, dynamic>;
             return ListTile(
               leading:
                   const Icon(Icons.notification_important, color: Colors.blue),

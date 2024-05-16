@@ -16,10 +16,7 @@ class ResetPasswordPage extends StatelessWidget {
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xFF121212),
-              Color.fromARGB(255, 16, 19, 24),
-            ],
+            colors: [Color(0xFF133068), Color(0xFF0B1425)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -37,7 +34,7 @@ class ResetPasswordPage extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(30.0),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1E1E1E),
+                        color: const Color(0xFF020C1B),
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
@@ -74,7 +71,7 @@ class ResetPasswordPage extends StatelessWidget {
                           ElevatedButton(
                             onPressed: () => _resetPassword(context),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF007AFF),
+                              backgroundColor: const Color.fromARGB(255, 7, 24, 60),
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 25),
                               shape: RoundedRectangleBorder(

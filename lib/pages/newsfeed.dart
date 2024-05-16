@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
 import '../services/connectivity_checker.dart';
 import '../services/reconnection_popup.dart';
+import '../main.dart';
 
 class NewsFeedPage extends StatefulWidget {
   const NewsFeedPage({super.key});
@@ -115,7 +116,7 @@ class _NewsFeedState extends State<NewsFeedPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: const Text('Venue'),
@@ -142,7 +143,6 @@ class _NewsFeedState extends State<NewsFeedPage> {
         if (!snapshot.hasData) {
           return const Text("No data available");
         }
-
         var filteredDocs = snapshot.data!.docs.where((doc) {
           var postData = doc.data();
           var eventId = postData['eventId'];

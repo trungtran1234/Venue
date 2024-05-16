@@ -21,7 +21,7 @@ class SignUpPage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF121212), Color.fromARGB(255, 16, 19, 24)],
+            colors: [Color(0xFF133068), Color(0xFF0B1425)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -50,7 +50,7 @@ class SignUpPage extends StatelessWidget {
   Widget _buildSignUpForm(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
+        color: const Color(0xFF020C1B),
         borderRadius: BorderRadius.circular(20),
         boxShadow: const [
           BoxShadow(
@@ -84,7 +84,7 @@ class SignUpPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () => _handleSignUp(context),
               style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF007AFF),
+                  backgroundColor: const Color.fromARGB(255, 7, 24, 60),
                   padding: const EdgeInsets.symmetric(vertical: 25),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
@@ -155,7 +155,7 @@ class SignUpPage extends StatelessWidget {
   Widget _buildLoginOption(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
+        color: const Color(0xFF020C1B),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(

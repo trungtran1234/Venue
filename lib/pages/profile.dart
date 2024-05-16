@@ -1,6 +1,9 @@
 import 'dart:io';
+import '../main.dart';
+
 import 'dart:typed_data';
 import 'package:app/database/storage_methods.dart';
+
 import 'package:app/global.dart';
 import 'package:app/pages/friends.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -92,7 +95,7 @@ class ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GradientScaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: const Text('Profile',
