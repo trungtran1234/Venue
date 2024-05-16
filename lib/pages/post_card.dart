@@ -129,14 +129,14 @@ String profileImageUrl = widget.snap['profilePicturePath'] ?? 'lib/assets/Defaul
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                                fontSize: 14,
                               ),
                             ),
                             Text(
                               ' @${widget.snap['username']}',
                               style: const TextStyle(
-                                color: Color.fromARGB(255, 203, 203, 203),
-                              ),
+                                  color: Color.fromARGB(255, 203, 203, 203),
+                                  fontSize: 12),
                             ),
                           ],
                         ),
