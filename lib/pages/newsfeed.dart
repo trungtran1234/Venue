@@ -87,11 +87,10 @@ Future<void> initFetch() async {
         .doc(user!.uid)
         .get();
     if (userDoc.exists) {
-      var data = userDoc.data() as Map<String, dynamic>?; // Cast to Map<String, dynamic>?
+      var data = userDoc.data() as Map<String, dynamic>?; 
       if (data != null && data.containsKey('friends')) {
         setState(() {
           userFriends = List<String>.from(data['friends']);
-          print("User friends: $userFriends");  // Debug: Log out the friends list
         });
       }
     }
@@ -148,17 +147,13 @@ Future<void> initFetch() async {
         var eventId = postData['eventId'];
         var event = eventDetailsCache[eventId];
         if (event == null) {
-          return false; // Skip if no event details are found (safety check)
+          return false;
         }
 
         var visibility = event['visibility'] ?? 'public';
         var creatorId = postData['uid'];
 
-        // Determine if the post should be visible based on event visibility and user's friends
         bool filterCondition = visibility == 'public' || (visibility == 'friendsOnly' && userFriends.contains(creatorId));
-
-        // Debug: Log the filtering process
-        print("Post: ${postData['description']}, EventID: $eventId, Visibility: $visibility, CreatorId: $creatorId, FilterCondition: $filterCondition");
 
         return filterCondition;
       }).toList();
