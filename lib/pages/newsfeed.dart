@@ -156,9 +156,10 @@ class _NewsFeedState extends State<NewsFeedPage> {
 
           var visibility = event['visibility'] ?? 'public';
           var creatorId = postData['uid'];
+          bool isCreatorOrFriend = creatorId == user!.uid || userFriends.contains(creatorId);
 
           bool filterCondition = visibility == 'public' ||
-              (visibility == 'friendsOnly' && userFriends.contains(creatorId));
+              (visibility == 'friendsOnly' && isCreatorOrFriend);
 
           return filterCondition;
         }).toList();
