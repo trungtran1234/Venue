@@ -79,21 +79,17 @@ class _NewsFeedState extends State<NewsFeedPage> {
   }
 
   Future<void> fetchUserFriends() async {
-    if (user != null) {
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user!.uid)
-          .get();
-      if (userDoc.exists) {
-        var data = userDoc.data()
-            as Map<String, dynamic>?; // Cast to Map<String, dynamic>?
-        if (data != null && data.containsKey('friends')) {
-          setState(() {
-            userFriends = List<String>.from(data['friends']);
-            print(
-                "User friends: $userFriends"); // Debug: Log out the friends list
-          });
-        }
+  if (user != null) {
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .get();
+    if (userDoc.exists) {
+      var data = userDoc.data() as Map<String, dynamic>?; 
+      if (data != null && data.containsKey('friends')) {
+        setState(() {
+          userFriends = List<String>.from(data['friends']);
+        });
       }
     }
   }
@@ -134,21 +130,35 @@ class _NewsFeedState extends State<NewsFeedPage> {
   }
 
   Widget _buildPostList() {
-    return StreamBuilder(
-      stream: FirebaseFirestore.instance
-          .collection('posts')
-          .orderBy('datePublished', descending: true)
-          .snapshots(),
-      builder: (context,
-          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+  return StreamBuilder(
+    stream: FirebaseFirestore.instance
+        .collection('posts')
+        .orderBy('datePublished', descending: true)
+        .snapshots(),
+    builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      if (!snapshot.hasData) {
+        return const Text("No data available");
+      }
+
+      var filteredDocs = snapshot.data!.docs.where((doc) {
+        var postData = doc.data();
+        var eventId = postData['eventId'];
+        var event = eventDetailsCache[eventId];
+        if (event == null) {
+          return false;
         }
 
-        if (!snapshot.hasData) {
-          return const Text("No data available");
-        }
+        var visibility = event['visibility'] ?? 'public';
+        var creatorId = postData['uid'];
 
+        bool filterCondition = visibility == 'public' || (visibility == 'friendsOnly' && userFriends.contains(creatorId));
+
+        return filterCondition;
+      }).toList();
         var filteredDocs = snapshot.data!.docs.where((doc) {
           var postData = doc.data();
           var eventId = postData['eventId'];

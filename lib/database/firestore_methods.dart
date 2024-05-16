@@ -19,6 +19,7 @@ class FirestoreMethods {
     String event,
     String? eventId,
     String? pfpUrl,
+
   ) async {
     String res = "some error occurred";
     try {
