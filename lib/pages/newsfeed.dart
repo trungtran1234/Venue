@@ -32,7 +32,7 @@ class _NewsFeedState extends State<NewsFeedPage> {
     _connectivityChecker.onStatusChanged = _handleConnectivityChange;
     fetchUserData().then((_) {
       fetchUserFriends().then((_) {
-        preloadEventDetails(); // Ensure this is called after user data and friends are loaded
+        preloadEventDetails();
       });
     });
     initFetch();
@@ -118,10 +118,14 @@ class _NewsFeedState extends State<NewsFeedPage> {
     return GradientScaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text('Venue'),
+        title: const Text('Feed',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 25,
+                fontWeight: FontWeight.bold)),
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : _buildPostList(),
       bottomNavigationBar: buildBottomNavigationBar(context, _selectedIndex),
     );
