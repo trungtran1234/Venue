@@ -139,7 +139,8 @@ class SignUpPage extends StatelessWidget {
           'friends': [],
           'posts': 0,
           'bio': '',
-          'profilePicturePath': 'lib/assets/Default_pfp.svg.png',
+          'profilePicturePath':
+              'https://cdn.discordapp.com/attachments/1204502528222302298/1240418949049483364/image.png?ex=66467dab&is=66452c2b&hm=75c4128119235994b56fdfa2bc72d12db77e706210ff0a383c78ac3a7e0b5e89&',
         });
 
         await user.sendEmailVerification();

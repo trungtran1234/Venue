@@ -10,8 +10,9 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PreferencesService.init();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    options: DefaultFirebaseOptions.currentPlatform
   );
+  
   runApp(const MyApp());
 }
 
@@ -29,6 +30,9 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const AuthStateChecker(),
+      routes: {
+        '/map': (context) => const MapPage(),
+      }
     );
   }
 }

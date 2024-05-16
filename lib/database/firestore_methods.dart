@@ -17,6 +17,9 @@ class FirestoreMethods {
     String firstName,
     String lastName,
     String event,
+    String? eventId,
+    String? pfpUrl,
+
   ) async {
     String res = "some error occurred";
     try {
@@ -35,6 +38,9 @@ class FirestoreMethods {
         postUrl: photoUrl,
         likes: [],
         event: event,
+        eventId: eventId ?? 'general',
+        pfpUrl: pfpUrl ??
+            'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg',
       );
 
       _firestore.collection('posts').doc(postId).set(

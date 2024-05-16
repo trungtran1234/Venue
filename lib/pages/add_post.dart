@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddPostScreen extends StatefulWidget {
-  const AddPostScreen({super.key});
+  final String eventId;
+  const AddPostScreen({super.key, required this.eventId});
 
   @override
   State<AddPostScreen> createState() => _AddPostScreenState();
@@ -52,7 +53,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   void postImage(String uid, String firstName, String lastName, String username,
-      String event) async {
+      String event, String pfpUrl) async {
     setState(() {
       _isLoading = true;
     });
@@ -65,6 +66,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
         firstName,
         lastName,
         event,
+        widget.eventId,
+        pfpUrl,
       );
 
       if (res == "success") {
@@ -192,6 +195,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     userData['lastName'],
                     userData['username'],
                     "event",
+                    userData['profilePicturePath'],
                   ),
                   child: const Text(
                     'Post',

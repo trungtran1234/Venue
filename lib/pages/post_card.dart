@@ -3,6 +3,8 @@ import 'package:app/services/like_animation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
+import './event_feed.dart';
+import 'package:intl/intl.dart';
 
 class PostCard extends StatefulWidget {
   final snap;
@@ -20,6 +22,7 @@ class _PostCardState extends State<PostCard> {
   bool _isLoading = false;
   firebase_auth.User? user = firebase_auth.FirebaseAuth.instance.currentUser;
   Map<String, dynamic> userData = {};
+  List<String> posterImageUrls = [];
 
   void fetchUserData() async {
     if (user != null) {
@@ -32,11 +35,10 @@ class _PostCardState extends State<PostCard> {
           setState(() {
             userData = userDoc.data() as Map<String, dynamic>;
             _isLoading =
-                false; // Set isLoading to false when data is successfully fetched
+                false; 
           });
         }
       } catch (e) {
-        // Handle exceptions by setting isLoading to false and logging error or showing a message
         setState(() {
           _isLoading = false;
         });
@@ -45,61 +47,125 @@ class _PostCardState extends State<PostCard> {
     }
   }
 
+    void fetchPosterData() async {
+    try {
+      // Assuming eventDoc is available in your post snapshot
+      List<String> posterIds = List<String>.from(widget.snap['event']['poster_list']);
+      for (var userId in posterIds) {
+        var userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+        if (userDoc.exists && userDoc.data()!['profilePicturePath'] != null) {
+          setState(() {
+            // To prevent duplicates and ensure unique entries
+            if (!posterImageUrls.contains(userDoc.data()!['profilePicturePath'])) {
+              posterImageUrls.add(userDoc.data()!['profilePicturePath']);
+            }
+          });
+        }
+      }
+    } catch (e) {
+      print('Error fetching poster data: $e');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     fetchUserData();
+    fetchPosterData();
+  }
+
+  Future<void> navigateToEventDetail() async {
+    var eventDoc = await FirebaseFirestore.instance
+        .collection('events')
+        .doc(widget.snap['eventId'])
+        .get();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EventDetailPage(
+          eventDoc: eventDoc.data()!,
+          eventId: widget.snap['eventId'],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    //final User user = Provider.of<UserProvider>(context).getUser;
+    String formattedDate = widget.snap['datePublished'] != null
+        ? DateFormat('hh:mm a MM/dd/yyyy')
+            .format(widget.snap['datePublished'].toDate())
+        : 'No date available';
 
+
+String profileImageUrl = widget.snap['profilePicturePath'] ?? 'lib/assets/Default_pfp.svg.png';
     return Card(
       child: FractionallySizedBox(
         widthFactor: 1.0,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //Post Header
             Container(
+              padding: const EdgeInsets.all(10),
               decoration: const BoxDecoration(
                 color: Colors.black,
               ),
-              child: Column(
+              child: Row(
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        child: const CircleAvatar(
-                          radius: 14,
-                          child: CircleAvatar(
-                            radius: 12,
-                            backgroundImage:
-                                //change to network image later
-                                AssetImage('lib/assets/Default_pfp.svg.png'),
+                  CircleAvatar(
+                    radius: 18,
+                    backgroundImage: NetworkImage(profileImageUrl),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${widget.snap['firstName']} ${widget.snap['lastName']}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                            Text(
+                              ' @${widget.snap['username']}',
+                              style: const TextStyle(
+                                color: Color.fromARGB(255, 203, 203, 203),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const Spacer(), // Space between last name and icon
+                        InkWell(
+                          onTap: navigateToEventDetail,
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                'lib/assets/grayLogo.png',
+                                width: 33,
+                                height: 33,
+                              ),
+                              Text(
+                                '${widget.snap['event']}',
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                      Text(
-                          '${widget.snap['firstName']} ${widget.snap['lastName']} @ ${widget.snap['event']}'),
-                      const Spacer(),
-                      IconButton(
-                        icon: const Icon(Icons.more_vert),
-                        onPressed: () {},
-                      )
-                    ],
-                  ),
-                  Text(
-                    '${widget.snap['username']}',
-                    style: const TextStyle(color: Colors.grey),
-                    textAlign: TextAlign.left,
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-            //Image Display
+            // Image Display
             GestureDetector(
               onDoubleTap: () async {
                 await FirestoreMethods().likePost(widget.snap['postId'],
@@ -124,9 +190,7 @@ class _PostCardState extends State<PostCard> {
                     opacity: isLikeAnimating ? 1 : 0,
                     child: LikeAnimation(
                       isAnimating: isLikeAnimating,
-                      duration: const Duration(
-                        milliseconds: 400,
-                      ),
+                      duration: const Duration(milliseconds: 400),
                       onEnd: () {
                         setState(() {
                           isLikeAnimating = false;
@@ -139,14 +203,14 @@ class _PostCardState extends State<PostCard> {
                 ],
               ),
             ),
-
-            //Post Footer
+            // Post Footer
             Container(
+              padding: const EdgeInsets.all(10),
               decoration: const BoxDecoration(
                 color: Colors.black,
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
@@ -166,16 +230,21 @@ class _PostCardState extends State<PostCard> {
                           ),
                         ),
                       ),
-                      Text('${widget.snap['likes'].length}'),
+                      Text('${widget.snap['likes'].length} likes'),
+                      const Spacer(),
+                      Text(
+                        formattedDate,
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
                     ],
                   ),
                   Container(
                     padding: const EdgeInsets.only(
                         top: 10, bottom: 40, left: 15, right: 15),
                     child: Column(
-                      //crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(widget.snap['description']),
+                        Text(widget.snap['description'], style: const TextStyle(fontSize: 18)),
                       ],
                     ),
                   )
