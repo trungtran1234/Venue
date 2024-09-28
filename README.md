@@ -26,7 +26,7 @@
 <figure style="text-align: center; width: 300px; margin: 10px;">
     <img src="https://github.com/user-attachments/assets/07b2d9f4-5682-4136-926e-f87d5f7f8ce3" alt="Screenshot 2024-05-18 013758" width="20%"/>
     <figcaption><---- Event Details Preview</figcaption>
-</figure> </br>
+</figure> </br> </br>
 
 <figure style="text-align: center; width: 300px; margin: 10px;">
     <img src="https://github.com/user-attachments/assets/d260de2c-da31-4b5e-898b-c01f4d76e6b9" alt="Screenshot 2024-05-18 013758" width="20%"/>
